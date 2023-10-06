@@ -21,6 +21,16 @@ namespace DevHub.Models
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public DbSet<SkillsModel> SkillsTable { get; set; }
+        public DbSet<CountryModel> country { get; set; }
+        public DbSet<StateModel> state { get; set; }
+        public DbSet<CityModel> city { get; set; }
+        public DbSet<CandidateModel> candidate { get; set; }
+        public DbSet<JobTypeModel> job_type { get; set; }
+        public DbSet<JobModeModel> job_mode { get; set; }
+        public DbSet<JobCategoryModel> job_category { get; set; }
+        public DbSet<JobModel> jobs { get; set; }
+        public DbSet<CompanyModel> company { get; set; }
+        public DbSet<CompanyJobMapper> company_job { get; set; }
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {

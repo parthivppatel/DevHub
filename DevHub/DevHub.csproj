@@ -204,15 +204,49 @@
     <Compile Include="Migrations\202310040700558_PopulateSkillsModel.Designer.cs">
       <DependentUpon>202310040700558_PopulateSkillsModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202310061000403_database_tables.cs" />
+    <Compile Include="Migrations\202310061000403_database_tables.Designer.cs">
+      <DependentUpon>202310061000403_database_tables.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202310061009183_countries_data.cs" />
+    <Compile Include="Migrations\202310061009183_countries_data.Designer.cs">
+      <DependentUpon>202310061009183_countries_data.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202310061010454_states_data.cs" />
+    <Compile Include="Migrations\202310061010454_states_data.Designer.cs">
+      <DependentUpon>202310061010454_states_data.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202310061012091_cities_data.cs" />
+    <Compile Include="Migrations\202310061012091_cities_data.Designer.cs">
+      <DependentUpon>202310061012091_cities_data.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202310061016378_job_tabels_data.cs" />
+    <Compile Include="Migrations\202310061016378_job_tabels_data.Designer.cs">
+      <DependentUpon>202310061016378_job_tabels_data.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\CandidateModel.cs" />
+    <Compile Include="Models\CityModel.cs" />
+    <Compile Include="Models\CompanyJobMapper.cs" />
+    <Compile Include="Models\CompanyModel.cs" />
+    <Compile Include="Models\CountryModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\JobCategoryModel.cs" />
+    <Compile Include="Models\JobModel.cs" />
+    <Compile Include="Models\JobModeModel.cs" />
+    <Compile Include="Models\JobTypeModel.cs" />
     <Compile Include="Models\SkillsModel.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\StateModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\aspnet-DevHub-20231004122157.mdf" />
+    <Content Include="App_Data\aspnet-DevHub-20231004122157_log.ldf">
+      <DependentUpon>aspnet-DevHub-20231004122157.mdf</DependentUpon>
+    </Content>
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -270,9 +304,7 @@
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_Data\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -295,6 +327,21 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202310040700558_PopulateSkillsModel.resx">
       <DependentUpon>202310040700558_PopulateSkillsModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202310061000403_database_tables.resx">
+      <DependentUpon>202310061000403_database_tables.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202310061009183_countries_data.resx">
+      <DependentUpon>202310061009183_countries_data.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202310061010454_states_data.resx">
+      <DependentUpon>202310061010454_states_data.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202310061012091_cities_data.resx">
+      <DependentUpon>202310061012091_cities_data.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202310061016378_job_tabels_data.resx">
+      <DependentUpon>202310061016378_job_tabels_data.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

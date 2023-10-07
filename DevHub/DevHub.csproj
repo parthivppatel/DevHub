@@ -185,10 +185,16 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\API\CityController.cs" />
+    <Compile Include="Controllers\API\CountryController.cs" />
     <Compile Include="Controllers\API\SkillsController.cs" />
+    <Compile Include="Controllers\API\StateController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Dtos\CityDto.cs" />
+    <Compile Include="Dtos\CountryDto.cs" />
     <Compile Include="Dtos\SkillsDto.cs" />
+    <Compile Include="Dtos\StateDto.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

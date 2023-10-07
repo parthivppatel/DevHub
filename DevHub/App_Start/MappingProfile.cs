@@ -14,6 +14,9 @@ namespace DevHub.App_Start
         {
             Mapper.CreateMap<SkillsModel, SkillsDto>();
             Mapper.CreateMap<SkillsDto, SkillsModel>();
+            Mapper.CreateMap<CountryDto, CountryModel>().ReverseMap();
+            Mapper.CreateMap<StateDto, StateModel>().ReverseMap();
+            Mapper.CreateMap<CityDto, CityModel>().ReverseMap();
         }
     }
 }

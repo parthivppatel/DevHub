@@ -54,7 +54,7 @@ namespace DevHub.Models
         public int proficiency { get; set; }
         public string linkedin { get; set; }
         public string facebook { get; set; }
-        public string resume { get; set; }
+        public byte[] resume { get; set; }
 
         public string UserId { get; set; }
         public ApplicationUser User { get; set; }

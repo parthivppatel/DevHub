@@ -12,7 +12,7 @@ namespace DevHub.Controllers.API
 {
     public class StateController : ApiController
     {
-        ApplicationDbContext _context;
+        private ApplicationDbContext _context;
         public StateController()
         {
             _context = new ApplicationDbContext();

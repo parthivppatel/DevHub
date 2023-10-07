@@ -13,7 +13,7 @@ namespace DevHub.Controllers.API
 {
     public class CityController : ApiController
     {
-        ApplicationDbContext _context;
+        private ApplicationDbContext _context;
         public CityController()
         {
             _context = new ApplicationDbContext();

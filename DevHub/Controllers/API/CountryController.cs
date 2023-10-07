@@ -7,12 +7,13 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-
+ 
 namespace DevHub.Controllers.API
 {
     public class CountryController : ApiController
     {
-        ApplicationDbContext _context;
+        private ApplicationDbContext _context;
+        
         public CountryController()
         {
             _context = new ApplicationDbContext();

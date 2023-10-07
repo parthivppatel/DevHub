@@ -49,6 +49,9 @@
       <HintPath>..\packages\AutoMapper.4.1.0\lib\net45\AutoMapper.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Swashbuckle.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cd1bb07a5ac7c7bc, processorArchitecture=MSIL">
+      <HintPath>..\packages\Swashbuckle.Core.5.6.0\lib\net40\Swashbuckle.Core.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -104,6 +107,9 @@
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="WebActivatorEx, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7b26dc2a43f6a0d4, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebActivatorEx.2.0\lib\net40\WebActivatorEx.dll</HintPath>
     </Reference>
     <Reference Include="WebGrease">
       <Private>True</Private>
@@ -183,12 +189,14 @@
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="App_Start\SwaggerConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\API\CityController.cs" />
     <Compile Include="Controllers\API\CountryController.cs" />
     <Compile Include="Controllers\API\SkillsController.cs" />
     <Compile Include="Controllers\API\StateController.cs" />
+    <Compile Include="Controllers\API\UserController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Dtos\CityDto.cs" />
@@ -233,6 +241,14 @@
     <Compile Include="Migrations\202310070403476_change_data_type_for_image.cs" />
     <Compile Include="Migrations\202310070403476_change_data_type_for_image.Designer.cs">
       <DependentUpon>202310070403476_change_data_type_for_image.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202310072045298_change_data_type_of_resume_fields.cs" />
+    <Compile Include="Migrations\202310072045298_change_data_type_of_resume_fields.Designer.cs">
+      <DependentUpon>202310072045298_change_data_type_of_resume_fields.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202310072047158_user_roles.cs" />
+    <Compile Include="Migrations\202310072047158_user_roles.Designer.cs">
+      <DependentUpon>202310072047158_user_roles.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -355,6 +371,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202310070403476_change_data_type_for_image.resx">
       <DependentUpon>202310070403476_change_data_type_for_image.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202310072045298_change_data_type_of_resume_fields.resx">
+      <DependentUpon>202310072045298_change_data_type_of_resume_fields.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202310072047158_user_roles.resx">
+      <DependentUpon>202310072047158_user_roles.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

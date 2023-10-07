@@ -14,7 +14,7 @@ namespace DevHub.Models
 
         [StringLength(50)]
         public string name { get; set; }
-        public string logo { get; set; }
+        public byte[] logo { get; set; }
 
         [StringLength(255)]
         public string address { get; set; }

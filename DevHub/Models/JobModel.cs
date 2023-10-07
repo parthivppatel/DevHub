@@ -25,7 +25,7 @@ namespace DevHub.Models
         public long phone { get; set; }
         public string gender { get; set; }
         public string description { get; set; }
-        public string document { get; set; }
+        public byte[] document { get; set; }
         public int job_typeid { get; set; }
         public JobTypeModel job_type { get; set; }
         public string job_categoryids { get; set; } //json

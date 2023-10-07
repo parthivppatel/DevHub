@@ -11,7 +11,7 @@ namespace DevHub.Models
     public class CandidateModel
     {
         public int id { get; set; }
-        public string image { get; set; }
+        public byte[] image { get; set; }
 
         [StringLength(50)]
         public string first_name { get; set; }

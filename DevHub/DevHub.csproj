@@ -224,6 +224,10 @@
     <Compile Include="Migrations\202310061016378_job_tabels_data.Designer.cs">
       <DependentUpon>202310061016378_job_tabels_data.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202310070403476_change_data_type_for_image.cs" />
+    <Compile Include="Migrations\202310070403476_change_data_type_for_image.Designer.cs">
+      <DependentUpon>202310070403476_change_data_type_for_image.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CandidateModel.cs" />
@@ -342,6 +346,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202310061016378_job_tabels_data.resx">
       <DependentUpon>202310061016378_job_tabels_data.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202310070403476_change_data_type_for_image.resx">
+      <DependentUpon>202310070403476_change_data_type_for_image.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

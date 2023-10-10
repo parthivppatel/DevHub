@@ -17,6 +17,7 @@ namespace DevHub.App_Start
             Mapper.CreateMap<CountryDto, CountryModel>().ReverseMap();
             Mapper.CreateMap<StateDto, StateModel>().ReverseMap();
             Mapper.CreateMap<CityDto, CityModel>().ReverseMap();
+            Mapper.CreateMap<CandidateDto, CandidateModel>().ReverseMap();
         }
     }
 }

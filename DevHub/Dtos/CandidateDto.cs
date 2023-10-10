@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
-namespace DevHub.Models
+namespace DevHub.Dtos
 {
-    [Table(name: "candidates")]
-    public class CandidateModel
+    public class CandidateDto
     {
         public int id { get; set; }
-        public byte[] image { get; set; }
+        public string image { get; set; }
 
         [Required]
         [StringLength(50)]
@@ -34,16 +32,12 @@ namespace DevHub.Models
 
         [Required]
         public int countryid { get; set; }
-        public CountryModel country { get; set; }
 
         [Required]
         public int stateid { get; set; }
-        public StateModel state { get; set; }
-
+        
         [Required]
         public int cityid { get; set; }
-        public CityModel city { get; set; }
-
         public long phone { get; set; }
 
         [Required]
@@ -62,14 +56,9 @@ namespace DevHub.Models
         public int proficiency { get; set; }
         public string linkedin { get; set; }
         public string facebook { get; set; }
-        public byte[] resume { get; set; }
+        public string resume { get; set; }
 
         [Required]
         public string UserId { get; set; }
-        public ApplicationUser User { get; set; }
- 
-        public DateTime created_at { get; set; }
-
-        public DateTime? updated_at { get; set; }
     }
 }

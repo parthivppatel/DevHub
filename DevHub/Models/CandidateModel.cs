@@ -59,7 +59,6 @@ namespace DevHub.Models
         public string education { get; set; } //json 
         public string experience { get; set; } //json
         public string skillids { get; set; } //json
-        public int proficiency { get; set; }
         public string linkedin { get; set; }
         public string facebook { get; set; }
         public byte[] resume { get; set; }

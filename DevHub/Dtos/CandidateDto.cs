@@ -8,7 +8,6 @@ namespace DevHub.Dtos
 {
     public class CandidateDto
     {
-        public int id { get; set; }
         public string image { get; set; }
 
         [Required]
@@ -53,7 +52,6 @@ namespace DevHub.Dtos
         public string education { get; set; } //json 
         public string experience { get; set; } //json
         public string skillids { get; set; } //json
-        public int proficiency { get; set; }
         public string linkedin { get; set; }
         public string facebook { get; set; }
         public string resume { get; set; }

@@ -172,7 +172,7 @@ namespace DevHub.Controllers.API
             if (candidateDto == null)
                 return BadRequest("Request is Invalid");
 
-            if (old_candidate.UserId != candidateDto.UserId)
+            if (!old_candidate.UserId.Equals(candidateDto.UserId))
                 return BadRequest("User Id Can't be Changed");
 
             var candidate=Mapper.Map(candidateDto, old_candidate);
@@ -246,28 +246,29 @@ namespace DevHub.Controllers.API
         public IHttpActionResult GetCandidate(int id)
         {
             var candidate = _context.candidate.Where(c => c.id == id).AsEnumerable().Select(c => new CandidateDto
-            {
-                first_name = c.first_name,
-                last_name=c.last_name,
-                surname=c.surname,
-                dob=c.dob,
-                gender=c.gender,
-                countryid=c.countryid,
-                stateid=c.stateid,
-                cityid=c.cityid,
-                phone=c.phone,
-                email=c.email,
-                portfolio_website=c.portfolio_website,
-                address=c.address,
-                about_me=c.about_me,
-                education=c.education,
-                experience=c.experience,
-                skillids=c.skillids,
-                linkedin=c.linkedin,
-                facebook=c.facebook,
-                UserId=c.UserId,
-                image = c.image != null ? Convert.ToBase64String(c.image) : null,
-                resume = c.resume != null ? Convert.ToBase64String(c.resume) : null
+            {   
+                    id=c.id,
+                    first_name = c.first_name,
+                    last_name=c.last_name,
+                    surname=c.surname,
+                    dob=c.dob,
+                    gender=c.gender,
+                    countryid=c.countryid,
+                    stateid=c.stateid,
+                    cityid=c.cityid,
+                    phone=c.phone,
+                    email=c.email,
+                    portfolio_website=c.portfolio_website,
+                    address=c.address,
+                    about_me=c.about_me,
+                    education=c.education,
+                    experience=c.experience,
+                    skillids=c.skillids,
+                    linkedin=c.linkedin,
+                    facebook=c.facebook,
+                    UserId=c.UserId,
+                    image = c.image != null ? Convert.ToBase64String(c.image) : null,
+                    resume = c.resume != null ? Convert.ToBase64String(c.resume) : null
             }).SingleOrDefault();
             
             if (candidate == null)
@@ -280,26 +281,27 @@ namespace DevHub.Controllers.API
         {
             var candidatelist = _context.candidate.ToList().Select(c => new CandidateDto
             {
-                first_name = c.first_name,
-                last_name = c.last_name,
-                surname = c.surname,
-                dob = c.dob,
-                gender = c.gender,
-                countryid = c.countryid,
-                stateid = c.stateid,
-                cityid = c.cityid,
-                phone = c.phone,
-                email = c.email,
-                portfolio_website = c.portfolio_website,
-                address = c.address,
-                about_me = c.about_me,
-                education = c.education,
-                experience = c.experience,
-                skillids = c.skillids,
-                linkedin = c.linkedin,
-                facebook = c.facebook,
-                UserId = c.UserId,
-                image = c.image != null ? Convert.ToBase64String(c.image) : null,
+                    id=c.id,
+                    first_name = c.first_name,
+                    last_name = c.last_name,
+                    surname = c.surname,
+                    dob = c.dob,
+                    gender = c.gender,
+                    countryid = c.countryid,
+                    stateid = c.stateid,
+                    cityid = c.cityid,
+                    phone = c.phone,
+                    email = c.email,
+                    portfolio_website = c.portfolio_website,
+                    address = c.address,
+                    about_me = c.about_me,
+                    education = c.education,
+                    experience = c.experience,
+                    skillids = c.skillids,
+                    linkedin = c.linkedin,
+                    facebook = c.facebook,
+                    UserId = c.UserId,
+                    image = c.image != null ? Convert.ToBase64String(c.image) : null,
             });
 
             var data = Mapper.Map<IEnumerable<CandidateDto>>(candidatelist);

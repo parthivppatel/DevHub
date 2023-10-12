@@ -8,6 +8,7 @@ namespace DevHub.Dtos
 {
     public class CandidateDto
     {
+        public int id { get; set; }
         public string image { get; set; }
 
         [Required]

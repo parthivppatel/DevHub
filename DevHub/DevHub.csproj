@@ -222,6 +222,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\API\CandidateController.cs" />
     <Compile Include="Controllers\API\CityController.cs" />
+    <Compile Include="Controllers\API\CompanyController.cs" />
     <Compile Include="Controllers\API\CountryController.cs" />
     <Compile Include="Controllers\API\RoleController.cs" />
     <Compile Include="Controllers\API\SkillsController.cs" />
@@ -231,6 +232,7 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Dtos\CandidateDto.cs" />
     <Compile Include="Dtos\CityDto.cs" />
+    <Compile Include="Dtos\CompanyDto.cs" />
     <Compile Include="Dtos\CountryDto.cs" />
     <Compile Include="Dtos\SkillsDto.cs" />
     <Compile Include="Dtos\StateDto.cs" />
@@ -292,6 +294,10 @@
     <Compile Include="Migrations\202310111404156_remove_proficiency_field.cs" />
     <Compile Include="Migrations\202310111404156_remove_proficiency_field.Designer.cs">
       <DependentUpon>202310111404156_remove_proficiency_field.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202310120633569_cascade_true_in_company.cs" />
+    <Compile Include="Migrations\202310120633569_cascade_true_in_company.Designer.cs">
+      <DependentUpon>202310120633569_cascade_true_in_company.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -429,6 +435,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202310111404156_remove_proficiency_field.resx">
       <DependentUpon>202310111404156_remove_proficiency_field.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202310120633569_cascade_true_in_company.resx">
+      <DependentUpon>202310120633569_cascade_true_in_company.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

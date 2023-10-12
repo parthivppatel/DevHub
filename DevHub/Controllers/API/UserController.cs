@@ -43,6 +43,8 @@ namespace DevHub.Controllers.API
         {
             var userManager = HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>();
             var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
+            var authenticationManager = HttpContext.Current.GetOwinContext().Authentication; // Get the AuthenticationManager
+
             if (identity != null)
             {
                 var userIdClaim = identity.FindFirst(ClaimTypes.NameIdentifier);
@@ -55,6 +57,7 @@ namespace DevHub.Controllers.API
                         var result = userManager.Delete(user);
                         if (result.Succeeded)
                         {
+                            authenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
                             return Ok("User deleted successfully.");
                         }
                         else

@@ -18,6 +18,8 @@ namespace DevHub.Controllers.API
         {
             _context = new ApplicationDbContext();
         }
+
+        [Authorize]
         public IHttpActionResult GetCities(int id)
         {
             var cities = _context.city.Where(c => c.stateid == id).ToList();

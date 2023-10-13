@@ -34,6 +34,7 @@ namespace DevHub.Controllers.API
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin,Candidate")]
         public IHttpActionResult PostCandidate()
         {
             var HttpCtx = HttpContext.Current.Request;
@@ -137,6 +138,7 @@ namespace DevHub.Controllers.API
         }
         
         [HttpPut]
+        [Authorize(Roles = "Admin,Candidate")]
         public IHttpActionResult UpdateCandidate(int id)
         {
             var  old_candidate = _context.candidate.SingleOrDefault(c => c.id == id);
@@ -242,7 +244,8 @@ namespace DevHub.Controllers.API
 
             return Ok("Candidate Updated Successfully");
         }
- 
+
+        [Authorize(Roles = "Admin,Candidate")]
         public IHttpActionResult GetCandidate(int id)
         {
             var candidate = _context.candidate.Where(c => c.id == id).AsEnumerable().Select(c => new CandidateDto
@@ -277,6 +280,8 @@ namespace DevHub.Controllers.API
             var data = Mapper.Map<CandidateDto>(candidate);
             return Ok(data);
         }
+        
+        [Authorize(Roles = "Admin,Company")]
         public IHttpActionResult GetCandidates()
         {
             var candidatelist = _context.candidate.ToList().Select(c => new CandidateDto

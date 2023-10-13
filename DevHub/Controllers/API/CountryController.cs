@@ -18,6 +18,8 @@ namespace DevHub.Controllers.API
         {
             _context = new ApplicationDbContext();
         }
+
+        [Authorize]
         public IEnumerable<CountryDto> GetCountries()
         {
             var countrieslist = _context.country.ToList().Select(Mapper.Map<CountryModel, CountryDto>);

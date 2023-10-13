@@ -36,6 +36,7 @@ namespace DevHub.Controllers.API
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin,Company")]
         public IHttpActionResult PostCompany()
         {
             var HttpCtx = HttpContext.Current.Request;
@@ -111,6 +112,7 @@ namespace DevHub.Controllers.API
         }
 
         [HttpPut]
+        [Authorize(Roles = "Admin,Company")]
         public IHttpActionResult UpdateCompany(int id)
         {
             var old_company = _context.company.SingleOrDefault(c => c.id == id);
@@ -183,6 +185,7 @@ namespace DevHub.Controllers.API
             return Ok("Company Updated Successfully");
         }
 
+        [Authorize(Roles = "Admin,Company")]
         public IHttpActionResult GetCompany(int id)
         {
             var company = _context.company.Where(c => c.id == id).AsEnumerable().Select(c => new CompanyDto
@@ -208,6 +211,8 @@ namespace DevHub.Controllers.API
             var data = Mapper.Map<CompanyDto>(company);
             return Ok(data);
         }
+        
+        [Authorize(Roles = "Admin")]
         public IHttpActionResult GetCompanies()
         {
             var companylist = _context.company.ToList().Select(c => new CompanyDto

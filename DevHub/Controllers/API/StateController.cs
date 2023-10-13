@@ -17,6 +17,8 @@ namespace DevHub.Controllers.API
         {
             _context = new ApplicationDbContext();
         }
+
+        [Authorize]
         public IHttpActionResult GetStates(int id)
         {
             var states = _context.state.Where(c => c.countryid == id).ToList();

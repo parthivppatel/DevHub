@@ -25,6 +25,7 @@ namespace DevHub.Controllers.API
         }
 
         // GET Skills
+        [Authorize(Roles = "Admin,Candidate")]
         public IEnumerable<SkillsDto> GetSkills()
         {
             var skillsList = _context.SkillsTable.ToList().Select(Mapper.Map<SkillsModel,SkillsDto>);

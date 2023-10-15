@@ -350,6 +350,19 @@ namespace DevHub.Controllers.API
 
             return BadRequest("You are Not Authorized, please Login!");
         }
+
+        //[Authorize(Roles = "Admin,Company")]
+        [Route("api/Candidate/GetCandidateJobs")]
+        [HttpGet]
+        public IHttpActionResult CanidateJobs(int id)
+        {
+            var candidateJobs = _context.candidate_job
+                         .Where(cj => cj.candidateid == id)
+                         .SelectMany(cj => _context.jobs.Where(j => j.id == cj.jobid))
+                         .ToList().Select(job => Mapper.Map<JobModel, JobDto>(job));
+            return Ok(candidateJobs);
+        }
+
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);

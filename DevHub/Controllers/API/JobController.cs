@@ -307,18 +307,5 @@ namespace DevHub.Controllers.API
 
             return Ok(joblist);
         }
-
-        //[Authorize(Roles = "Admin,Company")]
-        [Route("api/Job/GetCompanyJobs")]
-        [HttpGet]
-        public IHttpActionResult CompanyJobs(int id)
-        {
-            var companyJobs = _context.company_job
-                         .Where(jm => jm.companyid == id)
-                         .SelectMany(jm => _context.jobs.Where(j => j.id == jm.jobid))
-                         .ToList().Select(job => Mapper.Map<JobModel, JobDto>(job));
-            return Ok(companyJobs);
-        }
-
     }
 }

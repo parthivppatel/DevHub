@@ -224,6 +224,7 @@
     <Compile Include="Controllers\API\CityController.cs" />
     <Compile Include="Controllers\API\CompanyController.cs" />
     <Compile Include="Controllers\API\CountryController.cs" />
+    <Compile Include="Controllers\API\JobController.cs" />
     <Compile Include="Controllers\API\RoleController.cs" />
     <Compile Include="Controllers\API\SkillsController.cs" />
     <Compile Include="Controllers\API\StateController.cs" />
@@ -231,9 +232,15 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Dtos\CandidateDto.cs" />
+    <Compile Include="Dtos\CandidateJobDto.cs" />
     <Compile Include="Dtos\CityDto.cs" />
     <Compile Include="Dtos\CompanyDto.cs" />
+    <Compile Include="Dtos\CompanyJobDto.cs" />
     <Compile Include="Dtos\CountryDto.cs" />
+    <Compile Include="Dtos\JobCategoryDto.cs" />
+    <Compile Include="Dtos\JobDto.cs" />
+    <Compile Include="Dtos\JobModeDto.cs" />
+    <Compile Include="Dtos\JobTypeDto.cs" />
     <Compile Include="Dtos\SkillsDto.cs" />
     <Compile Include="Dtos\StateDto.cs" />
     <Compile Include="Global.asax.cs">
@@ -299,8 +306,21 @@
     <Compile Include="Migrations\202310120633569_cascade_true_in_company.Designer.cs">
       <DependentUpon>202310120633569_cascade_true_in_company.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202310151047311_change_datetime_of_jobs.cs" />
+    <Compile Include="Migrations\202310151047311_change_datetime_of_jobs.Designer.cs">
+      <DependentUpon>202310151047311_change_datetime_of_jobs.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202310151059592_candidate_job_table.cs" />
+    <Compile Include="Migrations\202310151059592_candidate_job_table.Designer.cs">
+      <DependentUpon>202310151059592_candidate_job_table.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202310151119436_remove_created_at_from_companyjob_table.cs" />
+    <Compile Include="Migrations\202310151119436_remove_created_at_from_companyjob_table.Designer.cs">
+      <DependentUpon>202310151119436_remove_created_at_from_companyjob_table.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\CandidateJobMapper.cs" />
     <Compile Include="Models\CandidateModel.cs" />
     <Compile Include="Models\CityModel.cs" />
     <Compile Include="Models\CompanyJobMapper.cs" />
@@ -438,6 +458,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202310120633569_cascade_true_in_company.resx">
       <DependentUpon>202310120633569_cascade_true_in_company.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202310151047311_change_datetime_of_jobs.resx">
+      <DependentUpon>202310151047311_change_datetime_of_jobs.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202310151059592_candidate_job_table.resx">
+      <DependentUpon>202310151059592_candidate_job_table.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202310151119436_remove_created_at_from_companyjob_table.resx">
+      <DependentUpon>202310151119436_remove_created_at_from_companyjob_table.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

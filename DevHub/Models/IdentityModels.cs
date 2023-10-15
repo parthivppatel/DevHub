@@ -31,6 +31,7 @@ namespace DevHub.Models
         public DbSet<JobModel> jobs { get; set; }
         public DbSet<CompanyModel> company { get; set; }
         public DbSet<CompanyJobMapper> company_job { get; set; }
+        public DbSet<CandidateJobMapper> candidate_job { get; set; }
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {

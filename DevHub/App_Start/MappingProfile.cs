@@ -18,7 +18,12 @@ namespace DevHub.App_Start
             Mapper.CreateMap<StateDto, StateModel>().ReverseMap();
             Mapper.CreateMap<CityDto, CityModel>().ReverseMap();
             Mapper.CreateMap<CandidateDto, CandidateModel>().ReverseMap();
-            Mapper.CreateMap<CompanyDto, CompanyModel>().ReverseMap();
+            Mapper.CreateMap<JobModeDto, JobModeModel>().ReverseMap();
+            Mapper.CreateMap<JobTypeDto, JobTypeModel>().ReverseMap();
+            Mapper.CreateMap<JobCategoryDto, JobCategoryModel>().ReverseMap();
+            Mapper.CreateMap<JobDto, JobModel>().ReverseMap();
+            Mapper.CreateMap<CompanyJobDto, CompanyJobMapper>().ReverseMap();
+            Mapper.CreateMap<CandidateJobDto, CandidateJobMapper>().ReverseMap();
         }
     }
 }

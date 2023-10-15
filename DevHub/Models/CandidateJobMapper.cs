@@ -6,15 +6,16 @@ using System.Web;
 
 namespace DevHub.Models
 {
-    [Table(name: "company_job_mapper")]
-    public class CompanyJobMapper
+    [Table(name: "candidate_job_mapper")]
+    public class CandidateJobMapper
     {
         public int id { get; set; }
-        public int companyid { get; set; }
-        public CompanyModel company { get; set; }
+        public int candidateid { get; set; }
+        public CandidateModel candidate { get; set; }
 
         public int jobid { get; set; }
         public JobModel job { get; set; }
 
+        public DateTime created_at { get; set; }
     }
 }

@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Claims;
 using System.Web;
 using System.Web.Http;
 
@@ -280,37 +281,74 @@ namespace DevHub.Controllers.API
             var data = Mapper.Map<CandidateDto>(candidate);
             return Ok(data);
         }
-        
+
         //[Authorize(Roles = "Admin,Company")]
         public IHttpActionResult GetCandidates()
         {
             var candidatelist = _context.candidate.ToList().Select(c => new CandidateDto
             {
-                    id=c.id,
-                    first_name = c.first_name,
-                    last_name = c.last_name,
-                    surname = c.surname,
-                    dob = c.dob,
-                    gender = c.gender,
-                    countryid = c.countryid,
-                    stateid = c.stateid,
-                    cityid = c.cityid,
-                    phone = c.phone,
-                    email = c.email,
-                    portfolio_website = c.portfolio_website,
-                    address = c.address,
-                    about_me = c.about_me,
-                    education = c.education,
-                    experience = c.experience,
-                    skillids = c.skillids,
-                    linkedin = c.linkedin,
-                    facebook = c.facebook,
-                    UserId = c.UserId,
-                    image = c.image != null ? Convert.ToBase64String(c.image) : null,
+                id = c.id,
+                first_name = c.first_name,
+                last_name = c.last_name,
+                surname = c.surname,
+                dob = c.dob,
+                gender = c.gender,
+                countryid = c.countryid,
+                stateid = c.stateid,
+                cityid = c.cityid,
+                phone = c.phone,
+                email = c.email,
+                portfolio_website = c.portfolio_website,
+                address = c.address,
+                about_me = c.about_me,
+                education = c.education,
+                experience = c.experience,
+                skillids = c.skillids,
+                linkedin = c.linkedin,
+                facebook = c.facebook,
+                UserId = c.UserId,
+                image = c.image != null ? Convert.ToBase64String(c.image) : null,
             });
-
             var data = Mapper.Map<IEnumerable<CandidateDto>>(candidatelist);
             return Ok(data);
+        }
+        
+        //[Authorize(Roles = "Admin,Company")]
+        [Route("api/Candidate/ApplyJob")]
+        public IHttpActionResult ApplyJob(int id)
+        {
+            var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
+
+            if (identity != null) {
+                var userIdClaim = identity.FindFirst(ClaimTypes.NameIdentifier);
+                if (userIdClaim != null)
+                {
+                    var userId = userIdClaim.Value;
+                    var check_job_exist = _context.jobs.SingleOrDefault(c => c.id == id);
+                    if (check_job_exist == null)
+                        return BadRequest("Job Not Found");
+
+                    var candidate_id = _context.candidate.SingleOrDefault(c => c.UserId == userId).id;
+                    var check_job_same_candidate = _context.candidate_job.Where(c => c.jobid == id && c.candidateid == candidate_id).SingleOrDefault(c => c.jobid == id);
+                    if (check_job_same_candidate != null)
+                        return BadRequest("You are already applied for this job");
+
+                    var candidate_job = new CandidateJobDto
+                    {
+                        candidateid =candidate_id,
+                        jobid=id
+                    };
+
+                    var Candidatejob = Mapper.Map<CandidateJobDto, CandidateJobMapper>(candidate_job);
+                    Candidatejob.created_at = DateTime.Now;
+                    _context.candidate_job.Add(Candidatejob);
+                    _context.SaveChanges();
+
+                    return Ok("Job Applied Successfully");
+                }
+            }
+
+            return BadRequest("You are Not Authorized, please Login!");
         }
         protected override void Dispose(bool disposing)
         {

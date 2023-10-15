@@ -256,28 +256,42 @@ namespace DevHub.Controllers.API
         //[Authorize(Roles = "Admin,Candidate")]
         public IHttpActionResult GetJob(int id)
         {
-            var job = _context.jobs.Where(c => c.id == id).AsEnumerable().Select(c => new JobDto
-            {
-                id = c.id,
-                title=c.title,
-                min_salary=c.min_salary,
-                max_salary=c.max_salary,
-                qualification=c.qualification,
-                responsibilities=c.responsibilities,
-                experience=c.experience,
-                email=c.email,
-                phone=c.phone,
-                gender=c.gender,
-                description=c.description,
-                job_typeid=c.job_typeid,
-                job_categoryids=c.job_categoryids,
-                modeids=c.modeids,
-                countryid=c.countryid,
-                stateid=c.stateid,
-                cityid=c.cityid,
-                skillids=c.skillids,
-                document = c.document != null ? Convert.ToBase64String(c.document) : null,
-            }).SingleOrDefault();
+            var job = _context.jobs
+            .Where(j => j.id == id)
+             .AsEnumerable()
+            .Join(_context.company_job,
+                  j => j.id,
+                  cj => cj.jobid,
+                  (j, cj) => new { Job = j, CompanyJobMapper = cj })
+            .Join(_context.company,
+                  temp => temp.CompanyJobMapper.companyid,
+                  c => c.id,
+                  (temp, c) => new JobDto
+                  {
+                      id = temp.Job.id,
+                      title = temp.Job.title,
+                      min_salary = temp.Job.min_salary,
+                      max_salary = temp.Job.max_salary,
+                      qualification = temp.Job.qualification,
+                      responsibilities = temp.Job.responsibilities,
+                      experience = temp.Job.experience,
+                      email = temp.Job.email,
+                      phone = temp.Job.phone,
+                      gender = temp.Job.gender,
+                      description = temp.Job.description,
+                      job_typeid = temp.Job.job_typeid,
+                      job_categoryids = temp.Job.job_categoryids,
+                      modeids = temp.Job.modeids,
+                      countryid = temp.Job.countryid,
+                      stateid = temp.Job.stateid,
+                      cityid = temp.Job.cityid,
+                      skillids = temp.Job.skillids,
+                      company_name = c.name,
+                      company_address = c.address,
+                      document = temp.Job.document != null ? Convert.ToBase64String(temp.Job.document) : null,
+
+                  }).Select(j => Mapper.Map<JobDto>(j))
+            .FirstOrDefault();
 
             if (job == null)
                 return BadRequest("Job Not Found");

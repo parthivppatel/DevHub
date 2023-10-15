@@ -17,7 +17,8 @@ namespace DevHub.Dtos
         public string qualification { get; set; }
         public string responsibilities { get; set; }
         public string experience { get; set; }
-
+        public string company_name { get; set; }
+        public string company_address { get; set; }
         public int company_id {get; set;}
 
         [StringLength(100)]

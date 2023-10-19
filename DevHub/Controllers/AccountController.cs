@@ -159,13 +159,13 @@ namespace DevHub.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(UserwithRole model)
         {
+            var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(_context));
             if (ModelState.IsValid)
             {
                 var user = new ApplicationUser { UserName = model.registerViewModel.Email, Email = model.registerViewModel.Email };
                 var result = await UserManager.CreateAsync(user, model.registerViewModel.Password);
                 if (result.Succeeded)
                 {
-                    var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(_context));
                     var role = await roleManager.FindByIdAsync(model.registerViewModel.RoleId.ToString());
                     await UserManager.AddToRoleAsync(user.Id, role.Name);
                     await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
@@ -177,9 +177,21 @@ namespace DevHub.Controllers
 
                     return RedirectToAction("Index", "Home");
                 }
-                AddErrors(result);
+                else
+                {
+                    var r_error = "";
+                    foreach (var error in result.Errors)
+                    {
+                       r_error = "";
+                       r_error = error;                 
+                    }
+                    ModelState.AddModelError("",r_error);
+                }
+                //AddErrors(result);
             }
 
+            model.registerViewModel = model.registerViewModel;
+            model.Role = roleManager.Roles.Where(r => r.Name != "Admin").ToList();
             // If we got this far, something failed, redisplay form
             return View(model);
         }

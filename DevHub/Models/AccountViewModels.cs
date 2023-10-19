@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.AspNet.Identity.EntityFramework;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace DevHub.Models
@@ -79,6 +80,16 @@ namespace DevHub.Models
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+        public int RoleId { get; set; }
+        public IdentityRole Role { get; set; }
+    }
+
+    public class UserwithRole
+    {
+        public RegisterViewModel registerViewModel { get; set; }
+
+        public List<IdentityRole> Role { get; set; }
     }
 
     public class ResetPasswordViewModel

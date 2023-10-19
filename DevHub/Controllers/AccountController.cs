@@ -9,6 +9,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using DevHub.Models;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace DevHub.Controllers
 {
@@ -17,9 +18,11 @@ namespace DevHub.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private ApplicationDbContext _context;
 
         public AccountController()
         {
+            _context = new ApplicationDbContext();
         }
 
         public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
@@ -139,7 +142,14 @@ namespace DevHub.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
-            return View();
+            var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(_context));
+            UserwithRole role_data = new UserwithRole
+            {
+                registerViewModel = new RegisterViewModel(),
+                Role = roleManager.Roles.Where(r => r.Name!="Admin").ToList()
+            };
+
+            return View(role_data);
         }
 
         //
@@ -147,15 +157,17 @@ namespace DevHub.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Register(RegisterViewModel model)
+        public async Task<ActionResult> Register(UserwithRole model)
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
-                var result = await UserManager.CreateAsync(user, model.Password);
+                var user = new ApplicationUser { UserName = model.registerViewModel.Email, Email = model.registerViewModel.Email };
+                var result = await UserManager.CreateAsync(user, model.registerViewModel.Password);
                 if (result.Succeeded)
                 {
-                    await UserManager.AddToRoleAsync(user.Id, "Candidate");//static for now
+                    var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(_context));
+                    var role = await roleManager.FindByIdAsync(model.registerViewModel.RoleId.ToString());
+                    await UserManager.AddToRoleAsync(user.Id, role.Name);
                     await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
                     // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link

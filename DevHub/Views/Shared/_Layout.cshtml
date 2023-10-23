@@ -22,14 +22,14 @@
                         <span class="lni-menu"></span>
                         <span class="lni-menu"></span>
                     </button>
-                    <a href="index.html" class="navbar-brand"><img src="@Url.Content("~/Content/img/logo.png")" alt=""></a>
+                    <a href="@Url.Action("Index", "Home")">
+                        <img src="@Url.Content("~/Content/img/logo.png")" alt="YourAltText" class="mt-2" />
+                    </a>
                 </div>
                 <div class="collapse navbar-collapse" id="main-navbar">
                     <ul class="navbar-nav mr-auto w-100 justify-content-end">
                         <li class="nav-item active">
-                            <a class="nav-link" href="index.html">
-                                Home
-                            </a>
+                            @Html.ActionLink("Home", "Index", "Home", routeValues: null, htmlAttributes: new { @class = "nav-link" })
                         </li>
                         @*<li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -52,8 +52,8 @@
                                     Candidates
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="browse_jobs.html">Browse Jobs</a></li>
-                                    <li><a class="dropdown-item" href="resume.html">Resume</a></li>
+                                    @Html.ActionLink("Browse Jobs", "Jobs", "Candidate", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
+                                    @Html.ActionLink("Resume", "Resume", "Candidate", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
                                 </ul>
                             </li>
                         }
@@ -64,9 +64,9 @@
                                     Employers
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="post-job.html">Add Job</a></li>
-                                    <li><a class="dropdown-item" href="manage-jobs.html">Manage Jobs</a></li>
-                                    <li><a class="dropdown-item" href="manage-applications.html">Manage Applications</a></li>
+                                    @Html.ActionLink("Add Job", "PostJob", "Company", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
+                                    @Html.ActionLink("Manage Jobs", "ManageJobs", "Company", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
+                                    @Html.ActionLink("Manage Applications", "ManageApplications", "Company", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
                                 </ul>
                             </li>
                         }
@@ -77,8 +77,8 @@
                                     Candidates
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="browse_jobs.html">Browse Jobs</a></li>
-                                    <li><a class="dropdown-item" href="resume.html">Resume</a></li>
+                                    @Html.ActionLink("Browse Jobs", "Jobs", "Candidate", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
+                                    @Html.ActionLink("Resume", "Resume", "Candidate", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
                                 </ul>
                             </li>
                             <li class="nav-item dropdown">
@@ -86,24 +86,20 @@
                                     Employers
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="post-job.html">Add Job</a></li>
-                                    <li><a class="dropdown-item" href="manage-jobs.html">Manage Jobs</a></li>
-                                    <li><a class="dropdown-item" href="manage-applications.html">Manage Applications</a></li>
+                                    @Html.ActionLink("Add Job", "PostJob", "Company", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
+                                    @Html.ActionLink("Manage Jobs", "ManageJobs", "Company", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
+                                    @Html.ActionLink("Manage Applications", "ManageApplications", "Company", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
                                 </ul>
                             </li>
 
                         }
 
-                        <li class="nav-item">
-                            <a class="nav-link" href="contact.html">
-                                Contact Us
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="about.html">
-                                About Us
-                            </a>
-                        </li>
+                    <li class="nav-item">
+                        @Html.ActionLink("Contact Us", "Contact", "Home", routeValues: null, htmlAttributes: new { @class = "nav-link" })
+                    </li>
+                    <li class="nav-item">
+                        @Html.ActionLink("About Us", "About", "Home", routeValues: null, htmlAttributes: new { @class = "nav-link" })
+                    </li>
                         @if (Request.IsAuthenticated)
                         {
                             using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
@@ -122,12 +118,9 @@
                         @if (User.IsInRole("Admin") || User.IsInRole("Company"))
                         {
                             <li class="button-group">
-                                <a href="post-job.html" class="button btn btn-common">Post a Job</a>
+                                @Html.ActionLink("Post a Job", "PostJob", "Company", routeValues: null, htmlAttributes: new { @class = "button btn btn-common" })
                             </li>
                         }
-
-
-
                     </ul>
                 </div>
             </div>

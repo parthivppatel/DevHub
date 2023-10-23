@@ -58,6 +58,7 @@ namespace DevHub.Models
         public string about_me { get; set; } // overview as template
         public string education { get; set; } //json 
         public string experience { get; set; } //json
+        //[DataType(DataType.MultilineText)]
         public string skillids { get; set; } //json
         public string linkedin { get; set; }
         public string facebook { get; set; }

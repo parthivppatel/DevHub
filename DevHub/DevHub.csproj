@@ -321,6 +321,10 @@
     <Compile Include="Migrations\202310151119436_remove_created_at_from_companyjob_table.Designer.cs">
       <DependentUpon>202310151119436_remove_created_at_from_companyjob_table.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202310282317325_add_title_in_candidate_table.cs" />
+    <Compile Include="Migrations\202310282317325_add_title_in_candidate_table.Designer.cs">
+      <DependentUpon>202310282317325_add_title_in_candidate_table.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CandidateJobMapper.cs" />
@@ -544,7 +548,6 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
-    <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
     <Content Include="Views\Account\ConfirmEmail.cshtml" />
     <Content Include="Views\Account\ExternalLoginConfirmation.cshtml" />
@@ -566,12 +569,13 @@
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Scripts\js\.DS_Store" />
-    <Content Include="Views\Home\Browse_jobs.cshtml" />
     <Content Include="Views\Candidate\Jobs.cshtml" />
     <Content Include="Views\Candidate\Resume.cshtml" />
     <Content Include="Views\Company\PostJob.cshtml" />
     <Content Include="Views\Company\ManageJobs.cshtml" />
     <Content Include="Views\Company\ManageApplications.cshtml" />
+    <Content Include="Views\Candidate\Add_Resume.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
@@ -641,6 +645,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202310151119436_remove_created_at_from_companyjob_table.resx">
       <DependentUpon>202310151119436_remove_created_at_from_companyjob_table.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202310282317325_add_title_in_candidate_table.resx">
+      <DependentUpon>202310282317325_add_title_in_candidate_table.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

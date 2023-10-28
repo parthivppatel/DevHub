@@ -1,0 +1,403 @@
+﻿
+@{
+    ViewBag.Title = "Add_Resume";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="keywords" content="Bootstrap, Landing page, Template, Registration, Landing">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="author" content="UIdeck">
+    <title>JobX - Bootstrap HTML5 Job Portal Template</title>
+    @Styles.Render("~/Content/css")
+
+</head>
+
+<body>
+    <!-- Page Header Start -->
+    <div class="page-header">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="inner-header">
+                        <h3>Create Resume</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Page Header End -->
+    <!-- Content section Start -->
+    <section id="content">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-9 col-md-12 col-xs-12">
+                    <div class="add-resume box">
+                        <form class="form-ad">
+                            <h3>Basic information</h3>
+                            <div class="border rounded p-4">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <label class="control-label">First Name</label>
+                                            <input type="text" class="form-control" placeholder="First Name">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="control-label">Middle Name</label>
+                                            <input type="text" class="form-control" placeholder="Middle Name">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="control-label">Surname</label>
+                                            <input type="text" class="form-control" placeholder="Surname">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label">Profession Title</label>
+                                    <input type="text" class="form-control" placeholder="Headline (e.g. Front-end developer)">
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label class="control-label">Date Of Birth</label>
+                                            <input type="date" class="form-control">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="control-label">Gender</label>
+                                            <select class="form-control">
+                                                <option data-display="General">Select Gender</option>
+                                                <option value="M">Male</option>
+                                                <option value="F">Female</option>
+                                                <option value="O">Other</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <h3 class="mt-5">Contact information</h3>
+                            <div class="border rounded p-4">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <label class="control-label">Country</label>
+                                            <select class="form-control" id="country">
+                                                <option data-display="General">Select Country</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="control-label">State</label>
+                                            <select class="form-control" id="state">
+                                                <option data-display="General">Select State</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="control-label">City</label>
+                                            <select class="form-control" id="city">
+                                                <option data-display="General">Select City</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <label class="control-label">Phone</label>
+                                            <input type="text" class="form-control" placeholder="(e.g 7959650045)">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="control-label">Email</label>
+                                            <input type="text" class="form-control" placeholder="(e.g abc@gmail.com)">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="control-label">Website</label>
+                                            <input type="text" class="form-control" placeholder="(e.g www.google.com)">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">Address</label>
+                                    <textarea class="form-control" rows="4"></textarea>
+                                </div>
+                            </div>
+
+                            <h3 class="mt-5">Education</h3>
+                            <div id="education">
+                                <div class="border rounded p-4">
+                                    <div class="form-group">
+                                        <label class="control-label">Degree</label>
+                                        <input type="text" class="form-control" placeholder="Degree, e.g. Bachelor">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Field of Study</label>
+                                        <input type="text" class="form-control" placeholder="Major, e.g Computer Science">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">School</label>
+                                        <input type="text" class="form-control" placeholder="School name, e.g. Massachusetts Institute of Technology">
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label class="control-label">From</label>
+                                                <input type="date" class="form-control" placeholder="e.g 2014">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="control-label">To</label>
+                                                <input type="date" class="form-control" placeholder="e.g 2020">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Description</label>
+                                        <textarea class="form-control" rows="4"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-end mt-2">
+                                <button class="btn add-edu-btn custom">Add Education</button>
+                            </div>
+
+                            <h3 class="mt-5">Work Experience</h3>
+                            <div id="experience">
+                                <div class="border rounded p-4" ">
+                                    <div class="form-group">
+                                        <label class="control-label">Company Name</label>
+                                        <input type="text" class="form-control" placeholder="Company name">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Title</label>
+                                        <input type="text" class="form-control" placeholder="e.g UI/UX Researcher">
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label class="control-label">Date Form</label>
+                                                <input type="date" class="form-control" placeholder="e.g 2014">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="control-label">Date To</label>
+                                                <input type="date" class="form-control" placeholder="e.g 2020">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Description</label>
+                                        <textarea class="form-control" rows="4"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-end mt-2">
+                                <button class="btn custom add-exp-btn">Add Experience</button>
+                            </div>
+                            <h3 class="mt-5">Skills</h3>
+                            <div class="border rounded p-4" id="skill">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-5">
+                                            <label class="control-label">Skill Name</label>
+                                            <input class="form-control" placeholder="Skill name, e.g. HTML" type="text">
+                                        </div>
+                                        <div class="col-md-5">
+                                            <label class="control-label">% (1-100)</label>
+                                            <input class="form-control" placeholder="Skill proficiency, e.g. 90" type="number" min="1" max="100">
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-end mt-2">
+                                <button class="btn custom add-skill-btn">Add Skill</button>
+                            </div>
+
+                            <div class="d-flex justify-content-center">
+                                <input href="resume.html" class="btn custom btn-common mt-4" type="submit" value="Save">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Content section End -->
+    <!-- Go To Top Link -->
+    <a href="#" class="back-to-top">
+        <i class="lni-arrow-up"></i>
+    </a>
+
+    <!-- Preloader -->
+    <div id="preloader">
+        <div class="loader" id="loader-1"></div>
+    </div>
+    <!-- End Preloader -->
+    <style>
+        .custom {
+            text-transform: none !important;
+            padding: 0.5rem !important;
+            background: #00BCD4 !important;
+        }
+
+        .custom-del {
+            text-transform: none !important;
+            padding: 0.5rem !important;
+        }
+    </style>
+
+
+    @section scripts {
+        <script>
+
+            $(document).ready(function () {
+                $.ajax({
+                    type: "GET",
+                    url: "/api/Country",
+                    success: function (response) {
+                        response.forEach(item => {
+                            $('#country').append("<option value=" + item.id + ">" + item.name + "</option >");
+                        });
+                    }
+                });
+
+                $('#country').change(function () {
+                    $('#state').html("<option>Select State</option >");
+                    $('#city').html("<option>Select City</option >");
+                    let country_id = $(this).val();
+                    $.ajax({
+                        type: "GET",
+                        url: "/api/State?id=" + country_id,
+                        success: function (response) {
+                            response.forEach(item => {
+                                $('#state').append("<option value=" + item.id + ">" + item.statename + "</option >");
+                            });
+                        }
+                    });
+                });
+
+                $('#state').change(function () {
+                    $('#city').html("<option>Select City</option >");
+                    let state_id = $(this).val();
+                    $.ajax({
+                        type: "GET",
+                        url: "/api/City?id=" + state_id,
+                        success: function (response) {
+                            response.forEach(item => {
+                                $('#city').append("<option value=" + item.id + ">" + item.cityname + "</option >");
+                            });
+                        }
+                    });
+                });
+
+
+                $('.add-edu-btn').click(function (event) {
+                    event.preventDefault();
+                    $('#education').append(`
+                            <div class="border rounded p-4 mt-3">
+                                   <div class= "form-group">
+                                       <label class="control-label">Degree</label>
+                                       <input type="text" class="form-control" placeholder="Degree, e.g. Bachelor">
+                                   </div>
+                                   <div class="form-group">
+                                       <label class="control-label">Field of Study</label>
+                                       <input type="text" class="form-control" placeholder="Major, e.g Computer Science">
+                                   </div>
+                                   <div class="form-group">
+                                       <label class="control-label">School</label>
+                                       <input type="text" class="form-control" placeholder="School name, e.g. Massachusetts Institute of Technology">
+                                   </div>
+                                   <div class="form-group">
+                                       <div class="row">
+                                           <div class="col-md-6">
+                                               <label class="control-label">From</label>
+                                               <input type="date" class="form-control" placeholder="e.g 2014">
+                                           </div>
+                                           <div class="col-md-6">
+                                               <label class="control-label">To</label>
+                                               <input type="date" class="form-control" placeholder="e.g 2020">
+                                           </div>
+                                       </div>
+                                   </div>
+                                   <div class="form-group">
+                                       <label class="control-label">Description</label>
+                                       <textarea class="form-control" rows="4"></textarea>
+                                   </div>
+
+                                 <div class="d-flex justify-content-end">
+                                       <button class="btn btn-danger custom-del delete-edu-btn">Delete</button>
+                                 </div>
+                            </div>
+                           `);
+                });
+
+                $('.add-exp-btn').click(function (event) {
+                    event.preventDefault();
+                    $('#experience').append(`
+                             <div class="border rounded p-4 mt-3">
+                                   <div class="form-group">
+                                       <label class="control-label">Company Name</label>
+                                       <input type="text" class="form-control" placeholder="Company name">
+                                   </div>
+                                   <div class="form-group">
+                                       <label class="control-label">Title</label>
+                                       <input type="text" class="form-control" placeholder="e.g UI/UX Researcher">
+                                   </div>
+                                   <div class="form-group">
+                                       <div class="row">
+                                           <div class="col-md-6">
+                                               <label class="control-label">Date Form</label>
+                                               <input type="date" class="form-control" placeholder="e.g 2014">
+                                           </div>
+                                           <div class="col-md-6">
+                                               <label class="control-label">Date To</label>
+                                               <input type="date" class="form-control" placeholder="e.g 2020">
+                                           </div>
+                                       </div>
+                                   </div>
+                                   <div class="form-group">
+                                       <label class="control-label">Description</label>
+                                       <textarea class="form-control" rows="4"></textarea>
+                                   </div>
+                                   <div class="d-flex justify-content-end">
+                                      <button class="btn btn-danger custom-del delete-edu-btn">Delete</button>
+                                  </div>
+                             </div>
+                             `);
+
+                })
+                $(document).on('click', '.delete-edu-btn', function (e) {
+                    e.preventDefault();
+                    $(this).parent().parent().remove();
+                });
+
+                $('.add-skill-btn').click(function (event) {
+                    event.preventDefault();
+                    $('#skill').append(`
+                             <div class="form-group mt-2">
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <label class="control-label">Skill Name</label>
+                                        <input class="form-control" placeholder="Skill name, e.g. HTML" type="text">
+                                    </div>
+                                    <div class="col-md-5">
+                                            <label class="control-label">% (1-100)</label>
+                                            <input class="form-control" placeholder="Skill proficiency, e.g. 90" type="number" min="1" max="100">
+                                    </div>
+                                     <div class="col-md-2">
+                                        <button class="btn btn-danger delete-edu-btn custom-del mt-4">Delete</button>
+                                    </div>
+                                </div>
+                            </div>
+                            `);
+                });
+            });
+
+        </script>
+
+    }
+
+
+</body>
+</html>

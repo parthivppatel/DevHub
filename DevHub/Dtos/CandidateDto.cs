@@ -23,6 +23,10 @@ namespace DevHub.Dtos
         public string surname { get; set; }
 
         [Required]
+        [StringLength(50)]
+        public string title { get; set; }
+
+        [Required]
         [StringLength(20)]
         public string dob { get; set; }
 

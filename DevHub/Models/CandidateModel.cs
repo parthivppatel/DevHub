@@ -29,6 +29,10 @@ namespace DevHub.Models
         public string dob { get; set; }
 
         [Required]
+        [StringLength(50)]
+        public string title { get; set; }
+
+        [Required]
         [StringLength(1)]
         public string gender { get; set; }
 

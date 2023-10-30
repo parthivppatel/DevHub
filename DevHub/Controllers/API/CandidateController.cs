@@ -35,10 +35,12 @@ namespace DevHub.Controllers.API
         }
 
         [HttpPost]
-        //[Authorize(Roles = "Admin,Candidate")]
+        [Authorize(Roles = "Admin,Candidate")]
         public IHttpActionResult PostCandidate()
         {
             var HttpCtx = HttpContext.Current.Request;
+            var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
+            var userId = identity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             CandidateDto candidateDto=null;
             HttpPostedFile image = null;
             HttpPostedFile resume = null;
@@ -66,6 +68,7 @@ namespace DevHub.Controllers.API
             if (candidateDto == null)
                 return BadRequest("Request is Invalid");
 
+            candidateDto.UserId = userId;
             var candidate=Mapper.Map<CandidateDto, CandidateModel>(candidateDto);
             var check_candidate_exist = _context.candidate.SingleOrDefault(c => c.UserId == candidate.UserId);
             if (check_candidate_exist != null)
@@ -246,10 +249,13 @@ namespace DevHub.Controllers.API
             return Ok("Candidate Updated Successfully");
         }
 
-        //[Authorize(Roles = "Admin,Candidate")]
-        public IHttpActionResult GetCandidate(int id)
+        [Authorize(Roles = "Admin,Candidate")]
+        [Route("api/Candidate/CandidateDetails")]
+        public IHttpActionResult GetCandidate()
         {
-            var candidate = _context.candidate.Where(c => c.id == id).AsEnumerable().Select(c => new CandidateDto
+            var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
+            var userId = identity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var candidate = _context.candidate.Where(c => c.UserId == userId).AsEnumerable().Select(c => new CandidateDto
             {   
                     id=c.id,
                     first_name = c.first_name,
@@ -271,6 +277,7 @@ namespace DevHub.Controllers.API
                     linkedin=c.linkedin,
                     facebook=c.facebook,
                     UserId=c.UserId,
+                    title=c.title,
                     image = c.image != null ? Convert.ToBase64String(c.image) : null,
                     resume = c.resume != null ? Convert.ToBase64String(c.resume) : null
             }).SingleOrDefault();
@@ -307,6 +314,7 @@ namespace DevHub.Controllers.API
                 linkedin = c.linkedin,
                 facebook = c.facebook,
                 UserId = c.UserId,
+                title=c.title,
                 image = c.image != null ? Convert.ToBase64String(c.image) : null,
             });
             var data = Mapper.Map<IEnumerable<CandidateDto>>(candidatelist);

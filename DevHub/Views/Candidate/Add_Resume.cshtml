@@ -13,6 +13,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <meta name="author" content="UIdeck">
     <title>JobX - Bootstrap HTML5 Job Portal Template</title>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     @Styles.Render("~/Content/css")
 
 </head>
@@ -37,40 +38,40 @@
             <div class="row justify-content-center">
                 <div class="col-lg-9 col-md-12 col-xs-12">
                     <div class="add-resume box">
-                        <form class="form-ad">
+                        <form class="form-ad" id="candidate-form" enctype="multipart/form-data">
                             <h3>Basic information</h3>
                             <div class="border rounded p-4">
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-md-4">
                                             <label class="control-label">First Name</label>
-                                            <input type="text" class="form-control" placeholder="First Name">
+                                            <input type="text" class="form-control" name="first_name" placeholder="First Name">
                                         </div>
                                         <div class="col-md-4">
                                             <label class="control-label">Middle Name</label>
-                                            <input type="text" class="form-control" placeholder="Middle Name">
+                                            <input type="text" class="form-control" name="surname" placeholder="Middle Name">
                                         </div>
                                         <div class="col-md-4">
                                             <label class="control-label">Surname</label>
-                                            <input type="text" class="form-control" placeholder="Surname">
+                                            <input type="text" class="form-control" name="last_name" placeholder="Last Name">
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="form-group">
                                     <label class="control-label">Profession Title</label>
-                                    <input type="text" class="form-control" placeholder="Headline (e.g. Front-end developer)">
+                                    <input type="text" class="form-control" name="title" placeholder="Headline (e.g. Front-end developer)">
                                 </div>
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-md-6">
                                             <label class="control-label">Date Of Birth</label>
-                                            <input type="date" class="form-control">
+                                            <input type="date" name="dob" class="form-control">
                                         </div>
                                         <div class="col-md-6">
                                             <label class="control-label">Gender</label>
-                                            <select class="form-control">
-                                                <option data-display="General">Select Gender</option>
+                                            <select class="form-control" name="gender" required>
+                                                <option data-display="General" selected value="">Select Gender</option>
                                                 <option value="M">Male</option>
                                                 <option value="F">Female</option>
                                                 <option value="O">Other</option>
@@ -78,27 +79,38 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="form-group">
+                                    <div class="button-group">
+                                        <div class="action-buttons">
+                                            <div class="upload-button">
+                                                <button class="btn custom">Add a Profile Photo</button>
+                                                <input id="profile" name="profile_image" type="file">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
+
                             <h3 class="mt-5">Contact information</h3>
                             <div class="border rounded p-4">
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-md-4">
                                             <label class="control-label">Country</label>
-                                            <select class="form-control" id="country">
-                                                <option data-display="General">Select Country</option>
+                                            <select class="form-control" name="countryid" id="country" required >
+                                                <option data-display="General" selected value="">Select Country</option>
                                             </select>
                                         </div>
                                         <div class="col-md-4">
                                             <label class="control-label">State</label>
-                                            <select class="form-control" id="state">
-                                                <option data-display="General">Select State</option>
+                                            <select class="form-control" name="stateid" id="state" required>
+                                                <option data-display="General" selected value="">Select State</option>
                                             </select>
                                         </div>
                                         <div class="col-md-4">
                                             <label class="control-label">City</label>
-                                            <select class="form-control" id="city">
-                                                <option data-display="General">Select City</option>
+                                            <select class="form-control" name="cityid" id="city" required>
+                                                <option data-display="General" selected value="">Select City</option>
                                             </select>
                                         </div>
                                     </div>
@@ -107,54 +119,58 @@
                                     <div class="row">
                                         <div class="col-md-4">
                                             <label class="control-label">Phone</label>
-                                            <input type="text" class="form-control" placeholder="(e.g 7959650045)">
+                                            <input type="text" required class="form-control" name="phone" placeholder="(e.g 7959650045)">
                                         </div>
                                         <div class="col-md-4">
                                             <label class="control-label">Email</label>
-                                            <input type="text" class="form-control" placeholder="(e.g abc@gmail.com)">
+                                            <input type="text" class="form-control" name="email" placeholder="(e.g abc@gmail.com)">
                                         </div>
                                         <div class="col-md-4">
                                             <label class="control-label">Website</label>
-                                            <input type="text" class="form-control" placeholder="(e.g www.google.com)">
+                                            <input type="text" class="form-control" name="portfolio_website" placeholder="(e.g www.google.com)">
                                         </div>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label">Address</label>
-                                    <textarea class="form-control" rows="4"></textarea>
+                                    <textarea class="form-control" name="address" rows="2"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">About Me</label>
+                                    <textarea class="form-control" name="about_me" rows="4"></textarea>
                                 </div>
                             </div>
 
                             <h3 class="mt-5">Education</h3>
                             <div id="education">
-                                <div class="border rounded p-4">
+                                <div class="border rounded p-4" id="education_row1">
                                     <div class="form-group">
                                         <label class="control-label">Degree</label>
-                                        <input type="text" class="form-control" placeholder="Degree, e.g. Bachelor">
+                                        <input type="text" class="form-control" name="degree1" placeholder="Degree, e.g. Bachelor">
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label">Field of Study</label>
-                                        <input type="text" class="form-control" placeholder="Major, e.g Computer Science">
+                                        <input type="text" class="form-control" name="field1" placeholder="Major, e.g Computer Science">
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label">School</label>
-                                        <input type="text" class="form-control" placeholder="School name, e.g. Massachusetts Institute of Technology">
+                                        <input type="text" class="form-control" name="school1" placeholder="School name, e.g. Massachusetts Institute of Technology">
                                     </div>
                                     <div class="form-group">
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <label class="control-label">From</label>
-                                                <input type="date" class="form-control" placeholder="e.g 2014">
+                                                <input type="date" class="form-control" name="from1" placeholder="e.g 2014">
                                             </div>
                                             <div class="col-md-6">
                                                 <label class="control-label">To</label>
-                                                <input type="date" class="form-control" placeholder="e.g 2020">
+                                                <input type="date" class="form-control" name="to1" placeholder="e.g 2020">
                                             </div>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label">Description</label>
-                                        <textarea class="form-control" rows="4"></textarea>
+                                        <textarea class="form-control" name="description1" rows="4"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -164,30 +180,30 @@
 
                             <h3 class="mt-5">Work Experience</h3>
                             <div id="experience">
-                                <div class="border rounded p-4" ">
+                                <div class="border rounded p-4" id="experience_row1">
                                     <div class="form-group">
                                         <label class="control-label">Company Name</label>
-                                        <input type="text" class="form-control" placeholder="Company name">
+                                        <input type="text" class="form-control" name="company1" placeholder="Company name">
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label">Title</label>
-                                        <input type="text" class="form-control" placeholder="e.g UI/UX Researcher">
+                                        <input type="text" class="form-control" name="title1" placeholder="e.g UI/UX Researcher">
                                     </div>
                                     <div class="form-group">
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <label class="control-label">Date Form</label>
-                                                <input type="date" class="form-control" placeholder="e.g 2014">
+                                                <input type="date" class="form-control" name="wfrom1" placeholder="e.g 2014">
                                             </div>
                                             <div class="col-md-6">
                                                 <label class="control-label">Date To</label>
-                                                <input type="date" class="form-control" placeholder="e.g 2020">
+                                                <input type="date" class="form-control" name="wto1" placeholder="e.g 2020">
                                             </div>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label">Description</label>
-                                        <textarea class="form-control" rows="4"></textarea>
+                                        <textarea class="form-control" name="wdescription1" rows="4"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -197,23 +213,33 @@
                             <h3 class="mt-5">Skills</h3>
                             <div class="border rounded p-4" id="skill">
                                 <div class="form-group">
-                                    <div class="row">
-                                        <div class="col-md-5">
-                                            <label class="control-label">Skill Name</label>
-                                            <input class="form-control" placeholder="Skill name, e.g. HTML" type="text">
-                                        </div>
-                                        <div class="col-md-5">
-                                            <label class="control-label">% (1-100)</label>
-                                            <input class="form-control" placeholder="Skill proficiency, e.g. 90" type="number" min="1" max="100">
-                                        </div>
+                                    <label class="control-label">Select Skills</label>
+                                    <select class="form-control skill-selector" name="skillids" multiple required>
+                                    </select>
 
+                                </div>
+                                <div class="form-group">
+                                    <div class="button-group">
+                                        <div class="action-buttons">
+                                            <div class="upload-button">
+                                                <button class="btn custom">Add Resume</button>
+                                                <input id="resume" name="resume" type="file">
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="d-flex justify-content-end mt-2">
-                                <button class="btn custom add-skill-btn">Add Skill</button>
+                            <h3 class="mt-5">Social Links</h3>
+                            <div class="border rounded p-4" id="skill">
+                                <div class="form-group">
+                                    <label class="control-label">Linkedin</label>
+                                    <input type="text" class="form-control" name="linkedin" placeholder="e.g www.linkedin.com/in/abc-7654884a/">
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">Facebook</label>
+                                    <input type="text" class="form-control" name="facebook" placeholder="e.g www.facebook.com/profile.php?id=468487477">
+                                </div>
                             </div>
-
                             <div class="d-flex justify-content-center">
                                 <input href="resume.html" class="btn custom btn-common mt-4" type="submit" value="Save">
                             </div>
@@ -249,9 +275,24 @@
 
 
     @section scripts {
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
         <script>
 
             $(document).ready(function () {
+                $('.skill-selector').select2(); 
+                let education_counter = 1;
+                let experience_counter = 1;
+
+                $.ajax({
+                    type: "GET",
+                    url: "/api/Skills",
+                    success: function (response) {
+                        response.forEach(item => {
+                            $('.skill-selector').append("<option value=" + item.id + ">" + item.name + "</option >");
+                        });
+                    }
+                });
+
                 $.ajax({
                     type: "GET",
                     url: "/api/Country",
@@ -263,8 +304,8 @@
                 });
 
                 $('#country').change(function () {
-                    $('#state').html("<option>Select State</option >");
-                    $('#city').html("<option>Select City</option >");
+                    $('#state').html("<option selected value=''>Select State</option >");
+                    $('#city').html("<option selected value=''>Select City</option >");
                     let country_id = $(this).val();
                     $.ajax({
                         type: "GET",
@@ -278,7 +319,7 @@
                 });
 
                 $('#state').change(function () {
-                    $('#city').html("<option>Select City</option >");
+                    $('#city').html("<option selected value=''>Select City</option >");
                     let state_id = $(this).val();
                     $.ajax({
                         type: "GET",
@@ -293,36 +334,37 @@
 
 
                 $('.add-edu-btn').click(function (event) {
+                    education_counter++;
                     event.preventDefault();
                     $('#education').append(`
-                            <div class="border rounded p-4 mt-3">
+                            <div class="border rounded p-4 mt-3"  id="education_row${education_counter}">
                                    <div class= "form-group">
                                        <label class="control-label">Degree</label>
-                                       <input type="text" class="form-control" placeholder="Degree, e.g. Bachelor">
+                                       <input type="text" class="form-control" name="degree${education_counter}" placeholder="Degree, e.g. Bachelor">
                                    </div>
                                    <div class="form-group">
                                        <label class="control-label">Field of Study</label>
-                                       <input type="text" class="form-control" placeholder="Major, e.g Computer Science">
+                                       <input type="text" class="form-control" name="field${education_counter}" placeholder="Major, e.g Computer Science">
                                    </div>
                                    <div class="form-group">
                                        <label class="control-label">School</label>
-                                       <input type="text" class="form-control" placeholder="School name, e.g. Massachusetts Institute of Technology">
+                                       <input type="text" class="form-control" name="school${education_counter}" placeholder="School name, e.g. Massachusetts Institute of Technology">
                                    </div>
                                    <div class="form-group">
                                        <div class="row">
                                            <div class="col-md-6">
                                                <label class="control-label">From</label>
-                                               <input type="date" class="form-control" placeholder="e.g 2014">
+                                               <input type="date" class="form-control" name="from${education_counter}" placeholder="e.g 2014">
                                            </div>
                                            <div class="col-md-6">
                                                <label class="control-label">To</label>
-                                               <input type="date" class="form-control" placeholder="e.g 2020">
+                                               <input type="date" class="form-control" name="to${education_counter}" placeholder="e.g 2020">
                                            </div>
                                        </div>
                                    </div>
                                    <div class="form-group">
                                        <label class="control-label">Description</label>
-                                       <textarea class="form-control" rows="4"></textarea>
+                                       <textarea class="form-control" name="description${education_counter}" rows="4"></textarea>
                                    </div>
 
                                  <div class="d-flex justify-content-end">
@@ -334,31 +376,32 @@
 
                 $('.add-exp-btn').click(function (event) {
                     event.preventDefault();
+                    experience_counter++;
                     $('#experience').append(`
-                             <div class="border rounded p-4 mt-3">
+                             <div class="border rounded p-4 mt-3" id="experience_row${experience_counter}">
                                    <div class="form-group">
                                        <label class="control-label">Company Name</label>
-                                       <input type="text" class="form-control" placeholder="Company name">
+                                       <input type="text" class="form-control" name="company${experience_counter}" placeholder="Company name">
                                    </div>
                                    <div class="form-group">
                                        <label class="control-label">Title</label>
-                                       <input type="text" class="form-control" placeholder="e.g UI/UX Researcher">
+                                       <input type="text" class="form-control" name="title${experience_counter}" placeholder="e.g UI/UX Researcher">
                                    </div>
                                    <div class="form-group">
                                        <div class="row">
                                            <div class="col-md-6">
                                                <label class="control-label">Date Form</label>
-                                               <input type="date" class="form-control" placeholder="e.g 2014">
+                                               <input type="date" name="wfrom${experience_counter}" class="form-control" placeholder="e.g 2014">
                                            </div>
                                            <div class="col-md-6">
                                                <label class="control-label">Date To</label>
-                                               <input type="date" class="form-control" placeholder="e.g 2020">
+                                               <input type="date" class="form-control" name="wto${experience_counter}" placeholder="e.g 2020">
                                            </div>
                                        </div>
                                    </div>
                                    <div class="form-group">
                                        <label class="control-label">Description</label>
-                                       <textarea class="form-control" rows="4"></textarea>
+                                       <textarea class="form-control"  name="wdescription${experience_counter}" rows="4"></textarea>
                                    </div>
                                    <div class="d-flex justify-content-end">
                                       <button class="btn btn-danger custom-del delete-edu-btn">Delete</button>
@@ -367,31 +410,106 @@
                              `);
 
                 })
+
                 $(document).on('click', '.delete-edu-btn', function (e) {
                     e.preventDefault();
                     $(this).parent().parent().remove();
                 });
 
-                $('.add-skill-btn').click(function (event) {
+                $('#candidate-form').submit(function (event) {
                     event.preventDefault();
-                    $('#skill').append(`
-                             <div class="form-group mt-2">
-                                <div class="row">
-                                    <div class="col-md-5">
-                                        <label class="control-label">Skill Name</label>
-                                        <input class="form-control" placeholder="Skill name, e.g. HTML" type="text">
-                                    </div>
-                                    <div class="col-md-5">
-                                            <label class="control-label">% (1-100)</label>
-                                            <input class="form-control" placeholder="Skill proficiency, e.g. 90" type="number" min="1" max="100">
-                                    </div>
-                                     <div class="col-md-2">
-                                        <button class="btn btn-danger delete-edu-btn custom-del mt-4">Delete</button>
-                                    </div>
-                                </div>
-                            </div>
-                            `);
+                    let formdata = new FormData(this);
+                    let data = new FormData();
+
+                    // Convert FormData to JSON
+                    let formDataJson = Object.fromEntries(formdata);
+
+                    let education_data = {};
+                    let counter = 1;
+                    let row = 0;
+
+                    for (let i = 1; i <= education_counter; i++) {
+                        row = $('#education_row' + i).length;
+                        if (row != 0) {
+                            let edu_data = {
+                                degree: formDataJson['degree' + i],
+                                field: formDataJson['field' + i],
+                                school: formDataJson['school' + i],
+                                from: formDataJson['from' + i],
+                                to: formDataJson['to' + i],
+                                description: formDataJson['description' + i],
+                            }
+
+                            education_data[counter] = edu_data;
+                            counter++;
+
+                            delete formDataJson['degree' + i];
+                            delete formDataJson['field' + i];
+                            delete formDataJson['school' + i];
+                            delete formDataJson['from' + i];
+                            delete formDataJson['to' + i];
+                            delete formDataJson['description' + i];
+                        }
+
+                    }
+
+                    let experience_data = {};
+                    counter = 1;
+                    row = 0;
+
+                    for (let i = 1; i <= experience_counter; i++) {
+                        row = $('#experience_row' + i).length;
+                        if (row != 0) {
+                            let exp_data = {
+                                company: formDataJson['company' + i],
+                                title: formDataJson['title' + i],
+                                wfrom: formDataJson['wfrom' + i],
+                                wto: formDataJson['wto' + i],
+                                wdescription$: formDataJson['wdescription$' + i],
+                            }
+
+                            experience_data[counter] = exp_data;
+                            counter++;
+
+                            delete formDataJson['company' + i];
+                            delete formDataJson['title' + i];
+                            delete formDataJson['wfrom' + i];
+                            delete formDataJson['from' + i];
+                            delete formDataJson['wto' + i];
+                            delete formDataJson['wdescription' + i];
+                        }
+
+                    }
+
+                    let skill_data = {
+                        id: formdata.getAll('skillids')
+                    }
+
+                    formDataJson['education'] = JSON.stringify(education_data);
+                    formDataJson['experience'] = JSON.stringify(experience_data);
+                    formDataJson['skillids'] = JSON.stringify(skill_data);
+                    image = event.target.profile_image.files[0];
+                    resume = event.target.resume.files[0];
+
+                    delete formDataJson['profile_image'];
+                    delete formDataJson['resume'];
+                    data.append('candidateobj', JSON.stringify(formDataJson));
+                    image != undefined ? data.append('image', image) : '';
+                    resume != undefined? data.append('resume', resume): '';
+
+                    $.ajax({
+                        type: "POST",
+                        url: '/api/Candidate/Candidate_ApplyJob',
+                        data: data,
+                        contentType: false,
+                        processData: false,
+                        dataType:'json',
+                        success: function (response) {
+                            $(location).attr('href', '/Candidate/Resume');
+                        }
+                    });
                 });
+ 
             });
 
         </script>

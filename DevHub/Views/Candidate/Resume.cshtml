@@ -14,6 +14,7 @@
     <meta name="author" content="UIdeck">
     <title>JobX - Bootstrap HTML5 Job Portal Template</title>
     @Styles.Render("~/Content/css")
+ 
 </head>
 
 <body>
@@ -48,47 +49,38 @@
                     <div class="inner-box my-resume">
                         <div class="author-resume">
                             <div class="thumb">
-                                <img src="" id="myImage"alt="">
+                                <img src="" id="myImage" alt="">
                             </div>
-                            <div class="author-info">
-                                <h3>Mark Anderson</h3>
-                                <p class="sub-title">UI/UX Designer</p>
-                                <p><span class="address"><i class="lni-map-marker"></i>Mahattan, NYC, USA</span> <span><i class="ti-phone"></i>(+01) 211-123-5678</span></p>
-                                <div class="social-link">
-                                    <a href="#" class="Twitter"><i class="lni-twitter-filled"></i></a>
-                                    <a href="#" class="facebook"><i class="lni-facebook-filled"></i></a>
-                                    <a href="#" class="google"><i class="lni-google-plus"></i></a>
-                                    <a href="#" class="linkedin"><i class="lni-linkedin-fill"></i></a>
+                            <div class="author-info"  style="position: relative;">
+                               
+                                    <h3 id="full_name"></h3>
+                                    <p id="title" class="sub-title"></p>
+                                    <p><span class="address d-none"><i class="lni-map-marker" id="address"></i></span> ,<span class="d-none" id="phone"><i class="ti-phone"></i></span></p>
+                                    <div class="social-link">
+                                        <a href="#" class="facebook d-none" target="_blank"><i class="lni-facebook-filled"></i></a>
+                                        <a href="#" class="linkedin d-none" target="_blank"><i class="lni-linkedin-fill"></i></a>
+                                        <a href="#" class="instagram d-none" target="_blank"><i class="lni-instagram-filled"></i></a>
+                                    </div>
                                 </div>
+                                    <a href="@Url.Action("EditResume", "Candidate")" style="position: absolute; top: 15px; right: 40px;">
+                                        <img src="@Url.Content("~/Content/img/editing.png")" alt="YourAltText"  height="30" class="mt-2" />
+                                    </a>
                             </div>
-                        </div>
                         <div class="about-me item">
                             <h3>About Me</h3>
-                            <p>Nullam semper erat arcu, ac tincidunt sem venenatis vel. Curabitur a dolor ac ligula fermentum eusmod ac ullamcorper nulla. Integer blandit uitricies aliquam. Pellentesque quis dui varius, dapibus vilit id, ipsum. Morbi ac eros feugiat, lacinia elit ut, elementum turpis. Curabitur justo sapien, tempus sit amet ruturm eu, commodo eu lacus. Morbi in ligula nibh. Maecenas ut mi at odio hendririt eleif end tempor vitae augue. Fusce eget arcu et nibh dapibus maximus consectetur in est. Sed iaculis Luctus nibh sed veneatis. </p>
+                            <p id="about_me"></p>
                         </div>
-                        <div class="work-experence item">
+                        <div class="project item d-none">
+                            <h3>Project</h3>
+                        </div>
+                        <div class="work-experience item d-none">
                             <h3>Work Experience</h3>
-                            <h4>UI/UX Designer</h4>
-                            <h5>Bannana INC.</h5>
-                            <span class="date">Fab 2017-Present(5year)</span>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Libero vero, dolores, officia quibusdam architecto sapiente eos voluptas odit ab veniam porro quae possimus itaque, quas! Tempora sequi nobis, atque incidunt!</p>
-                            <p><a href="#">4 Projects</a></p>
-                            <br>
-                            <h4>UI Designer</h4>
-                            <h5>Whale Creative</h5>
-                            <span class="date">Fab 2017-Present(2year)</span>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Libero vero, dolores, officia quibusdam architecto sapiente eos voluptas odit ab veniam porro quae possimus itaque, quas! Tempora sequi nobis, atque incidunt!</p>
-                            <p><a href="#">4 Projects</a></p>
                         </div>
-                        <div class="education item">
+                        <div class="education item d-none">
                             <h3>Education</h3>
-                            <h4>Massachusetts Institute Of Technology</h4>
-                            <p>Bachelor of Computer Science</p>
-                            <span class="date">2010-2014</span>
-                            <br>
-                            <h4>Massachusetts Institute Of Technology</h4>
-                            <p>Bachelor of Computer Science</p>
-                            <span class="date">2010-2014</span>
+                        </div>
+                        <div class="skill item">
+                            <h3>Skills</h3>
                         </div>
                     </div>
                 </div>
@@ -110,20 +102,117 @@
 
         <script>
             $(document).ready(function () {
+
                 $.ajax({
                     type: "GET",
                     url: "/api/Candidate/CandidateDetails",
                     success: function (response) {
-                        console.log(response);
-                        let base64_string = "";
-                        for (let item in response) {
-                            if (item == 'image')
-                                base64_string = response[item];
+                        $('#full_name').text(response.first_name + " " + response.surname)
+                        $('#title').text(response.title)
+                        $('.instagram').removeClass('d-none');
+
+                        if (response.address != "") {
+                            $('#address').text(response.address);
+                            $('#address').parent().removeClass('d-none');
                         }
+                        if (response.phone != "") {
+                            $('#phone').text(response.phone);
+                            $('#phone').removeClass('d-none');
+                        }
+
+                        $('#about_me').text(response.about_me);
+                        if (response.facebook != "") {
+                            $('.facebook').attr('href', response.facebook);
+                            $('.facebook').removeClass('d-none');
+                        }
+                        if (response.linkedin != "") {
+                            $('.linkedin').attr('href', response.linkedin);
+                            $('.linkedin').removeClass('d-none');
+                        }
+                        if (response.instagram != "") {
+                            $('.instagram').attr('href', response.instagram);
+                            $('.instagram').removeClass('d-none');
+                        }
+                     
+
+                        let skillid_data = JSON.parse(response.skillids);
+                        skillid_data = skillid_data['id'];
+                        skillid_data = skillid_data.map(str => parseInt(str));
+
+                        $.ajax({
+                            type: "GET",
+                            url: "/api/Skills",
+                            success: function (response) {
+                                response.forEach(item => {
+                                    if (skillid_data.includes(item.id)) {
+                                        $('.skill').append(`<button class="btn mr-2 custom">${item.name}</button>`)
+                                    }
+                                });
+                            }
+                        });
+
+                        let from = "";
+                        let to = "";
+                        if (response.education != "") {
+                            $('.education').removeClass('d-none');
+                            let education = JSON.parse(response.education);
+                            for (let key in education) {
+                                from = education[key][`from`].slice(0, 4);
+                                to = education[key][`to`].slice(0, 4);
+
+                                $('.education').append(`
+                                            <h4>${education[key][`school`]}</h4>
+                                            <p>${education[key][`degree`]}</p>
+                                            <span class="date">${from}-${to}</span>
+                                            <p>${education[key][`description`]}</p>
+                                            <br>
+                                                 `);
+                            }
+
+                        }
+                        if (response.experience != "") {
+                            $('.work-experience').removeClass('d-none');
+                            let experience = JSON.parse(response.experience);
+                            for (let key in experience) {
+                                from = experience[key][`wfrom`].slice(0, 4);
+                                to = experience[key][`wto`].slice(0, 4);
+                                $('.work-experience').append(`
+                                    <h4>${experience[key][`title`]}</h4>
+                                    <h5>${experience[key][`company`]}</h5>
+                                    <span class="exp-date"></span>
+                                    <p>${experience[key][`wdescription`]}</p>
+                                    <br>
+                                         `);
+
+                                to == "" ? $('.exp-date').text(`${from}` - present) : $('.exp-date').text(`${from}-${to}`);
+                            }
+
+                        }
+
+                        if (response.project != "") {
+                            $('.project').removeClass('d-none');
+                            let project = JSON.parse(response.project);
+                            for (let key in project) {
+                                $('.project').append(`
+                                   <div style="display: flex; align-items: center;">
+                                        <h4>${project[key][`project`]}</h4>
+                                    <a href=${project[key][`link`]} target="_blank">
+                                        <img src="@Url.Content("~/Content/img/link.png")" alt="YourAltText"  height="20" class="mt-2" style="margin-left: 10px; margin-top:0rem!important; vertical-align:top!important;" />
+                                    </a>
+                                    </div>
+                                    <p>${project[key][`pdescription`]}</p>
+                                    <br>
+                                         `);
+
+                            }
+
+                        }
+
+                        let base64_string = "";
+                        response.image != "" ? base64_string = response.image : '';
                         // Extract the MIME type from the base64 string
                         if (base64_string != "") {
                             extension = base64_string.split(';')[0].split('/')[1]
-                            console.log(extension);
                             let byteCharacters = atob(base64_string);
                             let byteNumbers = new Array(byteCharacters.length);
                             for (let i = 0; i < byteCharacters.length; i++) {
@@ -144,6 +233,12 @@
             });
 
         </script>
+        <style>
+            .custom{
+                border-radius:25px;
+                color:black;
+            }
+        </style>
     }
     </body>
 </html>

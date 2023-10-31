@@ -325,6 +325,22 @@
     <Compile Include="Migrations\202310282317325_add_title_in_candidate_table.Designer.cs">
       <DependentUpon>202310282317325_add_title_in_candidate_table.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202310301756259_change_name_of_field.cs" />
+    <Compile Include="Migrations\202310301756259_change_name_of_field.Designer.cs">
+      <DependentUpon>202310301756259_change_name_of_field.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202310301937425_change_required_field.cs" />
+    <Compile Include="Migrations\202310301937425_change_required_field.Designer.cs">
+      <DependentUpon>202310301937425_change_required_field.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202310310955520_remove_resume_field.cs" />
+    <Compile Include="Migrations\202310310955520_remove_resume_field.Designer.cs">
+      <DependentUpon>202310310955520_remove_resume_field.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202310311039168_adding_fields_in_candidate_model.cs" />
+    <Compile Include="Migrations\202310311039168_adding_fields_in_candidate_model.Designer.cs">
+      <DependentUpon>202310311039168_adding_fields_in_candidate_model.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CandidateJobMapper.cs" />
@@ -576,6 +592,7 @@
     <Content Include="Views\Company\ManageApplications.cshtml" />
     <Content Include="Views\Candidate\Add_Resume.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Candidate\EditResume.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
@@ -648,6 +665,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202310282317325_add_title_in_candidate_table.resx">
       <DependentUpon>202310282317325_add_title_in_candidate_table.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202310301756259_change_name_of_field.resx">
+      <DependentUpon>202310301756259_change_name_of_field.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202310301937425_change_required_field.resx">
+      <DependentUpon>202310301937425_change_required_field.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202310310955520_remove_resume_field.resx">
+      <DependentUpon>202310310955520_remove_resume_field.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202310311039168_adding_fields_in_candidate_model.resx">
+      <DependentUpon>202310311039168_adding_fields_in_candidate_model.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

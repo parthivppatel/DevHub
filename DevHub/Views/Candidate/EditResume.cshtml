@@ -1,7 +1,8 @@
 ﻿
 @{
-    ViewBag.Title = "Add_Resume";
+    ViewBag.Title = "EditResume";
 }
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -25,7 +26,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="inner-header">
-                        <h3>Create Resume</h3>
+                        <h3>Edit Resume</h3>
                     </div>
                 </div>
             </div>
@@ -70,7 +71,7 @@
                                         </div>
                                         <div class="col-md-6">
                                             <label class="control-label">Gender</label>
-                                            <select class="form-control" name="gender" required>
+                                            <select class="form-control" name="gender" required id="gender">
                                                 <option data-display="General" selected value="">Select Gender</option>
                                                 <option value="M">Male</option>
                                                 <option value="F">Female</option>
@@ -82,9 +83,12 @@
                                 <div class="form-group">
                                     <div class="button-group">
                                         <div class="action-buttons">
-                                            <div class="upload-button">
+                                            <div class="thumb">
+                                                <img src="" id="profile" alt="" height="160">
+                                            </div>
+                                            <div class="upload-button mt-2">
                                                 <button class="btn custom">Add a Profile Photo</button>
-                                                <input id="profile" name="profile_image" type="file">
+                                                <input id="profile_image" name="profile_image" type="file">
                                             </div>
                                         </div>
                                     </div>
@@ -209,7 +213,7 @@
                             </div>
                             <div class="d-flex justify-content-end mt-2">
                                 <button class="btn custom add-exp-btn">Add Experience</button>
-                            </div>
+                            </div>      
                             <h3 class="mt-5">Projects</h3>
                             <div id="project">
                                 <div class="border rounded p-4" id="project_row1">
@@ -234,7 +238,7 @@
                             <div class="border rounded p-4" id="skill">
                                 <div class="form-group">
                                     <label class="control-label">Select Skills</label>
-                                    <select class="form-control skill-selector" name="skillids" multiple required>
+                                    <select class="form-control skill-selector" name="skillids" id="skillids" multiple required>
                                     </select>
 
                                 </div>
@@ -251,11 +255,11 @@
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label">Instagram</label>
-                                    <input type="text" class="form-control" name="instagram" placeholder="e.g www.instagram.com/profile.php?id=468487477">
+                                    <input type="text" class="form-control" name="instagram" placeholder="www.instagram.com/xyz/">
                                 </div>
                             </div>
                             <div class="d-flex justify-content-center">
-                                <input class="btn custom btn-common mt-4" type="submit" value="Save">
+                                <input class="btn custom btn-common mt-4" type="submit" value="Edit">
                             </div>
                         </form>
                     </div>
@@ -298,6 +302,227 @@
                 let experience_counter = 1;
                 let project_counter = 1;
 
+                let id = 0;
+                let user_id = "";
+
+                $.ajax({
+                    type: "GET",
+                    url: "/api/Candidate/CandidateDetails",
+                    success: function (response) {
+
+                        $.ajax({
+                            type: "GET",
+                            url: "/api/Country",
+                            success: function (co_response) {
+                                co_response.forEach(item => {
+                                    $('#country').append("<option value=" + item.id + ">" + item.name + "</option >");
+                                });
+                                $('#country option[value=' + response.countryid + ']').prop('selected', 'true');
+                            }
+                        });
+
+                        $.ajax({
+                            type: "GET",
+                            url: "/api/State?id=" + response.countryid,
+                            success: function (s_response) {
+                                s_response.forEach(item => {
+                                    $('#state').append("<option value=" + item.id + ">" + item.statename + "</option >");
+                                });
+                                $('#state option[value=' + response.stateid + ']').prop('selected', 'true');
+                            }
+                        });
+
+
+                        $.ajax({
+                            type: "GET",
+                            url: "/api/City?id=" + response.stateid,
+                            success: function (c_response) {
+                                c_response.forEach(item => {
+                                    $('#city').append("<option value=" + item.id + ">" + item.cityname + "</option >");
+                                });
+                                $('#city option[value=' + response.cityid + ']').prop('selected', 'true');
+                            }
+                        });
+
+
+                        $('input[name="first_name"]').val(response.first_name)
+                        $('input[name="middle_name"]').val(response.middle_name)
+                        $('input[name="surname"]').val(response.surname)
+                        $('input[name="title"]').val(response.title)
+                        $('input[name="dob"]').val(response.dob)
+                        $('#gender option[value=' + response.gender + ']').prop('selected', 'true');
+                        $('input[name="phone"]').val(response.phone)
+                        $('input[name="email"]').val(response.email)
+                        $('input[name="website"]').val(response.website)
+                        $('textarea[name="address"]').val(response.address)
+                        $('textarea[name="about_me"]').val(response.about_me)
+                        $('input[name="linkedin"]').val(response.linkedin)
+                        $('input[name="facebook"]').val(response.facebook)
+                        id = response.id;
+                        user_id = response.userId;
+
+
+                        if (response.education != "") {
+                            let education = JSON.parse(response.education);
+                            $('input[name = "degree1"]').val(education[1]['degree']);
+                            $('input[name = "field1"]').val(education[1]['field']);
+                            $('input[name = "school"]').val(education[1]['school']);
+                            $('input[name = "from1"]').val(education[1]['from']);
+                            $('input[name = "to1"]').val(education[1]['to']);
+                            $('textarea[name = "description1"]').val(education[1]['description']);
+                            education_counter = Object.keys(education).length;
+                            for (let i = 2; i <= education_counter; i++) {
+                                $('#education').append(`
+                                            <div class="border rounded p-4 mt-3"  id="education_row${i}">
+                                                   <div class= "form-group">
+                                                       <label class="control-label">Degree</label>
+                                                       <input type="text" class="form-control" name="degree${i}" value="${education[i]['degree']}" placeholder="Degree, e.g. Bachelor">
+                                                   </div>
+                                                   <div class="form-group">
+                                                       <label class="control-label">Field of Study</label>
+                                                       <input type="text" class="form-control" name="field${i}" value="${education[i]['field']}" placeholder="Major, e.g Computer Science">
+                                                   </div>
+                                                   <div class="form-group">
+                                                       <label class="control-label">School</label>
+                                                       <input type="text" class="form-control" name="school${i}" value="${education[i]['school']}" placeholder="School name, e.g. Massachusetts Institute of Technology">
+                                                   </div>
+                                                   <div class="form-group">
+                                                       <div class="row">
+                                                           <div class="col-md-6">
+                                                               <label class="control-label">From</label>
+                                                               <input type="date" class="form-control" name="from${i}" value="${education[i]['from']}" placeholder="e.g 2014">
+                                                           </div>
+                                                           <div class="col-md-6">
+                                                               <label class="control-label">To</label>
+                                                               <input type="date" class="form-control" name="to${i}" value="${education[i]['to']}" placeholder="e.g 2020">
+                                                           </div>
+                                                       </div>
+                                                   </div>
+                                                   <div class="form-group">
+                                                       <label class="control-label">Description</label>
+                                                       <textarea class="form-control" name="description${i}" rows="4">${education[i]['description']}</textarea>
+                                                   </div>
+
+                                                 <div class="d-flex justify-content-end">
+                                                       <button class="btn btn-danger custom-del delete-edu-btn">Delete</button>
+                                                 </div>
+                                            </div>
+                                           `);
+
+                            }
+
+                        }
+
+                        if (response.experience != "") {
+                            let experience = JSON.parse(response.experience);
+                            $('input[name = "company1"]').val(experience[1]['company']);
+                            $('input[name = "title1"]').val(experience[1]['title']);
+                            $('input[name = "wfrom1"]').val(experience[1]['wfrom']);
+                            $('input[name = "wto1"]').val(experience[1]['wto']);
+                            $('textarea[name = "wdescription1"]').val(experience[1]['wdescription']);
+                            experience_counter = Object.keys(experience).length;
+                            for (let i = 2; i <= experience_counter; i++) {
+                                $('#experience').append(`
+                                             <div class="border rounded p-4 mt-3" id="experience_row${i}">
+                                                   <div class="form-group">
+                                                       <label class="control-label">Company Name</label>
+                                                       <input type="text" class="form-control" name="company${i}" value="${experience[i]['company']}" placeholder="Company name">
+                                                   </div>
+                                                   <div class="form-group">
+                                                       <label class="control-label">Title</label>
+                                                       <input type="text" class="form-control" name="title${i}" value="${experience[i]['title']}" placeholder="e.g UI/UX Researcher">
+                                                   </div>
+                                                   <div class="form-group">
+                                                       <div class="row">
+                                                           <div class="col-md-6">
+                                                               <label class="control-label">Date Form</label>
+                                                               <input type="date" name="wfrom${i}" class="form-control"value="${experience[i]['wfrom']}"  placeholder="e.g 2014">
+                                                           </div>
+                                                           <div class="col-md-6">
+                                                               <label class="control-label">Date To</label>
+                                                               <input type="date" class="form-control" name="wto${i}" value="${experience[i]['wto']}" placeholder="e.g 2020">
+                                                           </div>
+                                                       </div>
+                                                   </div>
+                                                   <div class="form-group">
+                                                       <label class="control-label">Description</label>
+                                                       <textarea class="form-control"  name="wdescription${i}" value="${experience[i]['wdescription']}"  rows="4"></textarea>
+                                                   </div>
+                                                   <div class="d-flex justify-content-end">
+                                                      <button class="btn btn-danger custom-del delete-edu-btn">Delete</button>
+                                                  </div>
+                                             </div>
+                                             `);
+
+                            }
+
+                        }
+
+                        if (response.project != "") {
+                            let project = JSON.parse(response.project);
+                            $('input[name = "project1"]').val(project[1]['project']);
+                            $('input[name = "link1"]').val(project[1]['link']);
+                            $('textarea[name = "pdescription1"]').val(project[1]['pdescription']);
+
+                            project_counter = Object.keys(project).length;
+
+                            for (let i = 2; i <= project_counter; i++) {
+                                $('#project').append(`
+                                             <div class="border rounded p-4 mt-3" id="project_row${i}">
+                                                    <div class="form-group">
+                                                        <label class="control-label">Project Name</label>
+                                                        <input type="text" class="form-control" name="project${i}" value="${project[i]['project']}" placeholder="Project name">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="control-label">Project Link</label>
+                                                        <input type="text" class="form-control" name="link${i}"   value="${project[i]['link']}" placeholder="e.g www.github.com/xyz/">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="control-label">Description</label>
+                                                        <textarea class="form-control" name="pdescription${i}" rows="4"> value="${project[i]['pdescription']}"</textarea>
+                                                    </div>
+                                                    <div class="d-flex justify-content-end">
+                                                      <button class="btn btn-danger custom-del delete-edu-btn">Delete</button>
+                                                    </div>
+                                                </div>
+                                      `);
+
+                            }
+
+                        }
+
+                        let skill_data = JSON.parse(response.skillids);
+                        for (let item in skill_data) {
+                            for (let key in skill_data[item]) {
+                                $('#skillids option[value=' + skill_data[item][key] + ']').prop('selected', 'true');
+                                console.log(skill_data[item][key]);
+                            }
+                        }
+                        $('#skillids').trigger('change.select2');
+
+                        let base64_string = "";
+                        response.image != "" ? base64_string = response.image : '';
+                        // Extract the MIME type from the base64 string
+                        if (base64_string != "") {
+                            extension = base64_string.split(';')[0].split('/')[1]
+                            let byteCharacters = atob(base64_string);
+                            let byteNumbers = new Array(byteCharacters.length);
+                            for (let i = 0; i < byteCharacters.length; i++) {
+                                byteNumbers[i] = byteCharacters.charCodeAt(i);
+                            }
+                            let byteArray = new Uint8Array(byteNumbers);
+                            let blob = new Blob([byteArray], { type: 'image/' + extension }); // Adjust the image type accordingly
+
+                            // Create a URL for the Blob
+                            let blobUrl = URL.createObjectURL(blob);
+
+                            // Set the image source to the Blob URL
+                            let img = document.getElementById('profile');
+                            img.src = blobUrl;
+                        }
+                    }
+                });
+
                 $.ajax({
                     type: "GET",
                     url: "/api/Skills",
@@ -308,15 +533,7 @@
                     }
                 });
 
-                $.ajax({
-                    type: "GET",
-                    url: "/api/Country",
-                    success: function (response) {
-                        response.forEach(item => {
-                            $('#country').append("<option value=" + item.id + ">" + item.name + "</option >");
-                        });
-                    }
-                });
+
 
                 $('#country').change(function () {
                     $('#state').html("<option selected value=''>Select State</option >");
@@ -352,77 +569,77 @@
                     education_counter++;
                     event.preventDefault();
                     $('#education').append(`
-                                    <div class="border rounded p-4 mt-3"  id="education_row${education_counter}">
-                                           <div class= "form-group">
-                                               <label class="control-label">Degree</label>
-                                               <input type="text" class="form-control" name="degree${education_counter}" placeholder="Degree, e.g. Bachelor">
-                                           </div>
-                                           <div class="form-group">
-                                               <label class="control-label">Field of Study</label>
-                                               <input type="text" class="form-control" name="field${education_counter}" placeholder="Major, e.g Computer Science">
-                                           </div>
-                                           <div class="form-group">
-                                               <label class="control-label">School</label>
-                                               <input type="text" class="form-control" name="school${education_counter}" placeholder="School name, e.g. Massachusetts Institute of Technology">
-                                           </div>
-                                           <div class="form-group">
-                                               <div class="row">
-                                                   <div class="col-md-6">
-                                                       <label class="control-label">From</label>
-                                                       <input type="date" class="form-control" name="from${education_counter}" placeholder="e.g 2014">
+                                            <div class="border rounded p-4 mt-3"  id="education_row${education_counter}">
+                                                   <div class= "form-group">
+                                                       <label class="control-label">Degree</label>
+                                                       <input type="text" class="form-control" name="degree${education_counter}" placeholder="Degree, e.g. Bachelor">
                                                    </div>
-                                                   <div class="col-md-6">
-                                                       <label class="control-label">To</label>
-                                                       <input type="date" class="form-control" name="to${education_counter}" placeholder="e.g 2020">
+                                                   <div class="form-group">
+                                                       <label class="control-label">Field of Study</label>
+                                                       <input type="text" class="form-control" name="field${education_counter}" placeholder="Major, e.g Computer Science">
                                                    </div>
-                                               </div>
-                                           </div>
-                                           <div class="form-group">
-                                               <label class="control-label">Description</label>
-                                               <textarea class="form-control" name="description${education_counter}" rows="4"></textarea>
-                                           </div>
+                                                   <div class="form-group">
+                                                       <label class="control-label">School</label>
+                                                       <input type="text" class="form-control" name="school${education_counter}" placeholder="School name, e.g. Massachusetts Institute of Technology">
+                                                   </div>
+                                                   <div class="form-group">
+                                                       <div class="row">
+                                                           <div class="col-md-6">
+                                                               <label class="control-label">From</label>
+                                                               <input type="date" class="form-control" name="from${education_counter}" placeholder="e.g 2014">
+                                                           </div>
+                                                           <div class="col-md-6">
+                                                               <label class="control-label">To</label>
+                                                               <input type="date" class="form-control" name="to${education_counter}" placeholder="e.g 2020">
+                                                           </div>
+                                                       </div>
+                                                   </div>
+                                                   <div class="form-group">
+                                                       <label class="control-label">Description</label>
+                                                       <textarea class="form-control" name="description${education_counter}" rows="4"></textarea>
+                                                   </div>
 
-                                         <div class="d-flex justify-content-end">
-                                               <button class="btn btn-danger custom-del delete-edu-btn">Delete</button>
-                                         </div>
-                                    </div>
-                                   `);
+                                                 <div class="d-flex justify-content-end">
+                                                       <button class="btn btn-danger custom-del delete-edu-btn">Delete</button>
+                                                 </div>
+                                            </div>
+                                           `);
                 });
 
                 $('.add-exp-btn').click(function (event) {
                     event.preventDefault();
                     experience_counter++;
                     $('#experience').append(`
-                                     <div class="border rounded p-4 mt-3" id="experience_row${experience_counter}">
-                                           <div class="form-group">
-                                               <label class="control-label">Company Name</label>
-                                               <input type="text" class="form-control" name="company${experience_counter}" placeholder="Company name">
-                                           </div>
-                                           <div class="form-group">
-                                               <label class="control-label">Title</label>
-                                               <input type="text" class="form-control" name="title${experience_counter}" placeholder="e.g UI/UX Researcher">
-                                           </div>
-                                           <div class="form-group">
-                                               <div class="row">
-                                                   <div class="col-md-6">
-                                                       <label class="control-label">Date Form</label>
-                                                       <input type="date" name="wfrom${experience_counter}" class="form-control" placeholder="e.g 2014">
+                                             <div class="border rounded p-4 mt-3" id="experience_row${experience_counter}">
+                                                   <div class="form-group">
+                                                       <label class="control-label">Company Name</label>
+                                                       <input type="text" class="form-control" name="company${experience_counter}" placeholder="Company name">
                                                    </div>
-                                                   <div class="col-md-6">
-                                                       <label class="control-label">Date To</label>
-                                                       <input type="date" class="form-control" name="wto${experience_counter}" placeholder="e.g 2020">
+                                                   <div class="form-group">
+                                                       <label class="control-label">Title</label>
+                                                       <input type="text" class="form-control" name="title${experience_counter}" placeholder="e.g UI/UX Researcher">
                                                    </div>
-                                               </div>
-                                           </div>
-                                           <div class="form-group">
-                                               <label class="control-label">Description</label>
-                                               <textarea class="form-control"  name="wdescription${experience_counter}" rows="4"></textarea>
-                                           </div>
-                                           <div class="d-flex justify-content-end">
-                                              <button class="btn btn-danger custom-del delete-edu-btn">Delete</button>
-                                          </div>
-                                     </div>
-                                     `);
+                                                   <div class="form-group">
+                                                       <div class="row">
+                                                           <div class="col-md-6">
+                                                               <label class="control-label">Date Form</label>
+                                                               <input type="date" name="wfrom${experience_counter}" class="form-control" placeholder="e.g 2014">
+                                                           </div>
+                                                           <div class="col-md-6">
+                                                               <label class="control-label">Date To</label>
+                                                               <input type="date" class="form-control" name="wto${experience_counter}" placeholder="e.g 2020">
+                                                           </div>
+                                                       </div>
+                                                   </div>
+                                                   <div class="form-group">
+                                                       <label class="control-label">Description</label>
+                                                       <textarea class="form-control"  name="wdescription${experience_counter}" rows="4"></textarea>
+                                                   </div>
+                                                   <div class="d-flex justify-content-end">
+                                                      <button class="btn btn-danger custom-del delete-edu-btn">Delete</button>
+                                                  </div>
+                                             </div>
+                                             `);
 
                 })
 
@@ -430,28 +647,26 @@
                     event.preventDefault();
                     project_counter++;
                     $('#project').append(`
-                                      <div class="border rounded p-4" id="project_row${project_counter}">
-                                            <div class="form-group">
-                                                <label class="control-label">Project Name</label>
-                                                <input type="text" class="form-control" name="project${project_counter}" placeholder="Project name">
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="control-label">Project Link</label>
-                                                <input type="text" class="form-control" name="link${project_counter}" placeholder="e.g www.github.com/xyz/">
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="control-label">Description</label>
-                                                <textarea class="form-control" name="pdescription${project_counter}" rows="4"></textarea>
-                                            </div>
-                                        </div>
-                                            <div class="d-flex justify-content-end">
-                                              <button class="btn btn-danger custom-del delete-edu-btn">Delete</button>
-                                          </div>
-                                     </div>
-                                     `);
+                                              <div class="border rounded p-4" id="project_row${project_counter}">
+                                                    <div class="form-group">
+                                                        <label class="control-label">Project Name</label>
+                                                        <input type="text" class="form-control" name="project${project_counter}" placeholder="project name">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="control-label">Project Link</label>
+                                                        <input type="text" class="form-control" name="link${project_counter}" placeholder="e.g www.github.com/xyz/">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="control-label">Description</label>
+                                                        <textarea class="form-control" name="pdescription${project_counter}" rows="4"></textarea>
+                                                    </div>
+                                                  <div class="d-flex justify-content-end">
+                                                      <button class="btn btn-danger custom-del delete-edu-btn">Delete</button>
+                                                  </div>
+                                                </div>
+                                             `);
 
                 });
-
 
                 $(document).on('click', '.delete-edu-btn', function (e) {
                     e.preventDefault();
@@ -552,17 +767,20 @@
 
                     formDataJson['education'] = JSON.stringify(education_data);
                     formDataJson['experience'] = JSON.stringify(experience_data);
-                    formDataJson['project'] = JSON.stringify(project_data);
                     formDataJson['skillids'] = JSON.stringify(skill_data);
+                    formDataJson['project'] = JSON.stringify(project_data);
+                    formDataJson['id'] = id;
+                    formDataJson['UserId'] = user_id;
                     image = event.target.profile_image.files[0];
 
                     delete formDataJson['profile_image'];
                     data.append('candidateobj', JSON.stringify(formDataJson));
                     image != undefined ? data.append('image', image) : '';
 
+
                     $.ajax({
-                        type: "POST",
-                        url: '/api/Candidate/Candidate_ApplyJob',
+                        type: "PUT",
+                        url: '/api/Candidate/' + id,
                         data: data,
                         contentType: false,
                         processData: false,

@@ -22,6 +22,10 @@ namespace DevHub.Controllers
         {
             return View();
         }
+        public ActionResult EditResume()
+        {
+            return View();
+        }
 
         [CustomAuthorization("Admin", "Candidate")]
         public ActionResult Resume()

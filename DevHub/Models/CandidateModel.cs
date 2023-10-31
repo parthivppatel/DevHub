@@ -18,7 +18,7 @@ namespace DevHub.Models
         public string first_name { get; set; }
 
         [StringLength(50)]
-        public string last_name { get; set; }
+        public string middle_name { get; set; }
 
         [Required]
         [StringLength(50)]
@@ -59,14 +59,17 @@ namespace DevHub.Models
 
         [StringLength(255)]
         public string address { get; set; }
+
+        [Required]
         public string about_me { get; set; } // overview as template
         public string education { get; set; } //json 
         public string experience { get; set; } //json
+        public string project { get; set; } //json
         //[DataType(DataType.MultilineText)]
         public string skillids { get; set; } //json
         public string linkedin { get; set; }
         public string facebook { get; set; }
-        public byte[] resume { get; set; }
+        public string instagram { get; set; }
 
         [Required]
         public string UserId { get; set; }

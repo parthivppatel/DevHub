@@ -16,38 +16,73 @@ namespace DevHub.Controllers
         {
             _context = new ApplicationDbContext();
         }
-        // GET: Company
-        [CustomAuthorization("Admin", "Company")]
-        public ActionResult PostJob()
-        {
-            return View();
-        }
-        [CustomAuthorization("Admin", "Company")]
-        public ActionResult ManageJobs()
-        {
-            return View();
-        }
-        [CustomAuthorization("Admin", "Company")]
-        public ActionResult ManageApplications()
-        {
-            return View();
-        }
-        
-        [CustomAuthorization("Admin", "Company")]
-        public ActionResult EditCompanyDetails()
-        {
-            return View();
-        }
-        
-        [CustomAuthorization("Admin", "Company")]
-        public ActionResult CompanyProfile()
+
+        private bool CheckCompanyExist()
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             var userIdClaim = identity.FindFirst(ClaimTypes.NameIdentifier).Value;
             var check_company = _context.company.SingleOrDefault(c => c.UserId == userIdClaim);
 
             if (check_company == null)
+                return false;
+
+            return true;
+        }
+        // GET: Company
+        [CustomAuthorization("Admin", "Company")]
+        public ActionResult PostJob()
+        {
+            if (CheckCompanyExist() == false)
+            {
+                ViewBag.Message = "Please Create Company First";
                 return View("Add_Company");
+            }
+
+            return View();
+        }
+        [CustomAuthorization("Admin", "Company")]
+        public ActionResult ManageJobs()
+        {
+            if (CheckCompanyExist() == false)
+            {
+                ViewBag.Message = "Please Create Company First";
+                return View("Add_Company");
+            }
+
+            return View();
+        }
+        [CustomAuthorization("Admin", "Company")]
+        public ActionResult ManageApplications()
+        {
+            if (CheckCompanyExist() == false)
+            {
+                ViewBag.Message = "Please Create Company First";
+                return View("Add_Company");
+            }
+
+            return View();
+        }
+        
+        [CustomAuthorization("Admin", "Company")]
+        public ActionResult EditCompanyDetails()
+        {
+            if (CheckCompanyExist() == false)
+            {
+                ViewBag.Message = "Please Create Company First";
+                return View("Add_Company");
+            }
+
+            return View();
+        }
+        
+        [CustomAuthorization("Admin", "Company")]
+        public ActionResult CompanyProfile()
+        {
+            if (CheckCompanyExist() == false)
+            {
+                ViewBag.Message = "Please Create Company First";
+                return View("Add_Company");
+            }
 
             return View();
         }

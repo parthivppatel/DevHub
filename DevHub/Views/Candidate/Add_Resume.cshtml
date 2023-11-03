@@ -558,7 +558,7 @@
                     formDataJson['experience'] = JSON.stringify(experience_data);
                     formDataJson['project'] = JSON.stringify(project_data);
                     formDataJson['skillids'] = JSON.stringify(skill_data);
-                    image = event.target.profile_image.files[0];
+                    let image = event.target.profile_image.files[0];
 
                     delete formDataJson['profile_image'];
                     data.append('candidateobj', JSON.stringify(formDataJson));

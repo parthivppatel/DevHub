@@ -511,7 +511,6 @@
     </section> -->
     <!-- download Section Start -->
     <!-- Footer Section Start -->
-
     <!-- Footer Section End -->
     <!-- Go To Top Link -->
     <a href="#" class="back-to-top">
@@ -524,8 +523,28 @@
     </div>
     <!-- End Preloader -->
     <!-- jQuery first, then Tether, then Bootstrap JS. -->
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
+    @section scripts {
 
-</body>
+        @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/bootstrap")
+        <script>
+            $(document).ready(function () {
+                $('#deactivate').on('click', function () {
+                    $.ajax({
+                        type: "DELETE",
+                        url: "/api/User",
+                        success: function (response,status_code) {
+                            console.log(response);
+                            console.log(status_code);
+                            if (status_code == "success") {
+                                $(location).attr('href', '/ ');
+                            }
+                        }
+                    });
+                });
+        
+            })
+        </script>
+    }
+    </body>
 </html>

@@ -43,6 +43,7 @@ namespace DevHub.Controllers.API
             var HttpCtx = HttpContext.Current.Request;
             var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
             var userId = identity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
             CompanyDto companydto = null;
             HttpPostedFile logo = null;
             foreach (string key in HttpCtx.Form.AllKeys)
@@ -57,7 +58,7 @@ namespace DevHub.Controllers.API
             if (companydto == null)
                 return BadRequest("Request is Invalid");
 
-            companydto.UserId = userId;
+           companydto.UserId = userId;
            var company=Mapper.Map<CompanyDto, CompanyModel>(companydto);
             var check_company_exist = _context.company.SingleOrDefault(c => c.UserId.Equals(company.UserId));
             

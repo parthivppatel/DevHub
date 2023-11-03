@@ -30,6 +30,7 @@
             </div>
         </div>
     </div>
+    @*@ViewBag.Message*@
     <!-- Page Header End -->
     <!-- Content section Start -->
     <section id="content">
@@ -246,7 +247,7 @@
 
                     // Convert FormData to JSON
                     let formDataJson = Object.fromEntries(formdata);
-                    logo = event.target.logo.files[0];
+                    let logo = event.target.logo.files[0];
 
                     delete formDataJson['logo'];
                     data.append('compnayobj', JSON.stringify(formDataJson));

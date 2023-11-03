@@ -310,7 +310,7 @@
 
                     // Convert FormData to JSON
                     let formDataJson = Object.fromEntries(formdata);
-                    logo = event.target.logo.files[0];
+                    let logo = event.target.logo.files[0];
 
                     delete formDataJson['logo'];
                     formDataJson['id'] = id;

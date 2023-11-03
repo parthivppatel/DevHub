@@ -23,7 +23,6 @@ namespace DevHub.Models
         [StringLength(100)]
         public string email { get; set; }
         public long phone { get; set; }
-        public string gender { get; set; }
         public string description { get; set; }
         public byte[] document { get; set; }
         public int job_typeid { get; set; }

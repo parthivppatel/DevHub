@@ -14,6 +14,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <meta name="author" content="UIdeck">
     <title>JobX - Bootstrap HTML5 Job Portal Template</title>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
 </head>
 
@@ -30,6 +31,7 @@
             </div>
         </div>
     </div>
+
     <!-- Page Header End -->
     <!-- Content section Start -->
     <section class="section">
@@ -38,81 +40,116 @@
                 <div class="col-lg-9 col-md-12 col-xs-12">
                     <div class="post-job box">
                         <h3 class="job-title">Post a new Job</h3>
-                        <form class="form-ad">
+                        <form class="form-ad" id="Post-Job">
                             <div class="form-group">
                                 <label class="control-label">Job Title</label>
-                                <input type="text" class="form-control" placeholder="Write job title">
+                                <input type="text" class="form-control" name="title" required placeholder="Write job title">
                             </div>
                             <div class="form-group">
-                                <label class="control-label">Company</label>
-                                <input type="text" class="form-control" placeholder="Write company name">
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label">Location <span>(optional)</span></label>
-                                <input type="text" class="form-control" placeholder="e.g.London">
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label">Category</label>
-                                <div class="search-category-container">
-                                    <label class="styled-select">
-                                        <select class="dropdown-product selectpicker">
-                                            <option>All Categories</option>
-                                            <option>Finance</option>
-                                            <option>IT & Engineering</option>
-                                            <option>Education/Training</option>
-                                            <option>Art/Design</option>
-                                            <option>Sale/Markting</option>
-                                            <option>Healthcare</option>
-                                            <option>Science</option>
-                                            <option>Food Services</option>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label class="control-label">Job Type</label>
+                                        <select class="form-control" name="job_typeid" id="job-type" required>
+                                            <option data-display="General" selected value="">Job Type</option>
                                         </select>
-                                    </label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="control-label">Job Category</label>
+                                        <select class="form-control category-selector" name="job_categoryids" multiple required>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="control-label">Job Tags <span>(optional)</span></label>
-                                <input type="text" class="form-control" placeholder="e.g.PHP,Social Media,Management">
-                                <p class="note">Comma separate tags, such as required skills or technologies, for this job.</p>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label class="control-label">Job Mode</label>
+                                        <select class="form-control mode-selector" name="modeids" multiple required>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="control-label">Select Skills</label>
+                                        <select class="form-control skill-selector" name="skillids" multiple required>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label class="control-label">Minimum Salary</label>
+                                        <input type="number"  min="500" name="min_salary" class="form-control" placeholder="(e.g 500)">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="control-label">Maximum Salary</label>
+                                        <input type="number" min="1000"  name="max_salary" class="form-control" placeholder="(e.g 1000)">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label class="control-label">Email</label>
+                                        <input type="text" required class="form-control" name="email" placeholder="(e.g abc@gmail.com)">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="control-label">Phone</label>
+                                        <input type="text" class="form-control" name="phone" placeholder="(e.g 7959650045)">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label class="control-label">Country</label>
+                                        <select class="form-control" name="countryid" id="country" required>
+                                            <option data-display="General" selected value="">Select Country</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="control-label">State</label>
+                                        <select class="form-control" name="stateid" id="state" required>
+                                            <option data-display="General" selected value="">Select State</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="control-label">City</label>
+                                        <select class="form-control" name="cityid" id="city" required>
+                                            <option data-display="General" selected value="">Select City</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                             <section id="editor">
                                 <div class="form-group">
-                                    <label for="comment">Description</label>
-                                    <textarea class="form-control" rows="5" id="comment"></textarea>
+                                    <label for="comment">Qualification</label>
+                                    <textarea class="form-control" rows="3" name="qualification"></textarea>
                                 </div>
                             </section>
-                            <div class="form-group">
-                                <label class="control-label">Application email / URL</label>
-                                <input type="text" class="form-control" placeholder="Enter an email address or website URL">
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label">Closing Date <span>(optional)</span></label>
-                                <input type="text" class="form-control" placeholder="yyyy-mm-dd">
-                            </div>
-                            <div class="divider">
-                                <h3 class="job-title">Company Details</h3>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label">Company Name</label>
-                                <input type="text" class="form-control" placeholder="Enter the name of the company">
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label">Website <span>(optional)</span></label>
-                                <input type="text" class="form-control" placeholder="http://">
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label">Tagline <span>(optional)</span></label>
-                                <input type="text" class="form-control" placeholder="Briefly describe your company">
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label">Tagline <span>(optional)</span></label>
-                                <input type="text" class="form-control" placeholder="Briefly describe your company">
-                            </div>
+                            <section id="editor">
+                                <div class="form-group">
+                                    <label for="comment">Experience</label>
+                                    <textarea class="form-control" rows="3" name="experience"></textarea>
+                                </div>
+                            </section>
+                            <section id="editor">
+                                <div class="form-group">
+                                    <label for="comment">Responsibilities</label>
+                                    <textarea class="form-control" rows="4" name="responsibilities"></textarea>
+                                </div>
+                            </section>
+                            <section id="editor">
+                                <div class="form-group">
+                                    <label for="comment">Description</label>
+                                    <textarea class="form-control" rows="5" name="description"></textarea>
+                                </div>
+                            </section>
                             <div class="custom-file mb-3">
-                                <input type="file" class="custom-file-input" id="validatedCustomFile" required>
+                                <input type="file" class="custom-file-input" name="document" id="validatedCustomFile">
                                 <label class="custom-file-label form-control" for="validatedCustomFile">Choose file...</label>
                                 <div class="invalid-feedback">Example invalid custom file feedback</div>
                             </div>
-                            <a href="#" class="btn btn-common">Submit your job</a>
+                            <button type="submit" class="btn btn-common">Submit your job</button>
                         </form>
                     </div>
                 </div>
@@ -130,6 +167,139 @@
         <div class="loader" id="loader-1"></div>
     </div>
     <!-- End Preloader -->
+    @section scripts{
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+        <script>
+            $(document).ready(function () {
+                $('.skill-selector').select2();
+                $('.mode-selector').select2();
+                $('.category-selector').select2();
+
+                $.ajax({
+                    type: "GET",
+                    url: "/api/Country",
+                    success: function (response) {
+                        response.forEach(item => {
+                            $('#country').append("<option value=" + item.id + ">" + item.name + "</option >");
+                        });
+                    }
+                });
+
+                $('#country').change(function () {
+                    $('#state').html("<option selected value=''>Select State</option >");
+                    $('#city').html("<option selected value=''>Select City</option >");
+                    let country_id = $(this).val();
+                    $.ajax({
+                        type: "GET",
+                        url: "/api/State?id=" + country_id,
+                        success: function (response) {
+                            response.forEach(item => {
+                                $('#state').append("<option value=" + item.id + ">" + item.statename + "</option >");
+                            });
+                        }
+                    });
+                });
+
+                $('#state').change(function () {
+                    $('#city').html("<option selected value=''>Select City</option >");
+                    let state_id = $(this).val();
+                    $.ajax({
+                        type: "GET",
+                        url: "/api/City?id=" + state_id,
+                        success: function (response) {
+                            response.forEach(item => {
+                                $('#city').append("<option value=" + item.id + ">" + item.cityname + "</option >");
+                            });
+                        }
+                    });
+                });
+
+                $.ajax({
+                    type: "GET",
+                    url: "/api/Skills",
+                    success: function (response) {
+                        response.forEach(item => {
+                            $('.skill-selector').append("<option value=" + item.id + ">" + item.name + "</option >");
+                        });
+                    }
+                });
+
+                $.ajax({
+                    type: "GET",
+                    url: "/api/Job/GetJobTypes",
+                    success: function (response) {
+                        response.forEach(item => {
+                            $('#job-type').append("<option value=" + item.id + ">" + item.name + "</option >");
+                        });
+                    }
+                });
+
+                $.ajax({
+                    type: "GET",
+                    url: "/api/Job/GetJobCategories",
+                    success: function (response) {
+                        response.forEach(item => {
+                            $('.category-selector').append("<option value=" + item.id + ">" + item.name + "</option >");
+                        });
+                    }
+                });
+
+                $.ajax({
+                    type: "GET",
+                    url: "/api/Job/GetJobModes",
+                    success: function (response) {
+                        response.forEach(item => {
+                            $('.mode-selector').append("<option value=" + item.id + ">" + item.name + "</option >");
+                        });
+                    }
+                });
+
+                $('#Post-Job').submit(function (event) {
+                    event.preventDefault();
+                    let formdata = new FormData(this);
+                    let data = new FormData();
+
+                    // Convert FormData to JSON
+                    let formDataJson = Object.fromEntries(formdata);
+
+                 
+                    let skill_data = {
+                        id: formdata.getAll('skillids')
+                    }
+
+                    let category_data = {
+                        id: formdata.getAll('job_categoryids')
+                    }
+
+                    let mode_data = {
+                        id: formdata.getAll('modeids')
+                    }
+
+                    formDataJson['skillids'] = JSON.stringify(skill_data);
+                    formDataJson['job_categoryids'] = JSON.stringify(category_data);
+                    formDataJson['modeids'] = JSON.stringify(mode_data);
+                    let document = event.target.document.files[0];
+
+                    delete formDataJson['document'];
+                    data.append('jobobj', JSON.stringify(formDataJson));
+                    document != undefined ? data.append('document', document) : '';
+
+                    $.ajax({
+                        type: "POST",
+                        url: '/api/Job',
+                        data: data,
+                        contentType: false,
+                        processData: false,
+                        dataType: 'json',
+                        success: function (response) {
+                            $(location).attr('href', '/');
+                        }
+                    });
+
+                });
+            })
+        </script>
+    }
 
 </body>
 </html>

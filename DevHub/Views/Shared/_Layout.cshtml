@@ -32,18 +32,18 @@
                             @Html.ActionLink("Home", "Index", "Home", routeValues: null, htmlAttributes: new { @class = "nav-link" })
                         </li>
                         @*<li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Pages
-            </a>
-            <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="about.html">About</a></li>
-                <li><a class="dropdown-item" href="job-page.html">Job Page</a></li>
-                <li><a class="dropdown-item" href="job-details.html">Job Details</a></li>
-                <li><a class="dropdown-item" href="resume.html">Resume Page</a></li>
-                <li><a class="dropdown-item" href="privacy-policy.html">Privacy Policy</a></li>
-                <li><a class="dropdown-item" href="contact.html">Contact</a></li>
-            </ul>
-        </li>*@
+                                <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Pages
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="about.html">About</a></li>
+                                    <li><a class="dropdown-item" href="job-page.html">Job Page</a></li>
+                                    <li><a class="dropdown-item" href="job-details.html">Job Details</a></li>
+                                    <li><a class="dropdown-item" href="resume.html">Resume Page</a></li>
+                                    <li><a class="dropdown-item" href="privacy-policy.html">Privacy Policy</a></li>
+                                    <li><a class="dropdown-item" href="contact.html">Contact</a></li>
+                                </ul>
+                            </li>*@
 
                         @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Candidate")))
                         {
@@ -97,12 +97,12 @@
 
                         }
 
-                    <li class="nav-item">
-                        @Html.ActionLink("Contact Us", "Contact", "Home", routeValues: null, htmlAttributes: new { @class = "nav-link" })
-                    </li>
-                    <li class="nav-item">
-                        @Html.ActionLink("About Us", "About", "Home", routeValues: null, htmlAttributes: new { @class = "nav-link" })
-                    </li>
+                        <li class="nav-item">
+                            @Html.ActionLink("Contact Us", "Contact", "Home", routeValues: null, htmlAttributes: new { @class = "nav-link" })
+                        </li>
+                        <li class="nav-item">
+                            @Html.ActionLink("About Us", "About", "Home", routeValues: null, htmlAttributes: new { @class = "nav-link" })
+                        </li>
                         @if (Request.IsAuthenticated)
                         {
                             using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
@@ -152,12 +152,12 @@
                     @if (Request.IsAuthenticated)
                     {
                         <li><a class="dropdown-item" href="javascript:document.getElementById('logoutForm').submit()">Log off</a><</li>
-                        <li><a class="dropdown-item" href="manage-applications.html">Delete Account</a></li>
+                        <li><button class="dropdown-item" id="deactivate" style="cursor:pointer;">Delete Account</button></li>
 
                     }
                     else
                     {
-                       <li>@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })</li>
+                        <li>@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })</li>
                     }
                 </ul>
             </div>
@@ -206,7 +206,7 @@
                                 <p>Sed consequat sapien faus quam bibendum convallis.</p>
                                 <form method="post" id="subscribe-form" name="subscribe-form" class="validate">
                                     <div class="form-group is-empty">
-                                        <input type="email" value="" name="subscribe" class="form-control"  placeholder="Enter Email..." required="">
+                                        <input type="email" value="" name="subscribe" class="form-control" placeholder="Enter Email..." required="">
                                         <button type="submit" name="subscribe" id="subscribes" class="btn btn-common sub-btn"><i class="lni-envelope"></i></button>
                                         <div class="clearfix"></div>
                                     </div>
@@ -237,9 +237,9 @@
         }
     </style>
 
+     @Scripts.Render("~/bundles/jquery")
+     @Scripts.Render("~/bundles/bootstrap")
+     @RenderSection("scripts", required: false)
 
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
-</body>
+    </body>
 </html>

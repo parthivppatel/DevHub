@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Security.Claims;
 using System.Web;
 using System.Web.Http;
 
@@ -70,6 +71,9 @@ namespace DevHub.Controllers.API
         public IHttpActionResult PostJob()
         {
             var HttpCtx = HttpContext.Current.Request;
+            var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
+            var userId = identity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
             JobDto jobDto = null;
             HttpPostedFile document = null;
             foreach (string key in HttpCtx.Form.AllKeys)
@@ -98,10 +102,11 @@ namespace DevHub.Controllers.API
             if (jobDto == null)
                 return BadRequest("Request is Invalid");
 
-            int company_id = jobDto.company_id;
-            var check_company_exist = _context.company.SingleOrDefault(c => c.id == company_id);
+            var check_company_exist = _context.company.SingleOrDefault(c => c.UserId == userId);
             if (check_company_exist == null)
                 return BadRequest("Company Not Found");
+
+            int company_id = check_company_exist.id;
 
             var job = Mapper.Map<JobDto, JobModel>(jobDto);
 
@@ -114,7 +119,7 @@ namespace DevHub.Controllers.API
                 }
                 string fileExtension = "";
                 int documentsize = 3145728; //3 MB(int)
-                string[] allowedExtensions = { ".pdf", ".doc", ".docx" };
+                string[] allowedExtensions = { ".jpg", ".jpeg", ".png",".pdf", ".doc", ".docx" };
                 if (document != null && document.ContentLength > 0)
                 {
                     fileExtension = Path.GetExtension(document.FileName).ToLower();
@@ -127,7 +132,7 @@ namespace DevHub.Controllers.API
                     }
                     else
                     {
-                        return BadRequest("Dcoument should be in the format pdf/doc/docx and less than 3 MB");
+                        return BadRequest("Dcoument should be in the format jpg/jpeg/png/pdf/doc/docx and less than 3 MB");
                     }
                 }
             }
@@ -277,7 +282,6 @@ namespace DevHub.Controllers.API
                       experience = temp.Job.experience,
                       email = temp.Job.email,
                       phone = temp.Job.phone,
-                      gender = temp.Job.gender,
                       description = temp.Job.description,
                       job_typeid = temp.Job.job_typeid,
                       job_categoryids = temp.Job.job_categoryids,

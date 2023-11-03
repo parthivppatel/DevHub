@@ -807,7 +807,7 @@
                     formDataJson['project'] = JSON.stringify(project_data);
                     formDataJson['id'] = id;
                     formDataJson['UserId'] = user_id;
-                    image = event.target.profile_image.files[0];
+                    let image = event.target.profile_image.files[0];
 
                     delete formDataJson['profile_image'];
                     data.append('candidateobj', JSON.stringify(formDataJson));

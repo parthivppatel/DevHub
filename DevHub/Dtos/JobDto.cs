@@ -24,7 +24,6 @@ namespace DevHub.Dtos
         [StringLength(100)]
         public string email { get; set; }
         public long phone { get; set; }
-        public string gender { get; set; }
         public string description { get; set; }
         public string document { get; set; }
         public int job_typeid { get; set; }

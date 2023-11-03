@@ -12,12 +12,12 @@ namespace DevHub.App_Start
     {
         public MappingProfile()
         {
-            Mapper.CreateMap<SkillsModel, SkillsDto>();
-            Mapper.CreateMap<SkillsDto, SkillsModel>();
+            Mapper.CreateMap<SkillsModel, SkillsDto>().ReverseMap();
             Mapper.CreateMap<CountryDto, CountryModel>().ReverseMap();
             Mapper.CreateMap<StateDto, StateModel>().ReverseMap();
             Mapper.CreateMap<CityDto, CityModel>().ReverseMap();
             Mapper.CreateMap<CandidateDto, CandidateModel>().ReverseMap();
+            Mapper.CreateMap<CompanyDto, CompanyModel>().ReverseMap();
             Mapper.CreateMap<JobModeDto, JobModeModel>().ReverseMap();
             Mapper.CreateMap<JobTypeDto, JobTypeModel>().ReverseMap();
             Mapper.CreateMap<JobCategoryDto, JobCategoryModel>().ReverseMap();

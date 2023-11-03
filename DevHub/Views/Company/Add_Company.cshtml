@@ -1,0 +1,274 @@
+﻿
+@{
+    ViewBag.Title = "Add_Company";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="keywords" content="Bootstrap, Landing page, Template, Registration, Landing">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="author" content="UIdeck">
+    <title>JobX - Bootstrap HTML5 Job Portal Template</title>
+    @Styles.Render("~/Content/css")
+</head>
+
+<body>
+
+    <!-- Page Header Start -->
+    <div class="page-header">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="inner-header">
+                        <h3>Add Company</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Page Header End -->
+    <!-- Content section Start -->
+    <section id="content">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-9 col-md-12 col-xs-12">
+                    <div class="add-resume box">
+                        <form class="form-ad" id="company-form" enctype="multipart/form-data">
+                            <h3>Company Details</h3>
+                            <div class="border rounded p-4">
+                                <div class="form-group">
+                                    <label class="control-label">Company Name</label>
+                                    <input type="text" class="form-control" required name="name" placeholder="company name">
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">Website</label>
+                                    <input type="text" class="form-control" name="website" placeholder="e.g www.google.com">
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">How many people are in your company?</label>
+                                    <select class="form-control" name="people" required>
+                                        <option data-display="General" selected value="">Select Option</option>
+                                        <option value="1">It's Just Me</option>
+                                        <option value="2">2-10 employees</option>
+                                        <option value="3">10-99 employees</option>
+                                        <option value="4">100-1000 employees</option>
+                                        <option value="5">More Than 1000 employees</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <div class="button-group">
+                                        <div class="action-buttons">
+                                            <div class="upload-button">
+                                                <button class="btn custom">Add a Logo</button>
+                                                <input id="profile" name="logo" type="file">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h3 class="mt-5">Contact information</h3>
+                            <div class="border rounded p-4">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <label class="control-label">Country</label>
+                                            <select class="form-control" name="countryid" id="country" required>
+                                                <option data-display="General" selected value="">Select Country</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="control-label">State</label>
+                                            <select class="form-control" name="stateid" id="state" required>
+                                                <option data-display="General" selected value="">Select State</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="control-label">City</label>
+                                            <select class="form-control" name="cityid" id="city" required>
+                                                <option data-display="General" selected value="">Select City</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label class="control-label">Phone</label>
+                                            <input type="text" class="form-control" name="phone" placeholder="e.g 7959650045">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="control-label">Email</label>
+                                            <input type="text" required class="form-control" name="email" placeholder="e.g abc@gmail.com">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">Address</label>
+                                    <textarea class="form-control" name="address" rows="2"></textarea>
+                                </div>
+                            </div>
+                            <h3 class="mt-5">Other Details</h3>
+                            <div id="other">
+                                <div class="border rounded p-4">
+                                    <div class="form-group">
+                                        <label class="control-label">Overview</label>
+                                        <textarea class="form-control" name="overview" rows="4"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Services</label>
+                                        <textarea class="form-control" required name="services" rows="4"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h3 class="mt-5">Social Links</h3>
+                            <div class="border rounded p-4" id="skill">
+                                <div class="form-group">
+                                    <label class="control-label">Linkedin</label>
+                                    <input type="text" class="form-control" name="linkedin" placeholder="e.g www.linkedin.com/in/abc-7654884a/">
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">Facebook</label>
+                                    <input type="text" class="form-control" name="facebook" placeholder="e.g www.facebook.com/profile.php?id=468487477">
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">Instagram</label>
+                                    <input type="text" class="form-control" name="instagram" placeholder="e.g www.instagram.com/profile.php?id=468487477">
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">Twitter</label>
+                                    <input type="text" class="form-control" name="twitter" placeholder="e.g www.twitter.com/username">
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-center">
+                                <input class="btn custom btn-common mt-4" type="submit" value="Save">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Content section End -->
+    <!-- Go To Top Link -->
+    <a href="#" class="back-to-top">
+        <i class="lni-arrow-up"></i>
+    </a>
+
+    <!-- Preloader -->
+    <div id="preloader">
+        <div class="loader" id="loader-1"></div>
+    </div>
+    <!-- End Preloader -->
+    <style>
+        .custom {
+            text-transform: none !important;
+            padding: 0.5rem !important;
+            background: #00BCD4 !important;
+        }
+
+        .custom-del {
+            text-transform: none !important;
+            padding: 0.5rem !important;
+        }
+    </style>
+
+
+
+    @section scripts {
+        <script>
+
+            $(document).ready(function () {
+
+                $.ajax({
+                    type: "GET",
+                    url: "/api/Country",
+                    success: function (response) {
+                        response.forEach(item => {
+                            $('#country').append("<option value=" + item.id + ">" + item.name + "</option >");
+                        });
+                    }
+                });
+
+                $('#country').change(function () {
+                    $('#state').html("<option selected value=''>Select State</option >");
+                    $('#city').html("<option selected value=''>Select City</option >");
+                    let country_id = $(this).val();
+                    $.ajax({
+                        type: "GET",
+                        url: "/api/State?id=" + country_id,
+                        success: function (response) {
+                            response.forEach(item => {
+                                $('#state').append("<option value=" + item.id + ">" + item.statename + "</option >");
+                            });
+                        }
+                    });
+                });
+
+                $('#state').change(function () {
+                    $('#city').html("<option selected value=''>Select City</option >");
+                    let state_id = $(this).val();
+                    $.ajax({
+                        type: "GET",
+                        url: "/api/City?id=" + state_id,
+                        success: function (response) {
+                            response.forEach(item => {
+                                $('#city').append("<option value=" + item.id + ">" + item.cityname + "</option >");
+                            });
+                        }
+                    });
+                });
+
+
+                $('.add-ser-btn').click(function (event) {
+                    service_counter++;
+                    event.preventDefault();
+                    $('.service').append(`
+                         <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text"> - </div>
+                            </div>
+                            <input type="text" class="form-control" required name="service${service_counter}">
+                         </div>
+                    `);
+                });
+
+                $('#company-form').submit(function (event) {
+                    event.preventDefault();
+                    let formdata = new FormData(this);
+                    let data = new FormData();
+
+                    // Convert FormData to JSON
+                    let formDataJson = Object.fromEntries(formdata);
+                    logo = event.target.logo.files[0];
+
+                    delete formDataJson['logo'];
+                    data.append('compnayobj', JSON.stringify(formDataJson));
+                    logo != undefined ? data.append('logo', logo) : '';
+
+                    $.ajax({
+                        type: "POST",
+                        url: '/api/Company',
+                        data: data,
+                        contentType: false,
+                        processData: false,
+                        dataType: 'json',
+                        success: function (response) {
+                            $(location).attr('href', '/Company/CompanyProfile');
+                        }
+                    });
+                });
+
+            });
+
+        </script>
+    }
+
+</body>
+</html>

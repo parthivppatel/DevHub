@@ -60,6 +60,9 @@ namespace DevHub.Controllers
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
+            if (Request.IsAuthenticated)
+                return RedirectToAction("Index", "Home");
+
             ViewBag.ReturnUrl = returnUrl;
             return View();
         }
@@ -142,6 +145,9 @@ namespace DevHub.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
+            if (Request.IsAuthenticated)
+                return RedirectToAction("Index", "Home");
+
             var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(_context));
             UserwithRole role_data = new UserwithRole
             {

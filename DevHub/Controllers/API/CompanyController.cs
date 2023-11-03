@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Security.Claims;
 using System.Web;
 using System.Web.Http;
 
@@ -36,23 +37,28 @@ namespace DevHub.Controllers.API
         }
 
         [HttpPost]
-        //[Authorize(Roles = "Admin,Company")]
+        [Authorize(Roles = "Admin,Company")]
         public IHttpActionResult PostCompany()
         {
             var HttpCtx = HttpContext.Current.Request;
+            var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
+            var userId = identity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             CompanyDto companydto = null;
             HttpPostedFile logo = null;
             foreach (string key in HttpCtx.Form.AllKeys)
             {
                 string value = HttpCtx.Form[key];
                 if (IsJson(value))
+                {
                     companydto = JsonConvert.DeserializeObject<CompanyDto>(value);
+                }
                 
             }
             if (companydto == null)
                 return BadRequest("Request is Invalid");
 
-            var company = Mapper.Map<CompanyDto, CompanyModel>(companydto);
+            companydto.UserId = userId;
+           var company=Mapper.Map<CompanyDto, CompanyModel>(companydto);
             var check_company_exist = _context.company.SingleOrDefault(c => c.UserId.Equals(company.UserId));
             
             if (check_company_exist != null)
@@ -112,7 +118,7 @@ namespace DevHub.Controllers.API
         }
 
         [HttpPut]
-        //[Authorize(Roles = "Admin,Company")]
+        [Authorize(Roles = "Admin,Company")]
         public IHttpActionResult UpdateCompany(int id)
         {
             var old_company = _context.company.SingleOrDefault(c => c.id == id);
@@ -163,6 +169,8 @@ namespace DevHub.Controllers.API
                     }
                 }
             }
+            if (logo == null)
+                _context.Entry(company).Property(x => x.logo).IsModified = false;
 
             company.updated_at = DateTime.Now;
             try
@@ -185,22 +193,31 @@ namespace DevHub.Controllers.API
             return Ok("Company Updated Successfully");
         }
 
-        //[Authorize(Roles = "Admin,Company")]
-        public IHttpActionResult GetCompany(int id)
+        [Authorize(Roles = "Admin,Company")]
+        [Route("api/Company/CompanyDetails")]
+
+        public IHttpActionResult GetCompany()
         {
-            var company = _context.company.Where(c => c.id == id).AsEnumerable().Select(c => new CompanyDto
+            var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
+            var userId = identity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var company = _context.company.Where(c => c.UserId == userId).AsEnumerable().Select(c => new CompanyDto
             {
                 id=c.id,
                 name=c.name,
                 overview=c.overview,
-                service=c.service,
+                services=c.services,
                 website=c.website,
                 countryid = c.countryid,
                 stateid = c.stateid,
                 cityid = c.cityid,
                 phone = c.phone,
                 email = c.email,
+                people=c.people,
                 address = c.address,
+                linkedin =c.linkedin,
+                twitter =c.twitter,
+                instagram =c.instagram,
+                facebook =c.facebook,
                 UserId=c.UserId,
                 logo = c.logo != null ? Convert.ToBase64String(c.logo) : null,
             }).SingleOrDefault();
@@ -220,14 +237,19 @@ namespace DevHub.Controllers.API
                 id = c.id,
                 name = c.name,
                 overview = c.overview,
-                service = c.service,
+                services = c.services,
                 website = c.website,
                 countryid = c.countryid,
                 stateid = c.stateid,
                 cityid = c.cityid,
+                people=c.people,
                 phone = c.phone,
                 email = c.email,
                 address = c.address,
+                linkedin = c.linkedin,
+                twitter = c.twitter,
+                instagram = c.instagram,
+                facebook = c.facebook,
                 UserId = c.UserId,
                 logo = c.logo != null ? Convert.ToBase64String(c.logo) : null,
             });

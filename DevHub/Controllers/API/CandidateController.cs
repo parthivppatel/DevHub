@@ -131,7 +131,7 @@ namespace DevHub.Controllers.API
         }
 
         [HttpPut]
-        //[Authorize(Roles = "Admin,Candidate")]
+        [Authorize(Roles = "Admin,Candidate")]
         public IHttpActionResult UpdateCandidate(int id)
         {
             var old_candidate = _context.candidate.SingleOrDefault(c => c.id == id);
@@ -229,7 +229,7 @@ namespace DevHub.Controllers.API
 
             }
 
-            return Ok("Candidate Updated Successfully"+ BitConverter.ToString(old_candidate.image).Replace("-", string.Empty));
+            return Ok("Candidate Updated Successfully");
         }
 
         [Authorize(Roles = "Admin,Candidate")]
@@ -261,6 +261,7 @@ namespace DevHub.Controllers.API
                 linkedin = c.linkedin,
                 facebook = c.facebook,
                 instagram=c.instagram,
+                twitter=c.twitter,
                 UserId = c.UserId,
                 title = c.title,
                 image = c.image != null ? Convert.ToBase64String(c.image) : null,
@@ -299,6 +300,7 @@ namespace DevHub.Controllers.API
                 linkedin = c.linkedin,
                 facebook = c.facebook,
                 instagram=c.instagram,
+                twitter=c.twitter,
                 UserId = c.UserId,
                 title = c.title,
                 image = c.image != null ? Convert.ToBase64String(c.image) : null,

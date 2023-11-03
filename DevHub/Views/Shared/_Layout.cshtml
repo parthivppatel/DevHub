@@ -64,9 +64,11 @@
                                     Employers
                                 </a>
                                 <ul class="dropdown-menu">
+                                    @Html.ActionLink("Company", "CompanyProfile", "Company", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
                                     @Html.ActionLink("Add Job", "PostJob", "Company", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
                                     @Html.ActionLink("Manage Jobs", "ManageJobs", "Company", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
                                     @Html.ActionLink("Manage Applications", "ManageApplications", "Company", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
+
                                 </ul>
                             </li>
                         }
@@ -86,6 +88,7 @@
                                     Employers
                                 </a>
                                 <ul class="dropdown-menu">
+                                    @Html.ActionLink("Company", "CompanyProfile", "Company", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
                                     @Html.ActionLink("Add Job", "PostJob", "Company", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
                                     @Html.ActionLink("Manage Jobs", "ManageJobs", "Company", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
                                     @Html.ActionLink("Manage Applications", "ManageApplications", "Company", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
@@ -145,10 +148,9 @@
             </button>
             <div class="nav-item dropdown">
                 <ul class="dropdown-menu" style="right:0;left:auto;" aria-labelledby="dropdownMenuButton">
-                    <li><a class="dropdown-item" href="post-job.html">Profile</a></li>
+                    <li>@Html.ActionLink("Profile", "UserProfile", "Home", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })</li>
                     @if (Request.IsAuthenticated)
                     {
-
                         <li><a class="dropdown-item" href="javascript:document.getElementById('logoutForm').submit()">Log off</a><</li>
                         <li><a class="dropdown-item" href="manage-applications.html">Delete Account</a></li>
 
@@ -204,7 +206,7 @@
                                 <p>Sed consequat sapien faus quam bibendum convallis.</p>
                                 <form method="post" id="subscribe-form" name="subscribe-form" class="validate">
                                     <div class="form-group is-empty">
-                                        <input type="email" value="" name="Email" class="form-control" id="EMAIL" placeholder="Enter Email..." required="">
+                                        <input type="email" value="" name="subscribe" class="form-control"  placeholder="Enter Email..." required="">
                                         <button type="submit" name="subscribe" id="subscribes" class="btn btn-common sub-btn"><i class="lni-envelope"></i></button>
                                         <div class="clearfix"></div>
                                     </div>

@@ -55,11 +55,12 @@
                                
                                     <h3 id="full_name"></h3>
                                     <p id="title" class="sub-title"></p>
-                                    <p><span class="address d-none"><i class="lni-map-marker" id="address"></i></span> ,<span class="d-none" id="phone"><i class="ti-phone"></i></span></p>
+                                    <p><span class="address d-none" id="address"><i class="lni-map-marker"></i></span> ,<span class="d-none" id="phone"><i class="ti-phone"></i></span></p>
                                     <div class="social-link">
                                         <a href="#" class="facebook d-none" target="_blank"><i class="lni-facebook-filled"></i></a>
                                         <a href="#" class="linkedin d-none" target="_blank"><i class="lni-linkedin-fill"></i></a>
                                         <a href="#" class="instagram d-none" target="_blank"><i class="lni-instagram-filled"></i></a>
+                                        <a href="#" class="twitter d-none" target="_blank"><i class="lni-twitter-filled"></i></a>
                                     </div>
                                 </div>
                                     <a href="@Url.Action("EditResume", "Candidate")" style="position: absolute; top: 15px; right: 40px;">
@@ -109,11 +110,10 @@
                     success: function (response) {
                         $('#full_name').text(response.first_name + " " + response.surname)
                         $('#title').text(response.title)
-                        $('.instagram').removeClass('d-none');
 
                         if (response.address != "") {
-                            $('#address').text(response.address);
-                            $('#address').parent().removeClass('d-none');
+                            $('#address').removeClass('d-none');
+                            $('#address').append(response.address, ",");
                         }
                         if (response.phone != "") {
                             $('#phone').text(response.phone);
@@ -132,6 +132,10 @@
                         if (response.instagram != "") {
                             $('.instagram').attr('href', response.instagram);
                             $('.instagram').removeClass('d-none');
+                        }
+                        if (response.twitter != "") {
+                            $('.twitter').attr('href', response.twitter);
+                            $('.twitter').removeClass('d-none');
                         }
                      
 

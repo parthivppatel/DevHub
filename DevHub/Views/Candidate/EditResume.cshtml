@@ -257,6 +257,10 @@
                                     <label class="control-label">Instagram</label>
                                     <input type="text" class="form-control" name="instagram" placeholder="www.instagram.com/xyz/">
                                 </div>
+                                <div class="form-group">
+                                    <label class="control-label">Twitter</label>
+                                    <input type="text" class="form-control" name="twitter" placeholder="e.g www.twitter.com/username">
+                                </div>
                             </div>
                             <div class="d-flex justify-content-center">
                                 <input class="btn custom btn-common mt-4" type="submit" value="Edit">
@@ -358,6 +362,8 @@
                         $('textarea[name="about_me"]').val(response.about_me)
                         $('input[name="linkedin"]').val(response.linkedin)
                         $('input[name="facebook"]').val(response.facebook)
+                        $('input[name="twitter"]').val(response.twitter)
+                        $('input[name="instagram"]').val(response.instagram)
                         id = response.id;
                         user_id = response.userId;
 
@@ -532,6 +538,36 @@
                         });
                     }
                 });
+
+                $('#country').change(function () {
+                    $('#state').html("<option selected value=''>Select State</option >");
+                    $('#city').html("<option selected value=''>Select City</option >");
+                    let country_id = $(this).val();
+                    $.ajax({
+                        type: "GET",
+                        url: "/api/State?id=" + country_id,
+                        success: function (response) {
+                            response.forEach(item => {
+                                $('#state').append("<option value=" + item.id + ">" + item.statename + "</option >");
+                            });
+                        }
+                    });
+                });
+
+                $('#state').change(function () {
+                    $('#city').html("<option selected value=''>Select City</option >");
+                    let state_id = $(this).val();
+                    $.ajax({
+                        type: "GET",
+                        url: "/api/City?id=" + state_id,
+                        success: function (response) {
+                            response.forEach(item => {
+                                $('#city').append("<option value=" + item.id + ">" + item.cityname + "</option >");
+                            });
+                        }
+                    });
+                });
+
 
 
 

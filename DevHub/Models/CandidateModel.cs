@@ -70,6 +70,7 @@ namespace DevHub.Models
         public string linkedin { get; set; }
         public string facebook { get; set; }
         public string instagram { get; set; }
+        public string twitter { get; set; }
 
         [Required]
         public string UserId { get; set; }

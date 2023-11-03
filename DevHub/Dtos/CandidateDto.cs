@@ -62,6 +62,7 @@ namespace DevHub.Dtos
         public string skillids { get; set; } //json
         public string linkedin { get; set; }
         public string facebook { get; set; }
+        public string twitter { get; set; }
         public string instagram { get; set; }
 
         [Required]

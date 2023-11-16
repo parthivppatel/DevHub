@@ -466,6 +466,7 @@
     <Content Include="Content\img\bg\app.png" />
     <Content Include="Content\img\bg\bg-intro.jpg" />
     <Content Include="Content\img\bg\dd.jpg" />
+    <Content Include="Content\img\editing.png" />
     <Content Include="Content\img\features\img-1.jpg" />
     <Content Include="Content\img\features\img-2.jpg" />
     <Content Include="Content\img\features\img-3.jpg" />
@@ -476,6 +477,8 @@
     <Content Include="Content\img\features\img4.png" />
     <Content Include="Content\img\features\img5.png" />
     <Content Include="Content\img\features\img6.png" />
+    <Content Include="Content\img\left-arrow.png" />
+    <Content Include="Content\img\link.png" />
     <Content Include="Content\img\profile.png" />
     <Content Include="Content\img\jobs\avatar-1.jpg" />
     <Content Include="Content\img\jobs\avatar-1.png" />
@@ -502,6 +505,7 @@
     <Content Include="Content\img\product\img2.png" />
     <Content Include="Content\img\product\img3.png" />
     <Content Include="Content\img\resume\img-1.png" />
+    <Content Include="Content\img\right-arrow.png" />
     <Content Include="Content\img\search.png" />
     <Content Include="Content\img\testimonial\img1.png" />
     <Content Include="Content\img\testimonial\img2.png" />

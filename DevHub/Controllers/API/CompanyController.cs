@@ -262,13 +262,38 @@ namespace DevHub.Controllers.API
         //[Authorize(Roles = "Admin,Company")]
         [Route("api/Company/GetCompanyJobs")]
         [HttpGet]
-        public IHttpActionResult CompanyJobs(int id)
+        public IHttpActionResult CompanyJobs(int start,int end)
         {
-            var companyJobs = _context.company_job
-                         .Where(jm => jm.companyid == id)
-                         .SelectMany(jm => _context.jobs.Where(j => j.id == jm.jobid))
-                         .ToList().Select(job => Mapper.Map<JobModel, JobDto>(job));
-            return Ok(companyJobs);
+            var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
+            var userId = identity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var query= _context.company_job
+                    .Where(jm => jm.company.UserId == userId)
+                    .OrderByDescending(jm => jm.job.created_at);
+
+            var totalRecords = query.Count();
+
+            var limitedRecords = query
+                .Select(jm => new
+                {
+                    title = jm.job.title,
+                    address = jm.company.address,
+                    name = jm.company.name,
+                    created_at = jm.job.created_at,
+                    JobType = _context.job_type.FirstOrDefault(j => j.id == jm.job.job_typeid).name
+                })
+                .Skip(start)
+                .Take(end - start)
+                .ToList();
+
+
+            var result = new
+            {
+                TotalRecords = totalRecords,
+                data = limitedRecords
+            };
+
+            return Ok(result);
         }
 
         protected override void Dispose(bool disposing)

@@ -27,11 +27,14 @@ namespace DevHub.Dtos
         public string description { get; set; }
         public string document { get; set; }
         public int job_typeid { get; set; }
+        public string job_type_name { get; set; }
         public string job_categoryids { get; set; } //json
         public string modeids { get; set; } //json
         public int countryid { get; set; }
         public int stateid { get; set; }
         public int cityid { get; set; }
         public string skillids { get; set; } //json
+        public DateTime created_at { get; set; }
+
     }
 }

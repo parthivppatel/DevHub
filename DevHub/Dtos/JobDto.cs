@@ -14,11 +14,13 @@ namespace DevHub.Dtos
         public string title { get; set; }
         public long min_salary { get; set; }
         public long max_salary { get; set; }
+        public int stype { get; set; }
         public string qualification { get; set; }
         public string responsibilities { get; set; }
         public string experience { get; set; }
         public string company_name { get; set; }
         public string company_address { get; set; }
+        public string company_logo { get; set; }
         public int company_id {get; set;}
 
         [StringLength(100)]
@@ -31,6 +33,7 @@ namespace DevHub.Dtos
         public string job_categoryids { get; set; } //json
         public string modeids { get; set; } //json
         public int countryid { get; set; }
+        public string country_name { get; set; }
         public int stateid { get; set; }
         public int cityid { get; set; }
         public string skillids { get; set; } //json

@@ -22,6 +22,13 @@ namespace DevHub.Controllers
         {
             return View();
         }
+
+        // GET: Candidate
+        [CustomAuthorization("Admin", "Candidate")]
+        public ActionResult AppliedJobs()
+        {
+            return View();
+        }
         public ActionResult EditResume()
         {
             return View();

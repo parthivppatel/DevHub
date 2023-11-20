@@ -1,8 +1,7 @@
 ﻿
 @{
-    ViewBag.Title = "PostJob";
+    ViewBag.Title = "EditJob";
 }
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -25,7 +24,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="inner-header">
-                        <h3>Post A Job</h3>
+                        <h3>Edit Job</h3>
                     </div>
                 </div>
             </div>
@@ -39,8 +38,7 @@
             <div class="row justify-content-center">
                 <div class="col-lg-9 col-md-12 col-xs-12">
                     <div class="post-job box">
-                        <h3 class="job-title">Post a new Job</h3>
-                        <form class="form-ad" id="Post-Job">
+                        <form class="form-ad" id="Edit-Job">
                             <div class="form-group">
                                 <label class="control-label">Job Title</label>
                                 <input type="text" class="form-control" name="title" required placeholder="Write job title">
@@ -156,10 +154,11 @@
                                 </div>
                             </section>
                             <div class="custom-file mb-3">
-                                <input type="file" class="custom-file-input" name="document" id="validatedCustomFile">
+                                <input type="file" class="custom-file-input" name="document" >
                                 <label class="custom-file-label form-control" for="validatedCustomFile">Choose file...</label>
+                                <div class="invalid-feedback">Example invalid custom file feedback</div>
                             </div>
-                            <button type="submit" class="btn btn-common">Submit your job</button>
+                            <button type="submit" class="btn btn-common">Save</button>
                         </form>
                     </div>
                 </div>
@@ -177,19 +176,138 @@
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
         <script>
             $(document).ready(function () {
+
                 $('.skill-selector').select2();
                 $('.mode-selector').select2();
                 $('.category-selector').select2();
 
+                let id =@ViewBag.message;
+
                 $.ajax({
                     type: "GET",
-                    url: "/api/Country",
+                    url: "/api/Job/"+id,
                     success: function (response) {
-                        response.forEach(item => {
-                            $('#country').append("<option value=" + item.id + ">" + item.name + "</option >");
+                        console.log(response);
+
+                         $.ajax({
+                             type: "GET",
+                             url: "/api/Country",
+                             success: function (co_response) {
+                                 co_response.forEach(item => {
+                                     $('#country').append("<option value=" + item.id + ">" + item.name + "</option >");
+                                 });
+                                 $('#country option[value=' + response.countryid + ']').prop('selected', 'true');
+                             }
+                         });
+
+                         $.ajax({
+                             type: "GET",
+                             url: "/api/State?id=" + response.countryid,
+                             success: function (s_response) {
+                                 s_response.forEach(item => {
+                                     $('#state').append("<option value=" + item.id + ">" + item.statename + "</option >");
+                                 });
+                                 $('#state option[value=' + response.stateid + ']').prop('selected', 'true');
+                             }
+                         });
+
+
+                         $.ajax({
+                             type: "GET",
+                             url: "/api/City?id=" + response.stateid,
+                             success: function (c_response) {
+                                 c_response.forEach(item => {
+                                     $('#city').append("<option value=" + item.id + ">" + item.cityname + "</option >");
+                                 });
+                                 $('#city option[value=' + response.cityid + ']').prop('selected', 'true');
+                             }
+                         });
+
+                        $.ajax({
+                            type: "GET",
+                            url: "/api/Job/GetJobTypes",
+                            success: function (j_response) {
+                                j_response.forEach(item => {
+                                    $('#job-type').append("<option value=" + item.id + ">" + item.name + "</option >");
+                                });
+                                $('#job-type option[value=' + response.job_typeid + ']').prop('selected', 'true');
+                            }
                         });
+
+                         $.ajax({
+                            type: "GET",
+                            url: "/api/Skills",
+                            success: function (s_response) {
+                                s_response.forEach(item => {
+                                    $('.skill-selector').append("<option value=" + item.id + ">" + item.name + "</option >");
+                                });
+
+                                let skill_data = JSON.parse(response.skillids);
+                                for (let item in skill_data) {
+                                    for (let key in skill_data[item]) {
+                                        $('.skill-selector option[value=' + skill_data[item][key] + ']').prop('selected', 'true');
+                                        console.log(skill_data[item][key]);
+                                    }
+                                }
+                                $('.skill-selector').trigger('change.select2');
+                            }
+                        });
+
+                        $.ajax({
+                            type: "GET",
+                            url: "/api/Job/GetJobCategories",
+                            success: function (jc_response) {
+                                jc_response.forEach(item => {
+                                    $('.category-selector').append("<option value=" + item.id + ">" + item.name + "</option >");
+                                });
+
+                                let category_data = JSON.parse(response.job_categoryids);
+                                for (let item in category_data) {
+                                    for (let key in category_data[item]) {
+                                        $('.category-selector option[value=' + category_data[item][key] + ']').prop('selected', 'true');
+                                        console.log(category_data[item][key]);
+                                    }
+                                }
+                                $('.category-selector').trigger('change.select2');
+
+                            }
+                        });
+
+                        $.ajax({
+                            type: "GET",
+                            url: "/api/Job/GetJobModes",
+                            success: function (jm_response) {
+                                jm_response.forEach(item => {
+                                    $('.mode-selector').append("<option value=" + item.id + ">" + item.name + "</option >");
+                                });
+
+                                let mode_data = JSON.parse(response.modeids);
+                                for (let item in mode_data) {
+                                    for (let key in mode_data[item]) {
+                                        $('.mode-selector option[value=' + mode_data[item][key] + ']').prop('selected', 'true');
+                                        console.log(mode_data[item][key]);
+                                    }
+                                }
+                                $('.mode-selector').trigger('change.select2');
+                            }
+                        });
+
+                         $('input[name="title"]').val(response.title)
+                         $('input[name="min_salary"]').val(response.min_salary)
+                         $('input[name="max_salary"]').val(response.max_salary)
+                         $('#stype option[value=' + response.stype + ']').prop('selected', 'true');
+                         $('input[name="email"]').val(response.email)
+                         $('input[name="phone"]').val(response.phone)
+                         $('textarea[name="qualification"]').val(response.qualification)
+                         $('textarea[name="responsibilities"]').val(response.responsibilities)
+                         $('textarea[name="experience"]').val(response.experience)
+                         $('textarea[name="description"]').val(response.description)
+                         id = response.id;
+
+
                     }
                 });
+
 
                 $('#country').change(function () {
                     $('#state').html("<option selected value=''>Select State</option >");
@@ -220,47 +338,7 @@
                     });
                 });
 
-                $.ajax({
-                    type: "GET",
-                    url: "/api/Skills",
-                    success: function (response) {
-                        response.forEach(item => {
-                            $('.skill-selector').append("<option value=" + item.id + ">" + item.name + "</option >");
-                        });
-                    }
-                });
-
-                $.ajax({
-                    type: "GET",
-                    url: "/api/Job/GetJobTypes",
-                    success: function (response) {
-                        response.forEach(item => {
-                            $('#job-type').append("<option value=" + item.id + ">" + item.name + "</option >");
-                        });
-                    }
-                });
-
-                $.ajax({
-                    type: "GET",
-                    url: "/api/Job/GetJobCategories",
-                    success: function (response) {
-                        response.forEach(item => {
-                            $('.category-selector').append("<option value=" + item.id + ">" + item.name + "</option >");
-                        });
-                    }
-                });
-
-                $.ajax({
-                    type: "GET",
-                    url: "/api/Job/GetJobModes",
-                    success: function (response) {
-                        response.forEach(item => {
-                            $('.mode-selector').append("<option value=" + item.id + ">" + item.name + "</option >");
-                        });
-                    }
-                });
-
-                $('#Post-Job').submit(function (event) {
+                $('#Edit-Job').submit(function (event) {
                     event.preventDefault();
                     let formdata = new FormData(this);
                     let data = new FormData();
@@ -268,7 +346,7 @@
                     // Convert FormData to JSON
                     let formDataJson = Object.fromEntries(formdata);
 
-                 
+
                     let skill_data = {
                         id: formdata.getAll('skillids')
                     }
@@ -284,6 +362,8 @@
                     formDataJson['skillids'] = JSON.stringify(skill_data);
                     formDataJson['job_categoryids'] = JSON.stringify(category_data);
                     formDataJson['modeids'] = JSON.stringify(mode_data);
+                    formDataJson['id'] = id;
+
                     let document = event.target.document.files[0];
 
                     delete formDataJson['document'];
@@ -291,8 +371,8 @@
                     document != undefined ? data.append('document', document) : '';
 
                     $.ajax({
-                        type: "POST",
-                        url: '/api/Job',
+                        type: "PUT",
+                        url: '/api/Job/'+id,
                         data: data,
                         contentType: false,
                         processData: false,

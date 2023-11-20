@@ -119,11 +119,11 @@ namespace DevHub.Controllers.API
                 }
                 string fileExtension = "";
                 int documentsize = 3145728; //3 MB(int)
-                string[] allowedExtensions = { ".jpg", ".jpeg", ".png",".pdf", ".doc", ".docx" };
+                string[] allowedExtensions = { ".jpg", ".jpeg", ".png",".pdf", ".txt", ".docx" };
                 if (document != null && document.ContentLength > 0)
                 {
                     fileExtension = Path.GetExtension(document.FileName).ToLower();
-                    if (Array.IndexOf(allowedExtensions, fileExtension) >= 0 && Array.IndexOf(allowedExtensions, fileExtension) < 3 && document.ContentLength <= documentsize)
+                    if (Array.IndexOf(allowedExtensions, fileExtension) >= 0 && Array.IndexOf(allowedExtensions, fileExtension) < 6 && document.ContentLength <= documentsize)
                     {
                         // Get the file extension
                         Stream documentstream = document.InputStream;
@@ -132,7 +132,7 @@ namespace DevHub.Controllers.API
                     }
                     else
                     {
-                        return BadRequest("Dcoument should be in the format jpg/jpeg/png/pdf/doc/docx and less than 3 MB");
+                        return BadRequest("Dcoument should be in the format jpg/jpeg/png/pdf/txt/docx and less than 3 MB");
                     }
                 }
             }
@@ -219,11 +219,11 @@ namespace DevHub.Controllers.API
                 }
                 string fileExtension = "";
                 int documentsize = 3145728; //3 MB(int)
-                string[] allowedExtensions = { ".pdf", ".doc", ".docx" };
+                string[] allowedExtensions = { ".jpg", ".jpeg", ".png", ".pdf", ".txt", ".docx" };
                 if (document != null && document.ContentLength > 0)
                 {
                     fileExtension = Path.GetExtension(document.FileName).ToLower();
-                    if (Array.IndexOf(allowedExtensions, fileExtension) >= 0 && Array.IndexOf(allowedExtensions, fileExtension) < 3 && document.ContentLength <= documentsize)
+                    if (Array.IndexOf(allowedExtensions, fileExtension) >= 0 && Array.IndexOf(allowedExtensions, fileExtension) < 6 && document.ContentLength <= documentsize)
                     {
                         // Get the file extension
                         Stream documentstream = document.InputStream;
@@ -232,11 +232,16 @@ namespace DevHub.Controllers.API
                     }
                     else
                     {
-                        return BadRequest("Dcoument should be in the format pdf/doc/docx and less than 3 MB");
+                        return BadRequest("Dcoument should be in the format jpg/jpeg/png/pdf/txt/docx and less than 3 MB");
                     }
                 }
             }
 
+            _context.Entry(job).Property(x => x.created_at).IsModified = false;
+            if (document == null)
+                _context.Entry(job).Property(x => x.document).IsModified = false;
+
+            System.Diagnostics.Debug.WriteLine(job.created_at,"created");
             job.updated_at = DateTime.Now;
             try
             {
@@ -258,7 +263,7 @@ namespace DevHub.Controllers.API
             return Ok("Job Updated Successfully");
         }
 
-        //[Authorize(Roles = "Admin,Candidate")]
+        [Authorize(Roles = "Admin,Candidate,Company")]
         public IHttpActionResult GetJob(int id)
         {
             var job = _context.jobs
@@ -277,6 +282,7 @@ namespace DevHub.Controllers.API
                       title = temp.Job.title,
                       min_salary = temp.Job.min_salary,
                       max_salary = temp.Job.max_salary,
+                      stype=temp.Job.stype,
                       qualification = temp.Job.qualification,
                       responsibilities = temp.Job.responsibilities,
                       experience = temp.Job.experience,
@@ -292,6 +298,8 @@ namespace DevHub.Controllers.API
                       skillids = temp.Job.skillids,
                       company_name = c.name,
                       company_address = c.address,
+                      created_at=temp.Job.created_at,
+                      company_logo = c.logo!=null?Convert.ToBase64String(c.logo):null,
                       document = temp.Job.document != null ? Convert.ToBase64String(temp.Job.document) : null,
 
                   }).Select(j => Mapper.Map<JobDto>(j))
@@ -300,16 +308,60 @@ namespace DevHub.Controllers.API
             if (job == null)
                 return BadRequest("Job Not Found");
 
+            var country_name = _context.country.SingleOrDefault(C => C.id == job.countryid).name;
+            job.country_name = country_name;
             var data = Mapper.Map<JobDto>(job);
+
             return Ok(data);
         }
 
-        //[Authorize(Roles = "Admin,Company")]
-        public IHttpActionResult GetJobs()
+        [Authorize(Roles = "Admin,Company,Candidate")]
+        public IHttpActionResult GetJobs(int start,int end)
         {
-            var joblist = _context.jobs.ToList().Select(Mapper.Map<JobModel, JobDto>);
+            
+            var query = _context.company_job;
 
-            return Ok(joblist);
+            var totalRecords = query.Count();
+
+            var limitedRecords = query
+                  .Join(
+                     _context.country,
+                     jm => jm.job.countryid,
+                     c => c.id,
+                     (jm, c) => new
+                     {
+                         id = jm.job.id,
+                         title = jm.job.title,
+                         address = c.name,  // Access country name through the joined table
+                         name = jm.company.name,
+                         created_at = jm.job.created_at,
+                         JobType = _context.job_type.FirstOrDefault(j => j.id == jm.job.job_typeid).name
+                     }
+                  )
+                 .OrderByDescending(j => j.created_at)
+                 .Skip(start)
+                 .Take(end - start)
+                 .ToList();
+
+
+            var result = new
+            {
+                TotalRecords = totalRecords,
+                data = limitedRecords
+            };
+
+            return Ok(result);
+        }
+
+        [HttpDelete]
+        //[Authorize(Roles = "Admin,Company")]
+        public IHttpActionResult DeleteJob(int id)
+        {
+            var job = _context.jobs.SingleOrDefault(c=>c.id==id);
+            _context.jobs.Remove(job);
+            _context.SaveChanges();
+
+            return Ok("Job Deleted Succesfully");
         }
     }
 }

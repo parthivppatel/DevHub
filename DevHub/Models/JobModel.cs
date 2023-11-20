@@ -16,6 +16,7 @@ namespace DevHub.Models
         public string title { get; set; }
         public long min_salary { get; set; }
         public long max_salary { get; set; }
+        public int stype { get; set; }
         public string qualification { get; set; }
         public string responsibilities { get; set; }
         public string experience { get; set; }  

@@ -1,8 +1,7 @@
 ﻿
 @{
-    ViewBag.Title = "ManageJobs";
+    ViewBag.Title = "MyJobs";
 }
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -14,6 +13,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <meta name="author" content="UIdeck">
     <title>JobX - Bootstrap HTML5 Job Portal Template</title>
+
 </head>
 
 <body>
@@ -23,65 +23,43 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="inner-header">
-                        <h3>Manage Jobs</h3>
+                        <h3>Applied Jobs</h3>
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <!-- Page Header End -->
-    <!-- Start Content -->
-    <div id="content">
+    <!-- Job Browse Section Start -->
+    <section class="job-browse section">
         <div class="container">
-            <div class="row">
-                <div class="col-lg-4 col-md-4 col-xs-12">
-                    <div class="right-sideabr">
-                        <h4>Manage Account</h4>
-                        <ul class="list-item">
-                            <li><a href="resume.html">My Resume</a></li>
-                            <li><a href="bookmarked.html">Bookmarked Jobs</a></li>
-                            <li><a href="notifications.html">Notifications <span class="notinumber">2</span></a></li>
-                            <li><a class="active" href="job-alerts.html">Manage Jobs</a></li>
-                            <li><a href="manage-applications.html">Manage Applications</a></li>
-                            <li><a href="change-password.html">Change Password</a></li>
-                            <li><a href="index.html">Sing Out</a></li>
+                <div class="row jobs">
+                </div>
+                <br>
+                <!-- Start Pagination -->
+                <div class="d-flex justify-content-start flex-wrap" id="pagination">
+                    <!-- left arrow -->
+                    <div class="arrow-button">
+                        <a style="background:none; cursor:pointer;" class="m-0 p-0" id="prev">
+                            <img src="@Url.Content("~/Content/img/left-arrow.png")" alt="YourAltText" height="25" class="mt-2" />
+                        </a>
+                    </div>
+                    <!-- Pagination tab's containing page numbers -->
+                    <div class="paginate-button">
+                        <ul class="pagination" id="pages" style="margin-top:0px;">
                         </ul>
                     </div>
-                </div>
-                <div class="col-lg-8 col-md-8 col-xs-12">
-                    <div class="job-alerts-item">
-                        <h3 class="alerts-title">Manage Jobs</h3>
-                        <div class="col-lg-12 col-md-12 col-xs-12 jobs">
-                        </div>
-                        <br>
-                        
-                        <!-- Start Pagination -->
-                        <div class="d-flex justify-content-start flex-wrap mt-md-0 mt-3" id="pagination">
-                            <!-- left arrow -->
-                            <div class="arrow-button">
-                                <a style="background:none; cursor:pointer;" class="m-0 p-0" id="prev">
-                                    <img src="@Url.Content("~/Content/img/left-arrow.png")" alt="YourAltText" height="25" class="mt-2" />
-                                </a>
-                            </div>
-                            <!-- Pagination tab's containing page numbers -->
-                            <div class="paginate-button">
-                               <ul class="pagination" id="pages">
-                                     
-                               </ul>
-                           </div>
-                           <div class="arrow-button">
-                               <a style="background: none; cursor: pointer;" class="m-0 p-0" id="next">
-                                   <img src="@Url.Content("~/Content/img/right-arrow.png")" alt="YourAltText" height="25" class="mt-2" />
-                               </a>
-                           </div>
-                        </div>
-                        <!-- End Pagination -->
+                    <div class="arrow-button">
+                        <a style="background: none; cursor: pointer;" class="m-0 p-0" id="next">
+                            <img src="@Url.Content("~/Content/img/right-arrow.png")" alt="YourAltText" height="25" class="mt-2" />
+                        </a>
                     </div>
                 </div>
-            </div>
+                <!-- End Pagination -->
+
         </div>
-    </div>
-    <!-- End Content -->
+    </section>
+    <!-- Job Browse Section End -->
 
     <!-- Preloader -->
     <div id="preloader">
@@ -116,22 +94,23 @@
 
             $(document).ready(function () {
                 let TotalRecords = 0;
-                let PageSize = 5;
+                let PageSize = 10;
                 let pages = 0;
                 let pageTabs = 0;
                 let counter = 1;
 
                 $.ajax({
                     type: "GET",
-                    url: "/api/Company/GetCompanyJobs?start=" + 0 + "&end=" + PageSize,
+                    url: "/api/Candidate/GetCandidateJobs?start=" + 0 + "&end=" + PageSize,
                     success: function (response) {
                         response['data'].forEach(data => {
                             $('.jobs').append(`
+                                        <div class="col-lg-6 col-md-12 col-xs-12">
                                           <span class="job-listings-featured">
                                              <div class="row">
-                                                <div class="col-lg-6 col-md-6 col-xs-12">
+                                                <div class="col-lg-6 col-md-12 col-xs-12">
                                                     <div class="job-details" style="margin-left:0!important;">
-                                                        <h3><a href="/company/JobDetails/${data.id}">${data.title}</a></h3>
+                                                        <h3><a href="/company/CandidateJobDetails/${data.id}">${data.title}</a></h3>
                                                         <span class="company-neme">${data.name}</span>
                                                         <div class="tags">
                                                             <span><i class="lni-map-marker"></i>${data.address}</span>
@@ -139,21 +118,14 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-lg-4 col-md-4 col-xs-12">
-                                                    <div class="tag-type">
+                                                <div class="col-lg-6 col-md-6 col-xs-12 text-right">
+                                                   <div class="tag-type">
                                                         <span class="${data.jobType == "full-time" ? 'full-time' : 'part-time'}">${data.jobType}</span>
                                                     </div>
                                                 </div>
-                                                <div class="col-lg-2 col-md-2 col-xs-12" style="margin-top:23px;">
-                                                   <a href="/Company/EditJob?Jobid=${data.id}" style="background: none; cursor: pointer;" class="edit" data-value="${data.id}">
-                                                       <img src="@Url.Content("~/Content/img/edit.png")" alt="YourAltText" height="25" class="mt-2" />
-                                                   </a>
-                                                    <a style="background: none; cursor: pointer;" class="delete" data-value="${data.id}">
-                                                       <img src="@Url.Content("~/Content/img/delete.png")" alt="YourAltText" height="25" class="mt-2" />
-                                                   </a>
-                                                 </div>
                                             </div>
                                         </span>
+                                      </div>
                                      `);
 
                         })
@@ -197,15 +169,16 @@
                     $('.jobs').html('');
                     $.ajax({
                         type: "GET",
-                        url: "/api/Company/GetCompanyJobs?start=" + start + "&end=" + end,
+                        url: "/api/Candidate/GetCandidateJobs?start=" + start + "&end=" + end,
                         success: function (response) {
                             response['data'].forEach(data => {
                                 $('.jobs').append(`
-                                        <span class="job-listings-featured">
-                                            <div class="row">
-                                                <div class="col-lg-6 col-md-6 col-xs-12">
+                                        <div class="col-lg-6 col-md-12 col-xs-12">
+                                          <span class="job-listings-featured">
+                                             <div class="row">
+                                                <div class="col-lg-6 col-md-12 col-xs-12">
                                                     <div class="job-details" style="margin-left:0!important;">
-                                                        <h3>${data.title}</h3>
+                                                        <h3><a href="/company/CandidateJobDetails/${data.id}">${data.title}</a></h3>
                                                         <span class="company-neme">${data.name}</span>
                                                         <div class="tags">
                                                             <span><i class="lni-map-marker"></i>${data.address}</span>
@@ -213,27 +186,19 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-lg-4 col-md-4 col-xs-12">
-                                                    <div class="tag-type">
+                                                <div class="col-lg-6 col-md-6 col-xs-12 text-right">
+                                                   <div class="tag-type">
                                                         <span class="${data.jobType == "full-time" ? 'full-time' : 'part-time'}">${data.jobType}</span>
                                                     </div>
                                                 </div>
-                                                <div class="col-lg-2 col-md-2 col-xs-12" style="margin-top:23px;">
-                                                   <a href="/Company/EditJob?Jobid=${data.id}" style="background: none; cursor: pointer;" class="edit" data-value="${data.id}">
-                                                       <img src="@Url.Content("~/Content/img/edit.png")" alt="YourAltText" height="25" class="mt-2" />
-                                                   </a>
-                                                    <a style="background: none; cursor: pointer;" class="delete" data-value="${data.id}">
-                                                       <img src="@Url.Content("~/Content/img/delete.png")" alt="YourAltText" height="25" class="mt-2" />
-                                                   </a>
-                                                 </div>
                                             </div>
                                         </span>
+                                      </div>
                                     `);
                             })
                         }
                     });
                 });
-
 
                 $('#next').click(function () {
                     if (counter != pageTabs) {
@@ -273,21 +238,21 @@
                         }
                     }
                 });
-
-                $(document).on('click', '.delete', function (e) {
-                    let id = $(this).data('value');
-                    $.ajax({
-                        type: "DELETE",
-                        url: "/api/Job/"+ id,
-                        success: function (response) {
-                            console.log(response);
-                            $(location).attr('href', '/Company/ManageJobs');
-                        }
-                    });
-                });
-
             });
         </script>
     }
-    </body>
+
+    <style>
+        .apply {
+            margin-top: 8px;
+            padding: 5px 15px;
+            font-size: 14px;
+            text-transform: capitalize;
+        }
+
+        .full-time .part-time {
+            font-size: 6px !important;
+        }
+    </style>
+</body>
 </html>

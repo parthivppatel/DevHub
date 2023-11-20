@@ -1,0 +1,327 @@
+﻿
+@{
+    ViewBag.Title = "JobDetails";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!-- Page Header Start -->
+    <div class="page-header">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-md-6 col-xs-12">
+                    <div class="breadcrumb-wrapper">
+                        <div class="img-wrapper">
+                            <img src="" alt="" id="logo" height="90">
+                        </div>
+                        <div class="content">
+                            <h3 class="product-title"></h3>
+                            <p class="brand"></p>
+                            <div class="tags">
+                                <span class="mr-0"><i class="lni-map-marker"></i></span><span id="country"></span>
+                                <span class="mr-1"><i class="lni-calendar"></i> Posted</span><span id="date"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 col-xs-12">
+                    <div class="month-price">
+                        <span class="stype"></span>
+                        <div style="font-size:20px;">₹<span class="min-salary"></span> - ₹<span class="max-salary"></span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Page Header End -->
+    <!-- Job Detail Section Start -->
+    <section class="job-detail section">
+        <div class="container">
+            <div class="row justify-content-between">
+                <div class="col-lg-12 col-md-12 col-xs-12">
+                    <div class="content-area">
+                        <div class="mt-2" id="description">
+                            <h4>Job Description</h4>
+                            <div class="border p-2 rounded">
+                                <p></p>
+                                <span style="cursor:pointer;" id="download"><img src="@Url.Content("~/Content/img/download.png")" alt="YourAltText" height="15" class="mr-2" />Download Info</span>
+                            </div>
+                        </div>
+                        <div class="d-none mt-4" id="qualification">
+                            <h4>Qualification</h4>
+                            <div class="border p-2 rounded">
+                                <p></p>
+                            </div>
+                        </div>
+                        <div class="d-none mt-4" id="experience">
+                            <h4>Experience</h4>
+                            <div class="border p-2 rounded">
+                                <p></p>
+                            </div>
+                        </div>
+                        <div class="d-none mt-4" id="responsibilities">
+                            <h4>Responsibilities</h4>
+                            <div class="border p-2 rounded">
+                                <p></p>
+                            </div>
+                        </div>
+                        <div class="mode mt-5">
+                            <h4 class="mb-3">Mode</h4>
+                        </div>
+                        <div class="category mt-5">
+                            <h4 class="mb-3">Categories</h4>
+                        </div>
+                        <div class="skill mt-5">
+                            <h4 class="mb-3">Skills</h4>
+                        </div>
+                            <div class="mb-4">
+                                 @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Candidate")))
+                                  { 
+                                      <a href="" class="btn btn-common apply mt-5">Apply job</a>
+                                  }
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Job Detail Section End -->
+
+    <!-- Preloader -->
+    <div id="preloader">
+        <div class="loader" id="loader-1"></div>
+    </div>
+    <!-- End Preloader -->
+
+    @section scripts{
+        <script>
+
+            function getFileExtension(base64String) {
+                // Extract the first few characters of the base64 string
+                const signature = base64String.substring(0, 30);
+
+                // Define file signatures for common file types
+                const signatures = {
+                    '/9j/': 'jpg',
+                    'iVBORw': 'png',
+                    'UEsDBB': 'docx',
+                    'JVBERi0': 'pdf',
+                    // Add more signatures as needed
+                };
+
+                // Find a matching file signature
+                for (const [key, value] of Object.entries(signatures)) {
+                    if (signature.startsWith(key)) {
+                        return value;
+                    }
+                }
+
+                // If no match is found, assume it's an unknown binary file
+                return 'unknown';
+            }
+
+            $(document).ready(function () {
+                let message=@Html.Raw(Json.Encode(ViewBag.Message));
+                let id = message.id;
+                if (message.showbtn == false) {
+                    $('.apply').addClass('d-none');
+                }
+                let document_string = "";
+                let image_string = "";
+                let stype = {
+                    '1': 'Hourly',
+                    '2': 'Daily',
+                    '3': 'Weekly',
+                    '4': 'Monthly',
+                    '5': 'Yearly',
+                };
+
+                $.ajax({
+                    type: "GET",
+                    url: "/api/Job/" + id,
+                    success: function (response) {
+                        image_string = response.company_logo;
+                        document_string = response.document;
+
+                        $('.product-title').text(response.title);
+                        $('.brand').text(response.company_name);
+                        $('.stype').text(stype[response.stype])
+                        $('.min-salary').text(response.min_salary);
+                        $('.max-salary').text(response.max_salary);
+
+                        let description = response.description.replace(/\n/g, '<br>');
+                        $('#description p').html(description);
+
+                        if (document_string == "") {
+                            $('#download').addClass('d-none');
+                        }
+
+                        if (response.qualification != "") {
+                            let qualification = response.qualification.replace(/\n/g, '<br>');
+                            $('#qualification').removeClass('d-none');
+                            $('#qualification p').html(qualification);
+                        }
+                        if (response.experience != "") {
+                            let experience = response.experience.replace(/\n/g, '<br>');
+                            $('#experience').removeClass('d-none');
+                            $('#experience p').html(experience);
+                        }
+                        if (response.responsibilities != "") {
+                            let responsibilities = response.responsibilities.replace(/\n/g, '<br>');
+                            $('#responsibilities').removeClass('d-none');
+                            $('#responsibilities p').html(responsibilities);
+                        }
+
+                        let mode_data = JSON.parse(response.modeids);
+                        mode_data = mode_data['id'];
+                        mode_data = mode_data.map(str => parseInt(str));
+
+                        $.ajax({
+                            type: "GET",
+                            url: "/api/Job/GetJobModes",
+                            success: function (response) {
+                                response.forEach(item => {
+                                    if (mode_data.includes(item.id)) {
+                                        $('.mode').append(`<button class="btn mr-2 custom">${item.name}</button>`)
+                                    }
+                                });
+                            }
+                        });
+
+                        let category_data = JSON.parse(response.job_categoryids);
+                        category_data = category_data['id'];
+                        category_data = category_data.map(str => parseInt(str));
+
+                        $.ajax({
+                            type: "GET",
+                            url: "/api/Job/GetJobCategories",
+                            success: function (response) {
+                                response.forEach(item => {
+                                    if (category_data.includes(item.id)) {
+                                        $('.category').append(`<button class="btn mr-2 custom">${item.name}</button>`)
+                                    }
+                                });
+                            }
+                        });
+
+                        let skillid_data = JSON.parse(response.skillids);
+                        skillid_data = skillid_data['id'];
+                        skillid_data = skillid_data.map(str => parseInt(str));
+
+                        $.ajax({
+                            type: "GET",
+                            url: "/api/Skills",
+                            success: function (response) {
+                                response.forEach(item => {
+                                    if (skillid_data.includes(item.id)) {
+                                        $('.skill').append(`<button class="btn mr-2 custom">${item.name}</button>`)
+                                    }
+                                });
+                            }
+                        });
+
+                        let datetimeString = response.created_at;
+                        let dateTime = new Date(datetimeString);
+                        let options = { day: 'numeric', month: 'long', year: 'numeric' };
+                        let formattedDate = dateTime.toLocaleDateString('en-US', options);
+                        $('#date').text(formattedDate);
+                        $('#country').text(response.country_name);
+
+                        if (image_string != "") {
+                            extension = image_string.split(';')[0].split('/')[1]
+                            let byteCharacters = atob(image_string);
+                            let byteNumbers = new Array(byteCharacters.length);
+                            for (let i = 0; i < byteCharacters.length; i++) {
+                                byteNumbers[i] = byteCharacters.charCodeAt(i);
+                            }
+                            let byteArray = new Uint8Array(byteNumbers);
+                            let blob = new Blob([byteArray], { type: 'image/' + extension }); // Adjust the image type accordingly
+
+                            // Create a URL for the Blob
+                            let blobUrl = URL.createObjectURL(blob);
+
+                            // Set the image source to the Blob URL
+                            let img = document.getElementById('logo');
+                            img.src = blobUrl;
+
+
+                        }
+                        else {
+                            $('#logo').addClass('d-none');
+                        }
+                    }
+                });
+
+                $('.apply').on('click',function (e) {
+                    e.preventDefault();
+                    $.ajax({
+                        type: "POST",
+                        url: "/api/Candidate/ApplyJob?id=" + id,
+                        success: function (response) {
+                            $(location).attr('href', '/Candidate/Jobs');
+                        }
+                    });
+                })
+
+                $('#download').click(function (event) {
+                    event.preventDefault();
+                    let fileExtension = getFileExtension(document_string);
+                    fileExtension = fileExtension.toLowerCase();
+                    let fileType = "";
+
+                    // Decode base64 using TextDecoder with UTF-8 encoding
+                    const filename = "document";
+
+                    if (fileExtension == "pdf") {
+                        fileType = "application/pdf";
+                    }
+                    else if (fileExtension == "docx") {
+                        fileType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+                    }
+                    else if (fileExtension == "png") {
+                        fileType = "image/png";
+                    }
+                    else if (fileExtension == "jpg") {
+                        fileType = "image/jpeg";
+                    }
+                    else {
+                        fileType = "text/plain";
+                    }
+
+                    const dataUri = `data:${fileType};base64,${document_string}`;
+
+                    // Create a download link
+                    const downloadLink = document.createElement('a');
+                    downloadLink.href = dataUri;
+                    downloadLink.download = filename;
+
+                    // Append the link to the body
+                    document.body.appendChild(downloadLink);
+
+                    // Trigger the click event to start the download
+                    downloadLink.click();
+
+                    // Remove the link from the DOM
+                    document.body.removeChild(downloadLink);
+
+                });
+            });
+        </script>
+    }
+
+    <style>
+        .custom {
+            border-radius: 25px;
+            color: black;
+            pointer-events:none;
+        }
+    </style>
+</body>
+</html>
+ 

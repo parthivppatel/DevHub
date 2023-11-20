@@ -351,13 +351,50 @@ namespace DevHub.Controllers.API
         //[Authorize(Roles = "Admin,Company")]
         [Route("api/Candidate/GetCandidateJobs")]
         [HttpGet]
-        public IHttpActionResult CanidateJobs(int id)
+        public IHttpActionResult CanidateJobs(int start,int end)
         {
-            var candidateJobs = _context.candidate_job
-                         .Where(cj => cj.candidateid == id)
-                         .SelectMany(cj => _context.jobs.Where(j => j.id == cj.jobid))
-                         .ToList().Select(job => Mapper.Map<JobModel, JobDto>(job));
-            return Ok(candidateJobs);
+            var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
+            var userId = identity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var query = _context.candidate_job
+                    .Where(jm => jm.candidate.UserId == userId);
+
+            var totalRecords = query.Count();
+
+            var limitedRecords = query
+                 .Join(_context.jobs,
+                  cj => cj.jobid,
+                  j => j.id,
+                  (cj, j) => new { Job = j, CandidateJobMapper = cj })
+                 .Join(_context.company_job,
+                  candidate_job => candidate_job.Job.id,
+                  company_job => company_job.jobid,
+                  (candidate_job, company_job) => new { can_job = candidate_job, com_job = company_job })
+                 .Join(_context.company,
+                  mapper => mapper.com_job.companyid,
+                  company => company.id,
+                  (mapper, company) => new 
+                  {
+                    id = mapper.can_job.Job.id,
+                    title = mapper.can_job.Job.title,
+                    name=company.name,
+                    address = _context.country.FirstOrDefault(co=> co.id== mapper.can_job.Job.country.id).name,
+                    created_at = mapper.can_job.Job.created_at,
+                    JobType = _context.job_type.FirstOrDefault(j => j.id == mapper.can_job.Job.job_typeid).name
+                })
+                .OrderByDescending(j=>j.created_at)
+                .Skip(start)
+                .Take(end - start)
+                .ToList();
+
+
+            var result = new
+            {
+                TotalRecords = totalRecords,
+                data = limitedRecords
+            };
+
+            return Ok(result);
         }
 
         protected override void Dispose(bool disposing)

@@ -53,6 +53,7 @@
                                 </a>
                                 <ul class="dropdown-menu">
                                     @Html.ActionLink("Browse Jobs", "Jobs", "Candidate", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
+                                    @Html.ActionLink("Applied Jobs", "AppliedJobs", "Candidate", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
                                     @Html.ActionLink("Resume", "Resume", "Candidate", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
                                 </ul>
                             </li>
@@ -80,6 +81,7 @@
                                 </a>
                                 <ul class="dropdown-menu">
                                     @Html.ActionLink("Browse Jobs", "Jobs", "Candidate", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
+                                    @Html.ActionLink("Applied Jobs", "AppliedJobs", "Candidate", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
                                     @Html.ActionLink("Resume", "Resume", "Candidate", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
                                 </ul>
                             </li>
@@ -170,6 +172,9 @@
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
+        <a href="#" class="back-to-top">
+            <i class="lni-arrow-up"></i>
+        </a>
         <footer>
             <!-- Footer Area Start -->
             <section class="footer-Content">

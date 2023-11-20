@@ -276,8 +276,9 @@ namespace DevHub.Controllers.API
             var limitedRecords = query
                 .Select(jm => new
                 {
+                    id=jm.job.id,
                     title = jm.job.title,
-                    address = jm.company.address,
+                    address = jm.job.country.name,
                     name = jm.company.name,
                     created_at = jm.job.created_at,
                     JobType = _context.job_type.FirstOrDefault(j => j.id == jm.job.job_typeid).name

@@ -36,37 +36,33 @@
     <div class="section">
         <div class="container">
             <div class="row">
-                <div class="col-lg-4 col-md-4 col-xs-12">
-                    <div class="right-sideabr">
-                        <h4>Manage Account</h4>
-                        <ul class="list-item">
-                            <li>@Html.ActionLink("My Resume", "Resume", "Candidate", routeValues: null, htmlAttributes: new { @class = "active" })</li>
-                            <li><a href="manage-applications.html">Manage Applications</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-lg-8 col-md-8 col-xs-12">
+                <div class="col-lg-10 col-md-10 col-xs-12 mx-auto">
                     <div class="inner-box my-resume">
                         <div class="author-resume">
                             <div class="thumb">
                                 <img src="" id="myImage" alt="">
                             </div>
-                            <div class="author-info"  style="position: relative;">
-                               
-                                    <h3 id="full_name"></h3>
-                                    <p id="title" class="sub-title"></p>
-                                    <p><span class="address d-none" id="address"><i class="lni-map-marker"></i></span> ,<span class="d-none" id="phone"><i class="ti-phone"></i></span></p>
-                                    <div class="social-link">
-                                        <a href="#" class="facebook d-none" target="_blank"><i class="lni-facebook-filled"></i></a>
-                                        <a href="#" class="linkedin d-none" target="_blank"><i class="lni-linkedin-fill"></i></a>
-                                        <a href="#" class="instagram d-none" target="_blank"><i class="lni-instagram-filled"></i></a>
-                                        <a href="#" class="twitter d-none" target="_blank"><i class="lni-twitter-filled"></i></a>
-                                    </div>
+                            <div class="author-info" style="position: relative;">
+
+                                <h3 id="full_name"></h3>
+                                <p id="title" class="sub-title"></p>
+                                <p><span class="address d-none" id="address"><i class="lni-map-marker"></i></span> ,<span class="d-none" id="phone"><i class="ti-phone"></i></span></p>
+                                <div class="social-link">
+                                    <a href="#" class="facebook d-none" target="_blank"><i class="lni-facebook-filled"></i></a>
+                                    <a href="#" class="linkedin d-none" target="_blank"><i class="lni-linkedin-fill"></i></a>
+                                    <a href="#" class="instagram d-none" target="_blank"><i class="lni-instagram-filled"></i></a>
+                                    <a href="#" class="twitter d-none" target="_blank"><i class="lni-twitter-filled"></i></a>
                                 </div>
-                                    <a href="@Url.Action("EditResume", "Candidate")" style="position: absolute; top: 15px; right: 40px;">
-                                        <img src="@Url.Content("~/Content/img/editing.png")" alt="YourAltText"  height="30" class="mt-2" />
-                                    </a>
                             </div>
+                            @if (User.IsInRole("Candidate"))
+                            {
+                                <a class="edit" href="" style="position: absolute; top: 15px; right: 40px;">
+                                    <img src="@Url.Content("~/Content/img/editing.png")" alt="YourAltText" height="30" class="mt-2" />
+                                </a>
+
+                            }
+
+                        </div>
                         <div class="about-me item">
                             <h3>About Me</h3>
                             <p id="about_me"></p>
@@ -100,9 +96,10 @@
         <script>
             $(document).ready(function () {
 
+                let id =@ViewBag.Message;
                 $.ajax({
                     type: "GET",
-                    url: "/api/Candidate/CandidateDetails",
+                    url: "/api/Candidate/CandidateDetails?id="+id,
                     success: function (response) {
                         $('#full_name').text(response.first_name + " " + response.surname)
                         $('#title').text(response.title)
@@ -133,7 +130,7 @@
                             $('.twitter').attr('href', response.twitter);
                             $('.twitter').removeClass('d-none');
                         }
-                     
+
 
                         let skillid_data = JSON.parse(response.skillids);
                         skillid_data = skillid_data['id'];
@@ -230,6 +227,13 @@
                         }
                     }
                 });
+
+
+                $('.edit').click(function (event) {
+                    event.preventDefault();
+                    id = btoa(id);
+                    $(location).attr('href', '/Candidate/EditResume/' + id);
+                })
             });
 
         </script>

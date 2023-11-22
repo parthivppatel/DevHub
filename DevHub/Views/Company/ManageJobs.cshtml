@@ -101,7 +101,9 @@
                 const diffMonths = Math.floor(diffDays / 30);
                 const diffYears = Math.floor(diffMonths / 12);
 
-                if (diffMinutes < 60) {
+                if (diffSeconds < 60) {
+                    return Math.floor(diffSeconds) + " seconds ago";
+                } else if (diffMinutes < 60) {
                     return diffMinutes + " minutes ago";
                 } else if (diffHours < 24) {
                     return diffHours + " hours ago";
@@ -145,7 +147,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-2 col-md-2 col-xs-12" style="margin-top:23px;">
-                                                   <a href="/Company/EditJob?Jobid=${data.id}" style="background: none; cursor: pointer;" class="edit" data-value="${data.id}">
+                                                   <a href="/Company/EditJob?Jobid=${btoa(data.id.toString())}" style="background: none; cursor: pointer;" class="edit" data-value="${data.id}">
                                                        <img src="@Url.Content("~/Content/img/edit.png")" alt="YourAltText" height="25" class="mt-2" />
                                                    </a>
                                                     <a style="background: none; cursor: pointer;" class="delete" data-value="${data.id}">
@@ -219,7 +221,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-2 col-md-2 col-xs-12" style="margin-top:23px;">
-                                                   <a href="/Company/EditJob?Jobid=${data.id}" style="background: none; cursor: pointer;" class="edit" data-value="${data.id}">
+                                                   <a href="/Company/EditJob?Jobid=${btoa(data.id.toString())}" style="background: none; cursor: pointer;" class="edit" data-value="${data.id}">
                                                        <img src="@Url.Content("~/Content/img/edit.png")" alt="YourAltText" height="25" class="mt-2" />
                                                    </a>
                                                     <a style="background: none; cursor: pointer;" class="delete" data-value="${data.id}">

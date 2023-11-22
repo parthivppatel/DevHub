@@ -232,13 +232,13 @@ namespace DevHub.Controllers.API
             return Ok("Candidate Updated Successfully");
         }
 
-        [Authorize(Roles = "Admin,Candidate")]
+        [Authorize(Roles = "Admin,Candidate,Company")]
         [Route("api/Candidate/CandidateDetails")]
-        public IHttpActionResult GetCandidate()
+        public IHttpActionResult GetCandidate(int id)
         {
-            var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
-            var userId = identity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var candidate = _context.candidate.Where(c => c.UserId == userId).AsEnumerable().Select(c => new CandidateDto
+            //var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
+            //var userId = identity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var candidate = _context.candidate.Where(c => c.id == id).AsEnumerable().Select(c => new CandidateDto
             {
                 id = c.id,
                 first_name = c.first_name,
@@ -326,9 +326,18 @@ namespace DevHub.Controllers.API
                         return BadRequest("Job Not Found");
 
                     var candidate_id = _context.candidate.SingleOrDefault(c => c.UserId == userId).id;
-                    var check_job_same_candidate = _context.candidate_job.Where(c => c.jobid == id && c.candidateid == candidate_id).SingleOrDefault(c => c.jobid == id);
+                    var check_job_same_candidate = _context.candidate_job.SingleOrDefault(c => c.jobid == id && c.candidateid == candidate_id && c.stage != "Rejected");
                     if (check_job_same_candidate != null)
                         return BadRequest("You are already applied for this job");
+
+                    var check_applied_second_time = _context.candidate_job.SingleOrDefault(c => c.jobid == id && c.candidateid == candidate_id);
+                    if (check_applied_second_time != null)
+                    {
+                        check_applied_second_time.created_at = DateTime.Now;
+                        check_applied_second_time.stage = "Applied";
+                        _context.SaveChanges();
+                        return Ok("Job Applied Successfully");
+                    }
 
                     var candidate_job = new CandidateJobDto
                     {
@@ -338,6 +347,7 @@ namespace DevHub.Controllers.API
 
                     var Candidatejob = Mapper.Map<CandidateJobDto, CandidateJobMapper>(candidate_job);
                     Candidatejob.created_at = DateTime.Now;
+                    Candidatejob.stage = "Applied";
                     _context.candidate_job.Add(Candidatejob);
                     _context.SaveChanges();
 
@@ -378,8 +388,10 @@ namespace DevHub.Controllers.API
                     id = mapper.can_job.Job.id,
                     title = mapper.can_job.Job.title,
                     name=company.name,
+                    company_id=company.id,
                     address = _context.country.FirstOrDefault(co=> co.id== mapper.can_job.Job.country.id).name,
-                    created_at = mapper.can_job.Job.created_at,
+                    created_at = mapper.can_job.CandidateJobMapper.created_at,
+                    stage=mapper.can_job.CandidateJobMapper.stage,
                     JobType = _context.job_type.FirstOrDefault(j => j.id == mapper.can_job.Job.job_typeid).name
                 })
                 .OrderByDescending(j=>j.created_at)

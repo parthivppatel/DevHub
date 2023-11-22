@@ -307,7 +307,7 @@
 
                 $.ajax({
                     type: "GET",
-                    url: "/api/Candidate/CandidateDetails",
+                    url: "/api/Candidate/CandidateDetails?id=" +@ViewBag.Message,
                     success: function (response) {
 
                         $.ajax({

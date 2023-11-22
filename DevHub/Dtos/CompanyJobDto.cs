@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using DevHub.Models;
 
 namespace DevHub.Dtos
 {
@@ -9,6 +10,10 @@ namespace DevHub.Dtos
     {
         public int id { get; set; }
         public int companyid { get; set; }
+        
+        public CompanyModel Company;
         public int jobid { get; set; }
+
+        public JobModel Job;
     }
 }

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 
@@ -64,13 +65,24 @@ namespace DevHub.Controllers
         }
         
         [CustomAuthorization("Admin", "Company")]
-        public ActionResult EditCompanyDetails()
+        public ActionResult EditCompanyDetails(string id)
         {
             if (CheckCompanyExist() == false)
             {
                 ViewBag.Message = "Please Create Company First";
                 return View("Add_Company");
             }
+
+            int decodedId = 0;
+            try
+            {
+                decodedId = Convert.ToInt32(Encoding.UTF8.GetString(Convert.FromBase64String(id)));
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction("CompanyProfile", "Company");
+            }
+            ViewBag.Message = decodedId;
 
             return View();
         }
@@ -128,7 +140,7 @@ namespace DevHub.Controllers
 
         [CustomAuthorization("Admin", "Company")]
 
-        public ActionResult EditJob(int jobId)
+        public ActionResult EditJob(string jobId)
         {
             if (CheckCompanyExist() == false)
             {
@@ -136,27 +148,63 @@ namespace DevHub.Controllers
                 return View("Add_Company");
             }
 
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-            var userIdClaim = identity.FindFirst(ClaimTypes.NameIdentifier).Value;
-            var company = _context.company.SingleOrDefault(c => c.UserId == userIdClaim);
-
-            var check = _context.company_job.SingleOrDefault(c => c.companyid == company.id && c.jobid == jobId);
-            if (check == null)
+            int decodedId = 0;
+            try
             {
-                return View("ManageJobs");// Redirect to unauthorized page
+                decodedId = Convert.ToInt32(Encoding.UTF8.GetString(Convert.FromBase64String(jobId)));
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction("ManageJobs", "Company");
             }
 
-            ViewBag.message = jobId;
+            //var identity = HttpContext.User.Identity as ClaimsIdentity;
+            //var userIdClaim = identity.FindFirst(ClaimTypes.NameIdentifier).Value;
+            //var company = _context.company.SingleOrDefault(c => c.UserId == userIdClaim);
+
+            //var check = _context.company_job.SingleOrDefault(c => c.companyid == company.id && c.jobid == decodedId);
+            //if (check == null)
+            //{
+            //    return View("ManageJobs");// Redirect to unauthorized page
+            //}
+
+            ViewBag.message = decodedId;
             return View();
         }
 
-        [CustomAuthorization("Admin", "Company")]
-        public ActionResult CompanyProfile()
+        [CustomAuthorization("Admin", "Company","Candidate")]
+        public ActionResult CompanyProfile(string id=null)
         {
-            if (CheckCompanyExist() == false)
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var userIdClaim = identity.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var role = identity.FindFirst(ClaimTypes.Role).Value;
+
+            if (role == "Company")
             {
-                ViewBag.Message = "Please Create Company First";
-                return View("Add_Company");
+                var company_id = _context.company.SingleOrDefault(c => c.UserId == userIdClaim).id;
+                if (CheckCompanyExist() == false)
+                {
+                    ViewBag.Message = "Please Create Company First";
+                    return View("Add_Company");
+                }
+
+                ViewBag.Message = company_id;
+            }
+            else
+            {
+                if (id == null)
+                    return RedirectToAction("Jobs", "Candidate");
+
+                int decodedId = 0;
+                try
+                {
+                   decodedId = Convert.ToInt32(Encoding.UTF8.GetString(Convert.FromBase64String(id)));
+                }
+                catch (Exception e)
+                {
+                    return RedirectToAction("Jobs", "Candidate");
+                }
+                ViewBag.Message = decodedId;
             }
 
             return View();

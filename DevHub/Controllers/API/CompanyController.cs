@@ -194,14 +194,15 @@ namespace DevHub.Controllers.API
             return Ok("Company Updated Successfully");
         }
 
-        [Authorize(Roles = "Admin,Company")]
+        [Authorize(Roles = "Admin,Company,Candidate")]
         [Route("api/Company/CompanyDetails")]
 
-        public IHttpActionResult GetCompany()
+        public IHttpActionResult GetCompany(int id)
         {
-            var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
-            var userId = identity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var company = _context.company.Where(c => c.UserId == userId).AsEnumerable().Select(c => new CompanyDto
+            //var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
+            //var userId = identity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var company = _context.company.Where(c => c.id == id).AsEnumerable().Select(c => new CompanyDto
             {
                 id=c.id,
                 name=c.name,
@@ -282,6 +283,54 @@ namespace DevHub.Controllers.API
                     name = jm.company.name,
                     created_at = jm.job.created_at,
                     JobType = _context.job_type.FirstOrDefault(j => j.id == jm.job.job_typeid).name
+                })
+                .Skip(start)
+                .Take(end - start)
+                .ToList();
+
+
+            var result = new
+            {
+                TotalRecords = totalRecords,
+                data = limitedRecords
+            };
+
+            return Ok(result);
+        }
+        
+        //[Authorize(Roles = "Admin,Company")]
+        [Route("api/Company/GetCompanyApplications")]
+        [HttpGet]
+        public IHttpActionResult CompanyApplications(int start,int end)
+        {
+            var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
+            var userId = identity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var query = _context.company_job
+                         .Join(_context.jobs,
+                         com_job => com_job.jobid,
+                         j => j.id,
+                         (com_job, j) => new { Job = j, comjobmapper = com_job })
+                         .Join(_context.candidate_job,
+                         company_job => company_job.Job.id,
+                         candidate_job => candidate_job.jobid,
+                         (company_job, candidate_job) => new { candidate_job = candidate_job, company_job = company_job })
+                    .Where(r => r.company_job.comjobmapper.company.UserId == userId && r.candidate_job.stage == "Applied") //Default Filter
+                    .OrderBy(jm => jm.candidate_job.stage);
+
+            var totalRecords = query.Count();
+
+            var limitedRecords = query
+                .Select(jm => new
+                {
+                    id=jm.company_job.Job.id,
+                    title = jm.company_job.Job.title,
+                    candidate_id=jm.candidate_job.candidate.id,
+                    candidate_name = (jm.candidate_job.candidate.first_name+" "+jm.candidate_job.candidate.surname),
+                    company_name = jm.company_job.comjobmapper.company.name,
+                    stage = jm.candidate_job.stage,
+                    created_at = jm.candidate_job.created_at,
+                    JobType = _context.job_type.FirstOrDefault(j => j.id == jm.company_job.Job.job_typeid).name
                 })
                 .Skip(start)
                 .Take(end - start)

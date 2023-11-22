@@ -263,6 +263,17 @@ namespace DevHub.Controllers.API
             return Ok("Job Updated Successfully");
         }
 
+        //[Authorize(Roles = "Admin,Candidate")]
+        [Route("api/Job/JobStatus")]
+        public IHttpActionResult ApproveRejectJob(int candidate_id,int job_id,string stage)
+        {
+            var candidate_job = _context.candidate_job.SingleOrDefault(cj => cj.jobid == job_id && cj.candidateid == candidate_id);
+            candidate_job.stage = stage;
+            _context.SaveChanges();
+
+            return Ok("Job "+ stage + " Succesfully");
+        }
+        
         [Authorize(Roles = "Admin,Candidate,Company")]
         public IHttpActionResult GetJob(int id)
         {
@@ -318,39 +329,93 @@ namespace DevHub.Controllers.API
         [Authorize(Roles = "Admin,Company,Candidate")]
         public IHttpActionResult GetJobs(int start,int end)
         {
-            
-            var query = _context.company_job;
+            var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
+            var userId = identity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var role = identity.FindFirst(ClaimTypes.Role).Value;
 
-            var totalRecords = query.Count();
-
-            var limitedRecords = query
-                  .Join(
-                     _context.country,
-                     jm => jm.job.countryid,
-                     c => c.id,
-                     (jm, c) => new
-                     {
-                         id = jm.job.id,
-                         title = jm.job.title,
-                         address = c.name,  // Access country name through the joined table
-                         name = jm.company.name,
-                         created_at = jm.job.created_at,
-                         JobType = _context.job_type.FirstOrDefault(j => j.id == jm.job.job_typeid).name
-                     }
-                  )
-                 .OrderByDescending(j => j.created_at)
-                 .Skip(start)
-                 .Take(end - start)
-                 .ToList();
-
-
-            var result = new
+            if (role == "Candidate")
             {
-                TotalRecords = totalRecords,
-                data = limitedRecords
-            };
+                var candidate_id = _context.candidate.SingleOrDefault(c => c.UserId == userId).id;
 
-            return Ok(result);
+                var query = _context.company_job
+                         .Join(_context.jobs,
+                         com_job => com_job.jobid,
+                         j => j.id,
+                         (com_job, j) => new { Job = j, comjobmapper = com_job })
+                         .GroupJoin(_context.candidate_job,
+                         company_job => company_job.Job.id,
+                         candidate_job => candidate_job.jobid,
+                         (company_job, candidate_job) => new { candidate_job = candidate_job, company_job = company_job })
+                         .SelectMany(
+                         x => x.candidate_job.DefaultIfEmpty(),
+                         (x, candidate_job) => new { x.company_job, candidate_job })
+                        .Where(r => (r.candidate_job.candidateid != candidate_id || r.candidate_job.stage == "Rejected") &&
+                        r.candidate_job.stage != "Applied" && r.candidate_job.stage != "Approved");
+
+
+                var totalRecords = query.Count();
+                         
+                         var limitedRecords = query
+                               .Join(
+                                  _context.country,
+                                  jm => jm.company_job.Job.countryid,
+                                  c => c.id,
+                                  (jm, c) => new
+                                  {
+                                      id = jm.company_job.Job.id,
+                                      title = jm.company_job.Job.title,
+                                      address = c.name, 
+                                      name = jm.company_job.comjobmapper.company.name,
+                                      company_id=jm.company_job.comjobmapper.company.id,
+                                      created_at = jm.company_job.Job.created_at,
+                                      JobType = _context.job_type.FirstOrDefault(j => j.id == jm.company_job.Job.job_typeid).name
+                                  }
+                               )
+                              .OrderByDescending(j => j.created_at)
+                              .Skip(start)
+                              .Take(end - start)
+                              .ToList();
+
+                var result = new
+                {
+                    TotalRecords = totalRecords,
+                    data = limitedRecords
+                };
+                return Ok(result);
+            }
+            else
+            {
+                var query = _context.company_job;
+                var totalRecords = query.Count();
+
+                var limitedRecords = query
+                      .Join(
+                         _context.country,
+                         jm => jm.job.countryid,
+                         c => c.id,
+                         (jm, c) => new
+                         {
+                             id = jm.job.id,
+                             title = jm.job.title,
+                             address = c.name, 
+                             name = jm.company.name,
+                             company_id = jm.company.id,
+                             created_at = jm.job.created_at,
+                             JobType = _context.job_type.FirstOrDefault(j => j.id == jm.job.job_typeid).name
+                         }
+                      )
+                     .OrderByDescending(j => j.created_at)
+                     .Skip(start)
+                     .Take(end - start)
+                     .ToList();
+
+                var result = new
+                {
+                    TotalRecords = totalRecords,
+                    data = limitedRecords
+                };
+                return Ok(result);
+            }
         }
 
         [HttpDelete]

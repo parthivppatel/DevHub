@@ -361,6 +361,10 @@
     <Compile Include="Migrations\202311191456225_stype_column_in_jobs.Designer.cs">
       <DependentUpon>202311191456225_stype_column_in_jobs.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202311201813312_add_stage_column_in_candidate_job.cs" />
+    <Compile Include="Migrations\202311201813312_add_stage_column_in_candidate_job.Designer.cs">
+      <DependentUpon>202311201813312_add_stage_column_in_candidate_job.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CandidateJobMapper.cs" />
@@ -466,11 +470,13 @@
     <Content Include="Content\img\about\company-logo.png" />
     <Content Include="Content\img\about\img1.jpg" />
     <Content Include="Content\img\app.png" />
+    <Content Include="Content\img\approve.svg" />
     <Content Include="Content\img\banner.jpg" />
     <Content Include="Content\img\bg\app.png" />
     <Content Include="Content\img\bg\bg-intro.jpg" />
     <Content Include="Content\img\bg\dd.jpg" />
     <Content Include="Content\img\delete.png" />
+    <Content Include="Content\img\download.png" />
     <Content Include="Content\img\edit.png" />
     <Content Include="Content\img\editing.png" />
     <Content Include="Content\img\features\img-1.jpg" />
@@ -510,6 +516,7 @@
     <Content Include="Content\img\product\img1.png" />
     <Content Include="Content\img\product\img2.png" />
     <Content Include="Content\img\product\img3.png" />
+    <Content Include="Content\img\reject.svg" />
     <Content Include="Content\img\resume\img-1.png" />
     <Content Include="Content\img\right-arrow.png" />
     <Content Include="Content\img\search.png" />
@@ -724,6 +731,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202311191456225_stype_column_in_jobs.resx">
       <DependentUpon>202311191456225_stype_column_in_jobs.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202311201813312_add_stage_column_in_candidate_job.resx">
+      <DependentUpon>202311201813312_add_stage_column_in_candidate_job.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

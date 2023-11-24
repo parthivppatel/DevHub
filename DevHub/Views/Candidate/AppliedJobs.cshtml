@@ -33,11 +33,35 @@
     <!-- Job Browse Section Start -->
     <section class="job-browse section">
         <div class="container">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-xs-12">
+                    <div class="wrap-search-filter row">
+                        <div class="col-lg-3 col-md-3 col-xs-12 pl-2 pr-2">
+                            <input type="text" id="title" class="form-control" placeholder="Keyword: Title">
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-xs-12 pl-2 pr-2">
+                            <select class="form-control" id="stage">
+                                <option value="All">All</option>
+                                <option value="Applied" selected>Applied</option>
+                                <option value="Approved">Approved</option>
+                                <option value="Rejected">Rejected</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-xs-12 pl-2 pr-2">
+                            <select class="form-control" id="job-type">
+                                <option value="">Select Type</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-xs-12">
+                            <button type="submit" class="btn btn-common float-right mr-3 filter">Filter</button>
+                        </div>
+                    </div>
+                </div>
                 <div class="row jobs" style="width:100%;">
                 </div>
                 <br>
                 <!-- Start Pagination -->
-                <div class="d-flex justify-content-start flex-wrap" id="pagination">
+                <div class="d-none justify-content-start flex-wrap" id="pagination">
                     <!-- left arrow -->
                     <div class="arrow-button">
                         <a style="background:none; cursor:pointer;" class="m-0 p-0" id="prev">
@@ -56,7 +80,7 @@
                     </div>
                 </div>
                 <!-- End Pagination -->
-
+            </div>
         </div>
     </section>
     <!-- Job Browse Section End -->
@@ -100,13 +124,18 @@
                 let pages = 0;
                 let pageTabs = 0;
                 let counter = 1;
+                let filter = { 'stage': 'Applied' };
 
-                $.ajax({
-                    type: "GET",
-                    url: "/api/Candidate/GetCandidateJobs?start=" + 0 + "&end=" + PageSize,
-                    success: function (response) {
-                        response['data'].forEach(data => {
-                            $('.jobs').append(`
+                function CandidateApplications() {
+                    $.ajax({
+                        type: "POST",
+                        url: "/api/Candidate/GetCandidateJobs?start=" + 0 + "&end=" + PageSize,
+                        data: JSON.stringify(filter),
+                        processData: false,
+                        contentType: 'application/json',
+                        success: function (response) {
+                            response['data'].forEach(data => {
+                                $('.jobs').append(`
                                         <div class="col-lg-6 col-md-12 col-xs-12">
                                           <span class="job-listings-featured">
                                              <div class="row">
@@ -124,7 +153,7 @@
                                                    <div class="tag-type mt-0">
                                                         <span class="${data.jobType == "full-time" ? 'full-time' : 'part-time'}">${data.jobType}</span>
                                                     </div>
-                                                    <a style="pointer-events:none;" class="${data.stage == "Approved" ? 'btn btn-success' : data.stage =='Applied'? 'btn btn-primary' :  'btn btn-danger'} stage">
+                                                    <a style="pointer-events:none;" class="${data.stage == "Approved" ? 'btn btn-success' : data.stage == 'Applied' ? 'btn btn-primary' : 'btn btn-danger'} stage">
                                                       ${data.stage}
                                                    </a>
                                                 </div>
@@ -133,36 +162,59 @@
                                       </div>
                                      `);
 
-                        })
-                        TotalRecords = response['totalRecords'];
-                        pages = Math.ceil(TotalRecords / PageSize);
-                        pageTabs = Math.ceil(pages / 5);
-                        if (pages == 0) {
-                            $('#pagination').removeClass('d-flex');
-                            $('#pagination').addClass('d-none');
-                        }
-                        else if (pages <= 5) {
-                            $('#prev img').css('filter', 'saturate(0)');
-                            $('#next img').css('filter', 'saturate(0)');
+                            })
+                            $('.jobs').css('min-height', '0px');
 
-                            for (let i = 1; i <= 5; i++) {
-                                $('#pages').append(`<li class="page-item"><a class="page-link color">${i}</a></li>`);
-                                if (i == pages) {
-                                    break;
+                            TotalRecords = response['totalRecords'];
+                            pages = Math.ceil(TotalRecords / PageSize);
+                            pageTabs = Math.ceil(pages / 5);
+                            $('#prev img').css('filter', '');
+                            $('#next img').css('filter', '');
+                            if (pages == 0) {
+                                $('#pagination').removeClass('d-flex');
+                                $('#pagination').addClass('d-none');
+                            }
+                            else if (pages <= 5) {
+                                $('#pagination').removeClass('d-none');
+                                $('#pagination').addClass('d-flex');
+                                $('#prev img').css('filter', 'saturate(0)');
+                                $('#next img').css('filter', 'saturate(0)');
+
+                                for (let i = 1; i <= 5; i++) {
+                                    $('#pages').append(`<li class="page-item"><a class="page-link color">${i}</a></li>`);
+                                    if (i == pages) {
+                                        break;
+                                    }
                                 }
+                                $('#prev img').css('filter', 'saturate(0)');
                             }
-                            $('#prev img').css('filter', 'saturate(0)');
-                        }
-                        else {
-                            for (let i = 1; i <= 5; i++) {
-                                $('#pages').append(`<li class="page-item"><a class="page-link color">${i}</a></li>`);
+                            else {
+                                $('#pagination').removeClass('d-none');
+                                $('#pagination').addClass('d-flex');
+                                for (let i = 1; i <= 5; i++) {
+                                    $('#pages').append(`<li class="page-item"><a class="page-link color">${i}</a></li>`);
 
+                                }
+                                $('#prev img').css('filter', 'saturate(0)');
                             }
-                            $('#prev img').css('filter', 'saturate(0)');
-                        }
 
-                        $('a.color').filter(':contains("1")').css('color', 'black');
-                    }
+                            $('a.color').filter(':contains("1")').css('color', 'black');
+                        }
+                    });
+                }
+            
+                CandidateApplications();
+
+                $('.filter').click(function (event) {
+                    event.preventDefault();
+                    $('.jobs').css('min-height', '646px');
+                    filter['stage'] = $('#stage').val();
+                    filter['title'] = $('#title').val();
+                    filter['jobtype'] = $('#job-type').val();
+                    $('.jobs').html('');
+                    $('#pages').html('');
+                    CandidateApplications();
+
                 });
 
                 $(document).on('click', '.color', function (e) {
@@ -171,10 +223,14 @@
                     let value = $(this).text();
                     let end = value * PageSize;
                     let start = end - PageSize;
+                    $('.jobs').css('min-height', '646px');
                     $('.jobs').html('');
                     $.ajax({
-                        type: "GET",
+                        type: "POST",
                         url: "/api/Candidate/GetCandidateJobs?start=" + start + "&end=" + end,
+                        data: JSON.stringify(filter),
+                        processData: false,
+                        contentType: 'application/json',
                         success: function (response) {
                             response['data'].forEach(data => {
                                 $('.jobs').append(`
@@ -201,8 +257,19 @@
                                       </div>
                                     `);
                             })
+                            $('.jobs').css('min-height', '0px');
                         }
                     });
+                });
+
+                $.ajax({
+                    type: "GET",
+                    url: "/api/Job/GetJobTypes",
+                    success: function (response) {
+                        response.forEach(item => {
+                            $('#job-type').append("<option value=" + item.id + ">" + item.name + "</option >");
+                        });
+                    }
                 });
 
                 $('#next').click(function () {

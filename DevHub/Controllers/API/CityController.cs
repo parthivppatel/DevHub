@@ -32,6 +32,15 @@ namespace DevHub.Controllers.API
             return Ok(citieslist);
         }
 
+        [Authorize]
+        public IEnumerable<CityDto> GetCityWithFilter(string letter)
+        {
+            var citylist = _context.city;
+
+            var filterlist =citylist.Where(word => word.cityname.ToLower().StartsWith(letter.ToLower())).ToList().Select(Mapper.Map<CityModel, CityDto>);
+            return filterlist;
+        }
+
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);

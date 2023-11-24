@@ -14,7 +14,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <meta name="author" content="UIdeck">
     <title>JobX - Bootstrap HTML5 Job Portal Template</title>
-
+    <style>
+        .list-group::-webkit-scrollbar {
+            display: none;  
+        }
+    </style>
 </head>
 
 <body>
@@ -37,14 +41,23 @@
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-xs-12">
                     <div class="wrap-search-filter row">
-                        <div class="col-lg-5 col-md-5 col-xs-12">
-                            <input type="text" class="form-control" placeholder="Keyword: Name, Tag">
+                        <div class="col-lg-3 col-md-3 col-xs-12 pl-2 pr-2">
+                            <input type="text" class="form-control" placeholder="Keyword: Name" id="title">
                         </div>
-                        <div class="col-lg-5 col-md-5 col-xs-12">
-                            <input type="text" class="form-control" placeholder="Location: City, State, Zip">
+                        <div class="col-lg-3 col-md-3 col-xs-12 pl-2 pr-2">
+                            <input type="text" class="form-control"  id="city" autocomplete="off" placeholder="Location: City">
                         </div>
-                        <div class="col-lg-2 col-md-2 col-xs-12">
-                            <button type="submit" class="btn btn-common float-right">Filter</button>
+                        <div class="col-lg-3 col-md-3 col-xs-12 pl-2 pr-2">
+                            <select class="form-control" id="job-type">
+                                <option value="">Select Type</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-xs-12">
+                            <button type="submit" class="btn btn-common float-right mr-3 filter">Filter</button>
+                        </div>
+                        <div class="col-lg-3 col-md-3 offset-lg-3 col-xs-12 pl-2 pr-2" style="position: absolute; margin-top: 41px; z-index: 1">
+                            <div class="list-group" style="max-height: 229px; overflow-y: auto;" id="show-list">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -53,7 +66,7 @@
                 </div>
         
                     <!-- Start Pagination -->
-                    <div class="d-flex justify-content-start flex-wrap" id="pagination">
+                    <div class="d-none justify-content-start flex-wrap" id="pagination">
                         <!-- left arrow -->
                         <div class="arrow-button">
                             <a style="background:none; cursor:pointer;" class="m-0 p-0" id="prev">
@@ -116,13 +129,19 @@
                 let pages = 0;
                 let pageTabs = 0;
                 let counter = 1;
+                let city_data;
+                let filter = { 'title': '', 'jobtype': '' };
 
-                $.ajax({
-                    type: "GET",
-                    url: "/api/Job?start=" + 0 + "&end=" + PageSize,
-                    success: function (response) {
-                        response['data'].forEach(data => {
-                            $('.jobs').append(`
+                function jobs() {
+                    $.ajax({
+                        type: "POST",
+                        url: "/api/Job?start=" + 0 + "&end=" + PageSize,
+                        data: JSON.stringify(filter),
+                        processData: false,
+                        contentType: 'application/json',
+                        success: function (response) {
+                            response['data'].forEach(data => {
+                                $('.jobs').append(`
                                         <div class="col-lg-6 col-md-12 col-xs-12">
                                           <span class="job-listings-featured">
                                              <div class="row">
@@ -149,37 +168,47 @@
                                       </div>
                                      `);
 
-                        })
-                        TotalRecords = response['totalRecords'];
-                        pages = Math.ceil(TotalRecords / PageSize);
-                        pageTabs = Math.ceil(pages / 5);
-                        if (pages == 0) {
-                            $('#pagination').removeClass('d-flex');
-                            $('#pagination').addClass('d-none');
-                        }
-                        else if (pages <= 5) {
-                            $('#prev img').css('filter', 'saturate(0)');
-                            $('#next img').css('filter', 'saturate(0)');
+                            })
+                            $('.jobs').css('min-height', '0px');
+                            TotalRecords = response['totalRecords'];
+                            pages = Math.ceil(TotalRecords / PageSize);
+                            pageTabs = Math.ceil(pages / 5);
+                            $('#prev img').css('filter', '');
+                            $('#next img').css('filter', '');
+                            if (pages == 0) {
+                                $('#pagination').removeClass('d-flex');
+                                $('#pagination').addClass('d-none');
+                            }
+                            else if (pages <= 5) {
+                                $('#pagination').removeClass('d-none');
+                                $('#pagination').addClass('d-flex');
+                                $('#prev img').css('filter', 'saturate(0)');
+                                $('#next img').css('filter', 'saturate(0)');
 
-                            for (let i = 1; i <= 5; i++) {
-                                $('#pages').append(`<li class="page-item"><a class="page-link color">${i}</a></li>`);
-                                if (i == pages) {
-                                    break;
+                                for (let i = 1; i <= 5; i++) {
+                                    $('#pages').append(`<li class="page-item"><a class="page-link color">${i}</a></li>`);
+                                    if (i == pages) {
+                                        break;
+                                    }
                                 }
+                                $('#prev img').css('filter', 'saturate(0)');
                             }
-                            $('#prev img').css('filter', 'saturate(0)');
-                        }
-                        else {
-                            for (let i = 1; i <= 5; i++) {
-                                $('#pages').append(`<li class="page-item"><a class="page-link color">${i}</a></li>`);
+                            else {
+                                $('#pagination').removeClass('d-none');
+                                $('#pagination').addClass('d-flex');
+                                for (let i = 1; i <= 5; i++) {
+                                    $('#pages').append(`<li class="page-item"><a class="page-link color">${i}</a></li>`);
 
+                                }
+                                $('#prev img').css('filter', 'saturate(0)');
                             }
-                            $('#prev img').css('filter', 'saturate(0)');
-                        }
 
-                        $('a.color').filter(':contains("1")').css('color', 'black');
-                    }
-                });
+                            $('a.color').filter(':contains("1")').css('color', 'black');
+                        }
+                    });
+                }
+
+                jobs();
 
                 $(document).on('click', '.color', function (e) {
                     $(this).css('color', 'black');
@@ -187,10 +216,14 @@
                     let value = $(this).text();
                     let end = value * PageSize;
                     let start = end - PageSize;
+                    $('.jobs').css('min-height', '646px');
                     $('.jobs').html('');
                     $.ajax({
-                        type: "GET",
+                        type: "POST",
                         url: "/api/Job?start=" + start + "&end=" + end,
+                        data: JSON.stringify(filter),
+                        processData: false,
+                        contentType: 'application/json',
                         success: function (response) {
                             response['data'].forEach(data => {
                                 $('.jobs').append(`
@@ -220,8 +253,65 @@
                                       </div>
                                     `);
                             })
+                            $('.jobs').css('min-height', '0px');
                         }
                     });
+                });
+
+                $('#city').keyup(function () {
+                    let value = $(this).val();
+                    $('#show-list').css('min-height', '229px');
+                    $('#city').data('value', 0);
+                    $('#show-list').html('');
+                    if (value != "") {
+                        $.ajax({
+                            type: "GET",
+                            url: "/api/City?letter=" + value,
+                            success: function (response) {
+                                city_data = response;
+                                response.forEach(item => {
+                                    $('#show-list').append("<a href=''class='list-group-item list-group-item-action' data-value=" + item.id + ">" + item.cityname + "</a>");
+                                });
+                            }
+                        });
+                    }
+                    else {
+                        $('#show-list').html('');
+                    }
+                    $('#show-list').css('min-height', '0px');
+                });
+
+                $(document).on('click', '#show-list a', function (e) {
+                    e.preventDefault();
+                    $('#city').val($(this).text());
+                    $('#city').data('value', $(this).data('value'));
+                    $('#show-list').html('');
+                });
+
+                $('.filter').click(function (event) {
+                    event.preventDefault();
+                    $('.jobs').css('min-height', '646px');
+                    filter['title'] = $('#title').val();
+                    filter['jobtype'] = $('#job-type').val();
+
+                    let city_value = $('#city').val();
+                    let city_id = $('#city').data('value');
+                    filter['cityid'] = city_id;
+
+                    if (city_value != "" && city_id == 0) {
+                        city_value = city_value.toLowerCase();
+                        let city = city_data.filter(data => data.cityname.toLowerCase() == city_value);
+                        if (city.length > 0) {
+                            city_id = city[0].id;
+                            filter['cityid'] = city_id;
+                        }
+                    }
+                    if (city_value == "")
+                        delete filter.cityid;
+
+                    $('.jobs').html('');
+                    $('#pages').html('');
+                    jobs();
                 });
 
                 $(document).on('click', '.apply', function (e) {
@@ -235,6 +325,16 @@
                         }
                     });
                 })
+
+                $.ajax({
+                    type: "GET",
+                    url: "/api/Job/GetJobTypes",
+                    success: function (response) {
+                        response.forEach(item => {
+                            $('#job-type').append("<option value=" + item.id + ">" + item.name + "</option >");
+                        });
+                    }
+                });
 
                 $('#next').click(function () {
                     if (counter != pageTabs) {

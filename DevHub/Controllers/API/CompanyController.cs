@@ -262,15 +262,30 @@ namespace DevHub.Controllers.API
 
         //[Authorize(Roles = "Admin,Company")]
         [Route("api/Company/GetCompanyJobs")]
-        [HttpGet]
-        public IHttpActionResult CompanyJobs(int start,int end)
+        [HttpPost]
+        public IHttpActionResult CompanyJobs(int start,int end, [FromBody] Dictionary<string, object> filter)
         {
             var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
             var userId = identity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            var query= _context.company_job
-                    .Where(jm => jm.company.UserId == userId)
-                    .OrderByDescending(jm => jm.job.created_at);
+            var query = _context.company_job
+                    .Where(jm => jm.company.UserId == userId);
+
+            if (filter != null)
+            {
+                if (filter.ContainsKey("jobtype") && filter["jobtype"].ToString() != "")
+                {
+                    var jobtypeFilter = int.Parse(filter["jobtype"].ToString());
+                    query = query.Where(r => r.job.job_typeid == jobtypeFilter);
+                }
+                if (filter.ContainsKey("title") && filter["title"].ToString() != "")
+                {
+                    var titleFilter = filter["title"].ToString().ToLower();
+                    query = query.Where(r => r.job.title.ToLower().Contains(titleFilter));
+                }
+            }
+
+            query = query.OrderByDescending(jm => jm.job.created_at);
 
             var totalRecords = query.Count();
 
@@ -279,7 +294,7 @@ namespace DevHub.Controllers.API
                 {
                     id=jm.job.id,
                     title = jm.job.title,
-                    address = jm.job.country.name,
+                    address = jm.job.city.cityname,
                     name = jm.company.name,
                     created_at = jm.job.created_at,
                     JobType = _context.job_type.FirstOrDefault(j => j.id == jm.job.job_typeid).name
@@ -300,8 +315,8 @@ namespace DevHub.Controllers.API
         
         //[Authorize(Roles = "Admin,Company")]
         [Route("api/Company/GetCompanyApplications")]
-        [HttpGet]
-        public IHttpActionResult CompanyApplications(int start,int end)
+        [HttpPost]
+        public IHttpActionResult CompanyApplications(int start,int end, [FromBody] Dictionary<string, object> filter)
         {
             var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
             var userId = identity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -315,8 +330,28 @@ namespace DevHub.Controllers.API
                          company_job => company_job.Job.id,
                          candidate_job => candidate_job.jobid,
                          (company_job, candidate_job) => new { candidate_job = candidate_job, company_job = company_job })
-                    .Where(r => r.company_job.comjobmapper.company.UserId == userId && r.candidate_job.stage == "Applied") //Default Filter
-                    .OrderBy(jm => jm.candidate_job.stage);
+                    .Where(r => r.company_job.comjobmapper.company.UserId == userId); 
+
+            if (filter != null)
+            {
+                if (filter.ContainsKey("stage") && filter["stage"].ToString()!="All")
+                {
+                    var stageFilter = filter["stage"].ToString();
+                    query=query.Where(r => r.candidate_job.stage == stageFilter);
+                }
+                if (filter.ContainsKey("jobtype") && filter["jobtype"].ToString()!="")
+                {
+                    var jobtypeFilter = int.Parse(filter["jobtype"].ToString());
+                    query=query.Where(r => r.candidate_job.job.job_typeid == jobtypeFilter);
+                }
+                if (filter.ContainsKey("title") && filter["title"].ToString()!="")
+                {
+                    var titleFilter = filter["title"].ToString().ToLower();
+                    query=query.Where(r => r.candidate_job.job.title.ToLower().Contains(titleFilter));
+                }
+            }
+
+            query = query.OrderBy(jm => jm.candidate_job.stage);
 
             var totalRecords = query.Count();
 

@@ -52,24 +52,34 @@
                 <div class="col-lg-8 col-md-12 col-xs-12">
                     <div class="job-alerts-item">
                         <h3 class="alerts-title">Manage applications</h3>
-                    <div class="col-lg-12 col-md-12 col-xs-12 mb-4">
-                        <div class="wrap-search-filter row">
-                            <div class="col-lg-5 col-md-5 col-xs-12">
-                                <input type="text" class="form-control" placeholder="Keyword: Name, Tag">
-                            </div>
-                            <div class="col-lg-5 col-md-5 col-xs-12">
-                                <input type="text" class="form-control" placeholder="Location: City, State, Zip">
-                            </div>
-                            <div class="col-lg-2 col-md-2 col-xs-12">
-                                <button type="submit" class="btn btn-common float-right" style="padding:10px 20px;">Filter</button>
+                        <div class="col-lg-12 col-md-12 col-xs-12 mb-4">
+                            <div class="wrap-search-filter row">
+                                <div class="col-lg-3 col-md-3 col-xs-12 pr-0">
+                                    <input type="text" id="title" class="form-control" placeholder="Keyword: Title">
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-xs-12 pr-0">
+                                    <select class="form-control" id="stage">
+                                        <option value="All">All</option>
+                                        <option value="Applied" selected>Pending</option>
+                                        <option value="Approved">Approved</option>
+                                        <option value="Rejected">Rejected</option>
+                                    </select>
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-xs-12 pr-0">
+                                    <select class="form-control" id="job-type">
+                                        <option value="">Select Type</option>
+                                    </select>
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-xs-12">
+                                    <button class="btn btn-common float-right filter" style="padding:9px 25px;">Filter</button>
+                                </div>
                             </div>
                         </div>
-                    </div>
                         <div class="col-lg-12 col-md-12 col-xs-12 applications">
                         </div>
                         <br>
                         <!-- Start Pagination -->
-                        <div class="d-flex justify-content-start flex-wrap mt-md-0 mt-3" id="pagination">
+                        <div class="d-none justify-content-start flex-wrap mt-md-0 mt-3" id="pagination">
                             <!-- left arrow -->
                             <div class="arrow-button">
                                 <a style="background:none; cursor:pointer;" class="m-0 p-0" id="prev">
@@ -135,73 +145,107 @@
                 let counter = 1;
                 let job_id = 0;
                 let candidate_id = 0;
+                let filter = {'stage':'Applied'};
 
-                $.ajax({
-                    type: "GET",
-                    url: "/api/Company/GetCompanyApplications?start=" + 0 + "&end=" + PageSize,
-                    success: function (response) {
-                        response['data'].forEach(data => {
-                            $('.applications').append(`
-                                          <span class="job-listings-featured">
-                                             <div class="row">
-                                                <div class="col-lg-6 col-md-6 col-xs-12">
-                                                    <div class="job-details" style="margin-left:0!important;">
-                                                        <h3><a href="/company/JobDetails/${data.id}">${data.title}</a></h3>
-                                                        <span class="company-neme">${data.company_name}</span>
-                                                        <div class="tags">
-                                                            <span><i class="lni-user"></i><a style="text-transform:capitalize;" href="/candidate/Resume/${btoa(data.candidate_id.toString())}">${data.candidate_name}</a></span>
-                                                            <span><i class="lni-alarm-clock"></i>${formatDate(new Date(data.created_at))}</span>
+                function getCompanyApplications() {
+
+                    $.ajax({
+                        type: "POST",
+                        url: "/api/Company/GetCompanyApplications?start=" + 0 + "&end=" + PageSize,
+                        data: JSON.stringify(filter),
+                        processData: false,
+                        contentType: 'application/json',
+                        success: function (response) {
+                            response['data'].forEach(data => {
+                                $('.applications').append(`
+                                              <span class="job-listings-featured">
+                                                 <div class="row">
+                                                    <div class="col-lg-6 col-md-6 col-xs-12">
+                                                        <div class="job-details" style="margin-left:0!important;">
+                                                            <h3><a href="/company/JobDetails/${data.id}">${data.title}</a></h3>
+                                                            <span class="company-neme">${data.company_name}</span>
+                                                            <div class="tags">
+                                                                <span><i class="lni-user"></i><a style="text-transform:capitalize;" href="/candidate/Resume/${btoa(data.candidate_id.toString())}">${data.candidate_name}</a></span>
+                                                                <span><i class="lni-alarm-clock"></i>${formatDate(new Date(data.created_at))}</span>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div class="col-lg-4 col-md-4 col-xs-12">
-                                                    <div class="tag-type">
-                                                        <span class="${data.jobType == "full-time" ? 'full-time' : 'part-time'}">${data.jobType}</span>
+                                                    <div class="col-lg-4 col-md-4 col-xs-12">
+                                                        <div class="tag-type">
+                                                            <span class="${data.jobType == "full-time" ? 'full-time' : 'part-time'}">${data.jobType}</span>
+                                                        </div>
                                                     </div>
+                                                    <div class="col-lg-2 col-md-2 col-xs-12" style="margin-top:23px;">
+                                                     ${data.stage == 'Applied' ?
+                                                       `<a style="background: none; cursor: pointer;" class="approve" data-candidate="${data.candidate_id}" data-job="${data.id}">
+                                                           <img src="@Url.Content("~/Content/img/approve.svg")" alt="YourAltText" height="25" class="mt-2" />
+                                                       </a>
+                                                        <a style="background: none; cursor: pointer;" class="reject" data-candidate="${data.candidate_id} data-job="${data.id}">
+                                                           <img src="@Url.Content("~/Content/img/reject.svg")" alt="YourAltText" height="25" class="mt-2" />
+                                                       </a>`
+                                                     : data.stage == 'Approved' ?
+                                                      '<a style="pointer-events:none;" class="btn btn-success stage">Approved</a>'
+                                                     : '<a style="pointer-events:none;" class="btn btn-danger stage">Rejected</a>'}
+                                                     </div>
                                                 </div>
-                                                <div class="col-lg-2 col-md-2 col-xs-12" style="margin-top:23px;">
-                                                   <a style="background: none; cursor: pointer;" class="approve" data-candidate="${data.candidate_id}" data-job="${data.id}">
-                                                       <img src="@Url.Content("~/Content/img/approve.svg")" alt="YourAltText" height="25" class="mt-2" />
-                                                   </a>
-                                                    <a style="background: none; cursor: pointer;" class="reject" data-candidate="${data.candidate_id} data-job="${data.id}">
-                                                       <img src="@Url.Content("~/Content/img/reject.svg")" alt="YourAltText" height="25" class="mt-2" />
-                                                   </a>
-                                                 </div>
-                                            </div>
-                                        </span>
-                                     `);
+                                            </span>
+                                         `);
 
-                        });
+                            });
+                            $('.applications').css('min-height', '0px');
 
-                        TotalRecords = response['totalRecords'];
-                        pages = Math.ceil(TotalRecords / PageSize);
-                        pageTabs = Math.ceil(pages / 5);
-                        if (pages == 0) {
-                            $('#pagination').removeClass('d-flex');
-                            $('#pagination').addClass('d-none');
-                        }
-                        else if (pages <= 5) {
-                            $('#prev img').css('filter', 'saturate(0)');
-                            $('#next img').css('filter', 'saturate(0)');
+                            TotalRecords = response['totalRecords'];
+                            pages = Math.ceil(TotalRecords / PageSize);
+                            pageTabs = Math.ceil(pages / 5);
+                            $('#prev img').css('filter', '');
+                            $('#next img').css('filter', '');
 
-                            for (let i = 1; i <= 5; i++) {
-                                $('#pages').append(`<li class="page-item"><a class="page-link color">${i}</a></li>`);
-                                if (i == pages) {
-                                    break;
+                            if (pages == 0) {
+                                $('#pagination').removeClass('d-flex');
+                                $('#pagination').addClass('d-none');
+                            }
+                            else if (pages <= 5) {
+                                $('#pagination').removeClass('d-none');
+                                $('#pagination').addClass('d-flex');
+                                $('#prev img').css('filter', 'saturate(0)');
+                                $('#next img').css('filter', 'saturate(0)');
+
+                                for (let i = 1; i <= 5; i++) {
+                                    $('#pages').append(`<li class="page-item"><a class="page-link color">${i}</a></li>`);
+                                    if (i == pages) {
+                                        break;
+                                    }
                                 }
+                                $('#prev img').css('filter', 'saturate(0)');
                             }
-                            $('#prev img').css('filter', 'saturate(0)');
-                        }
-                        else {
-                            for (let i = 1; i <= 5; i++) {
-                                $('#pages').append(`<li class="page-item"><a class="page-link color">${i}</a></li>`);
+                            else {
+                                $('#pagination').removeClass('d-none');
+                                $('#pagination').addClass('d-flex');
+                                for (let i = 1; i <= 5; i++) {
+                                    $('#pages').append(`<li class="page-item"><a class="page-link color">${i}</a></li>`);
 
+                                }
+                                $('#prev img').css('filter', 'saturate(0)');
                             }
-                            $('#prev img').css('filter', 'saturate(0)');
-                        }
 
-                        $('a.color').filter(':contains("1")').css('color', 'black');
-                    }
+                            $('a.color').filter(':contains("1")').css('color', 'black');
+                        }
+                    });
+
+                }
+
+                getCompanyApplications();
+
+                $('.filter').click(function (event) {
+                    event.preventDefault();
+                    $('.applications').css('min-height', '646px');
+                    filter['stage'] = $('#stage').val();
+                    filter['title'] = $('#title').val();
+                    filter['jobtype'] = $('#job-type').val();
+                    $('.applications').html('');
+                    $('#pages').html('');
+                    getCompanyApplications();
+
                 });
 
                 $(document).on('click', '.approve', function (e) {
@@ -236,10 +280,14 @@
                     let value = $(this).text();
                     let end = value * PageSize;
                     let start = end - PageSize;
+                    $('.applications').css('min-height', '646px');
                     $('.applications').html('');
                     $.ajax({
-                        type: "GET",
+                        type: "POST",
                         url: "/api/Company/GetCompanyApplications?start=" + start + "&end=" + end,
+                        data: JSON.stringify(filter),
+                        processData: false,
+                        contentType: 'application/json',
                         success: function (response) {
                             response['data'].forEach(data => {
                                 $('.applications').append(`
@@ -261,21 +309,35 @@
                                                     </div>
                                                 </div>
                                                  <div class="col-lg-2 col-md-2 col-xs-12" style="margin-top:23px;">
-                                                   <a style="background: none; cursor: pointer;" class="approve" data-candidate="${data.candidate_id}" data-job="${data.id}">
-                                                       <img src="@Url.Content("~/Content/img/approve.svg")" alt="YourAltText" height="25" class="mt-2" />
-                                                   </a>
-                                                    <a style="background: none; cursor: pointer;" class="reject" data-candidate="${data.candidate_id} data-job="${data.id}">
-                                                       <img src="@Url.Content("~/Content/img/reject.svg")" alt="YourAltText" height="25" class="mt-2" />
-                                                   </a>
+                                                   ${data.stage == 'Applied' ?
+                                                       `<a style="background: none; cursor: pointer;" class="approve" data-candidate="${data.candidate_id}" data-job="${data.id}">
+                                                           <img src="@Url.Content("~/Content/img/approve.svg")" alt="YourAltText" height="25" class="mt-2" />
+                                                       </a>
+                                                        <a style="background: none; cursor: pointer;" class="reject" data-candidate="${data.candidate_id} data-job="${data.id}">
+                                                           <img src="@Url.Content("~/Content/img/reject.svg")" alt="YourAltText" height="25" class="mt-2" />
+                                                       </a>`
+                                                     : data.stage == 'Approved' ?
+                                                      '<a style="pointer-events:none;" class="btn btn-success stage">Approved</a>'
+                                                     : '<a style="pointer-events:none;" class="btn btn-danger stage">Rejected</a>'}
                                                  </div>
                                             </div>
                                         </span>
                                     `);
                             })
+                            $('.applications').css('min-height', '0px');
                         }
                     });
                 });
 
+                $.ajax({
+                    type: "GET",
+                    url: "/api/Job/GetJobTypes",
+                    success: function (response) {
+                        response.forEach(item => {
+                            $('#job-type').append("<option value=" + item.id + ">" + item.name + "</option >");
+                        });
+                    }
+                });
 
                 $('#next').click(function () {
                     if (counter != pageTabs) {
@@ -318,5 +380,13 @@
             });
         </script>
     }
+    <style>
+        .stage {
+            padding: 6px;
+            font-size: 12px;
+            margin-top:5px;
+            text-transform: capitalize;
+        }
+    </style>
 </body>
 </html>

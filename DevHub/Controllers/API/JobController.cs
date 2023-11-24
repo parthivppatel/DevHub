@@ -327,7 +327,8 @@ namespace DevHub.Controllers.API
         }
 
         [Authorize(Roles = "Admin,Company,Candidate")]
-        public IHttpActionResult GetJobs(int start,int end)
+        [HttpPost]
+        public IHttpActionResult GetJobs(int start,int end, [FromBody] Dictionary<string, object> filter)
         {
             var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
             var userId = identity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -352,29 +353,47 @@ namespace DevHub.Controllers.API
                         .Where(r => (r.candidate_job.candidateid != candidate_id || r.candidate_job.stage == "Rejected") &&
                         r.candidate_job.stage != "Applied" && r.candidate_job.stage != "Approved");
 
+                if (filter != null)
+                {
+                    if (filter.ContainsKey("jobtype") && filter["jobtype"].ToString() != "")
+                    {
+                        var jobtypeFilter = int.Parse(filter["jobtype"].ToString());
+                        query = query.Where(r => r.company_job.comjobmapper.job.job_typeid == jobtypeFilter);
+                    }
+                    if (filter.ContainsKey("cityid") && filter["cityid"].ToString() != "")
+                    {
+                        var cityFilter = int.Parse(filter["cityid"].ToString());
+                        query = query.Where(r => r.company_job.comjobmapper.job.cityid == cityFilter);
+                    }
+                    if (filter.ContainsKey("title") && filter["title"].ToString() != "")
+                    {
+                        var titleFilter = filter["title"].ToString().ToLower();
+                        query = query.Where(r => r.company_job.comjobmapper.job.title.ToLower().Contains(titleFilter));
+                    }
+                }
 
                 var totalRecords = query.Count();
                          
-                         var limitedRecords = query
-                               .Join(
-                                  _context.country,
-                                  jm => jm.company_job.Job.countryid,
-                                  c => c.id,
-                                  (jm, c) => new
-                                  {
-                                      id = jm.company_job.Job.id,
-                                      title = jm.company_job.Job.title,
-                                      address = c.name, 
-                                      name = jm.company_job.comjobmapper.company.name,
-                                      company_id=jm.company_job.comjobmapper.company.id,
-                                      created_at = jm.company_job.Job.created_at,
-                                      JobType = _context.job_type.FirstOrDefault(j => j.id == jm.company_job.Job.job_typeid).name
-                                  }
-                               )
-                              .OrderByDescending(j => j.created_at)
-                              .Skip(start)
-                              .Take(end - start)
-                              .ToList();
+                var limitedRecords = query
+                      .Join(
+                         _context.city,
+                         jm => jm.company_job.Job.cityid,
+                         c => c.id,
+                         (jm, c) => new
+                         {
+                             id = jm.company_job.Job.id,
+                             title = jm.company_job.Job.title,
+                             address = c.cityname, 
+                             name = jm.company_job.comjobmapper.company.name,
+                             company_id=jm.company_job.comjobmapper.company.id,
+                             created_at = jm.company_job.Job.created_at,
+                             JobType = _context.job_type.FirstOrDefault(j => j.id == jm.company_job.Job.job_typeid).name
+                         }
+                      )
+                     .OrderByDescending(j => j.created_at)
+                     .Skip(start)
+                     .Take(end - start)
+                     .ToList();
 
                 var result = new
                 {
@@ -385,19 +404,39 @@ namespace DevHub.Controllers.API
             }
             else
             {
-                var query = _context.company_job;
+                var query = _context.company_job.AsQueryable();
+                
+                if (filter != null)
+                {
+                    if (filter.ContainsKey("jobtype") && filter["jobtype"].ToString() != "")
+                    {
+                        var jobtypeFilter = int.Parse(filter["jobtype"].ToString());
+                        query = query.Where(r => r.job.job_typeid == jobtypeFilter);
+                    }
+                    if (filter.ContainsKey("cityid") && filter["cityid"].ToString() != "")
+                    {
+                        var cityFilter = int.Parse(filter["cityid"].ToString());
+                        query = query.Where(r => r.job.cityid == cityFilter);
+                    }
+                    if (filter.ContainsKey("title") && filter["title"].ToString() != "")
+                    {
+                        var titleFilter = filter["title"].ToString();
+                        query = query.Where(r => r.job.title.Contains(titleFilter));
+                    }
+                }
+
                 var totalRecords = query.Count();
 
                 var limitedRecords = query
                       .Join(
-                         _context.country,
-                         jm => jm.job.countryid,
+                         _context.city,
+                         jm => jm.job.cityid,
                          c => c.id,
                          (jm, c) => new
                          {
                              id = jm.job.id,
                              title = jm.job.title,
-                             address = c.name, 
+                             address = c.cityname, 
                              name = jm.company.name,
                              company_id = jm.company.id,
                              created_at = jm.job.created_at,

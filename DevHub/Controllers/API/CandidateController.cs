@@ -360,14 +360,33 @@ namespace DevHub.Controllers.API
 
         //[Authorize(Roles = "Admin,Company")]
         [Route("api/Candidate/GetCandidateJobs")]
-        [HttpGet]
-        public IHttpActionResult CanidateJobs(int start,int end)
+        [HttpPost]
+        public IHttpActionResult CanidateJobs(int start,int end, [FromBody] Dictionary<string, object> filter)
         {
             var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
             var userId = identity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             var query = _context.candidate_job
                     .Where(jm => jm.candidate.UserId == userId);
+
+            if (filter != null)
+            {
+                if (filter.ContainsKey("stage") && filter["stage"].ToString() != "All")
+                {
+                    var stageFilter = filter["stage"].ToString();
+                    query = query.Where(r => r.stage == stageFilter);
+                }
+                if (filter.ContainsKey("jobtype") && filter["jobtype"].ToString() != "")
+                {
+                    var jobtypeFilter = int.Parse(filter["jobtype"].ToString());
+                    query = query.Where(r => r.job.job_typeid == jobtypeFilter);
+                }
+                if (filter.ContainsKey("title") && filter["title"].ToString() != "")
+                {
+                    var titleFilter = filter["title"].ToString().ToLower();
+                    query = query.Where(r => r.job.title.ToLower().Contains(titleFilter));
+                }
+            }
 
             var totalRecords = query.Count();
 
@@ -389,7 +408,7 @@ namespace DevHub.Controllers.API
                     title = mapper.can_job.Job.title,
                     name=company.name,
                     company_id=company.id,
-                    address = _context.country.FirstOrDefault(co=> co.id== mapper.can_job.Job.country.id).name,
+                    address = _context.city.FirstOrDefault(city=> city.id== mapper.can_job.Job.city.id).cityname,
                     created_at = mapper.can_job.CandidateJobMapper.created_at,
                     stage=mapper.can_job.CandidateJobMapper.stage,
                     JobType = _context.job_type.FirstOrDefault(j => j.id == mapper.can_job.Job.job_typeid).name

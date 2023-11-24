@@ -51,12 +51,27 @@
                 <div class="col-lg-8 col-md-8 col-xs-12">
                     <div class="job-alerts-item">
                         <h3 class="alerts-title">Manage Jobs</h3>
+                        <div class="col-lg-12 col-md-12 col-xs-12 mb-4">
+                            <div class="wrap-search-filter row">
+                                <div class="col-lg-5 col-md-5 col-xs-12 pr-0">
+                                    <input type="text" id="title" class="form-control" placeholder="Keyword: Title">
+                                </div>
+                                <div class="col-lg-5 col-md-5 col-xs-12 pr-0">
+                                    <select class="form-control" id="job-type">
+                                        <option value="">Select Type</option>
+                                    </select>
+                                </div>
+                                <div class="col-lg-2 col-md-2 col-xs-12">
+                                    <button class="btn btn-common float-right filter" style="padding:8px 15px;">Filter</button>
+                                </div>
+                            </div>
+                        </div>
                         <div class="col-lg-12 col-md-12 col-xs-12 jobs">
                         </div>
                         <br>
-                        
+
                         <!-- Start Pagination -->
-                        <div class="d-flex justify-content-start flex-wrap mt-md-0 mt-3" id="pagination">
+                        <div class="d-none justify-content-start flex-wrap mt-md-0 mt-3" id="pagination">
                             <!-- left arrow -->
                             <div class="arrow-button">
                                 <a style="background:none; cursor:pointer;" class="m-0 p-0" id="prev">
@@ -65,15 +80,14 @@
                             </div>
                             <!-- Pagination tab's containing page numbers -->
                             <div class="paginate-button">
-                               <ul class="pagination" id="pages">
-                                     
-                               </ul>
-                           </div>
-                           <div class="arrow-button">
-                               <a style="background: none; cursor: pointer;" class="m-0 p-0" id="next">
-                                   <img src="@Url.Content("~/Content/img/right-arrow.png")" alt="YourAltText" height="25" class="mt-2" />
-                               </a>
-                           </div>
+                                <ul class="pagination" id="pages">
+                                </ul>
+                            </div>
+                            <div class="arrow-button">
+                                <a style="background: none; cursor: pointer;" class="m-0 p-0" id="next">
+                                    <img src="@Url.Content("~/Content/img/right-arrow.png")" alt="YourAltText" height="25" class="mt-2" />
+                                </a>
+                            </div>
                         </div>
                         <!-- End Pagination -->
                     </div>
@@ -122,15 +136,109 @@
                 let pages = 0;
                 let pageTabs = 0;
                 let counter = 1;
+                let filter = {'title':'','jobtype':''};
 
-                $.ajax({
-                    type: "GET",
-                    url: "/api/Company/GetCompanyJobs?start=" + 0 + "&end=" + PageSize,
-                    success: function (response) {
-                        response['data'].forEach(data => {
-                            $('.jobs').append(`
-                                          <span class="job-listings-featured">
-                                             <div class="row">
+                function getCompanyJobs() {
+                    $.ajax({
+                        type: "POST",
+                        url: "/api/Company/GetCompanyJobs?start=" + 0 + "&end=" + PageSize,
+                        data: JSON.stringify(filter),
+                        processData: false,
+                        contentType: 'application/json',
+                        success: function (response) {
+                            response['data'].forEach(data => {
+                                $('.jobs').append(`
+                                              <span class="job-listings-featured">
+                                                 <div class="row">
+                                                    <div class="col-lg-6 col-md-6 col-xs-12">
+                                                        <div class="job-details" style="margin-left:0!important;">
+                                                            <h3><a href="/company/JobDetails/${data.id}">${data.title}</a></h3>
+                                                            <span class="company-neme">${data.name}</span>
+                                                            <div class="tags">
+                                                                <span><i class="lni-map-marker"></i>${data.address}</span>
+                                                                <span><i class="lni-alarm-clock"></i>${formatDate(new Date(data.created_at))}</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-4 col-md-4 col-xs-12">
+                                                        <div class="tag-type">
+                                                            <span class="${data.jobType == "full-time" ? 'full-time' : 'part-time'}">${data.jobType}</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-2 col-md-2 col-xs-12" style="margin-top:23px;">
+                                                       <a href="/Company/EditJob?Jobid=${btoa(data.id.toString())}" style="background: none; cursor: pointer;" class="edit" data-value="${data.id}">
+                                                           <img src="@Url.Content("~/Content/img/edit.png")" alt="YourAltText" height="25" class="mt-2" />
+                                                       </a>
+                                                        <a style="background: none; cursor: pointer;" class="delete" data-value="${data.id}">
+                                                           <img src="@Url.Content("~/Content/img/delete.png")" alt="YourAltText" height="25" class="mt-2" />
+                                                       </a>
+                                                     </div>
+                                                </div>
+                                            </span>
+                                         `);
+
+                            })
+                            $('.jobs').css('min-height', '0px');
+                            TotalRecords = response['totalRecords'];
+                            pages = Math.ceil(TotalRecords / PageSize);
+                            pageTabs = Math.ceil(pages / 5);
+                            $('#prev img').css('filter', '');
+                            $('#next img').css('filter', '');
+                            if (pages == 0) {
+                                $('#pagination').removeClass('d-flex');
+                                $('#pagination').addClass('d-none');
+                            }
+                            else if (pages <= 5) {
+                                $('#pagination').removeClass('d-none');
+                                $('#pagination').addClass('d-flex');
+                                $('#prev img').css('filter', 'saturate(0)');
+                                $('#next img').css('filter', 'saturate(0)');
+
+                                for (let i = 1; i <= 5; i++) {
+                                    $('#pages').append(`<li class="page-item"><a class="page-link color">${i}</a></li>`);
+                                    if (i == pages) {
+                                        break;
+                                    }
+                                }
+                                $('#prev img').css('filter', 'saturate(0)');
+                            }
+                            else {
+                                $('#pagination').removeClass('d-none');
+                                $('#pagination').addClass('d-flex');
+                                for (let i = 1; i <= 5; i++) {
+                                    $('#pages').append(`<li class="page-item"><a class="page-link color">${i}</a></li>`);
+
+                                }
+                                $('#prev img').css('filter', 'saturate(0)');
+                            }
+
+                            $('a.color').filter(':contains("1")').css('color', 'black');
+                        }
+                    });
+
+                }
+
+                getCompanyJobs();
+
+                $(document).on('click', '.color', function (e) {
+                    $(this).css('color', 'black');
+                    $('.color').not(this).css('color', 'white');
+                    let value = $(this).text();
+                    let end = value * PageSize;
+                    let start = end - PageSize;
+                    $('.jobs').css('min-height', '646px');
+                    $('.jobs').html('');
+                    $.ajax({
+                        type: "POST",
+                        url: "/api/Company/GetCompanyJobs?start=" + start + "&end=" + end,
+                        data: JSON.stringify(filter),
+                        processData: false,
+                        contentType: 'application/json',
+                        success: function (response) {
+                            response['data'].forEach(data => {
+                                $('.jobs').append(`
+                                        <span class="job-listings-featured">
+                                            <div class="row">
                                                 <div class="col-lg-6 col-md-6 col-xs-12">
                                                     <div class="job-details" style="margin-left:0!important;">
                                                         <h3><a href="/company/JobDetails/${data.id}">${data.title}</a></h3>
@@ -156,86 +264,32 @@
                                                  </div>
                                             </div>
                                         </span>
-                                     `);
-
-                        })
-                        TotalRecords = response['totalRecords'];
-                        pages = Math.ceil(TotalRecords / PageSize);
-                        pageTabs = Math.ceil(pages / 5);
-                        if (pages == 0) {
-                            $('#pagination').removeClass('d-flex');
-                            $('#pagination').addClass('d-none');
-                        }
-                        else if (pages <= 5) {
-                            $('#prev img').css('filter', 'saturate(0)');
-                            $('#next img').css('filter', 'saturate(0)');
-
-                            for (let i = 1; i <= 5; i++) {
-                                $('#pages').append(`<li class="page-item"><a class="page-link color">${i}</a></li>`);
-                                if (i == pages) {
-                                    break;
-                                }
-                            }
-                            $('#prev img').css('filter', 'saturate(0)');
-                        }
-                        else {
-                            for (let i = 1; i <= 5; i++) {
-                                $('#pages').append(`<li class="page-item"><a class="page-link color">${i}</a></li>`);
-
-                            }
-                            $('#prev img').css('filter', 'saturate(0)');
-                        }
-
-                        $('a.color').filter(':contains("1")').css('color', 'black');
-                    }
-                });
-
-                $(document).on('click', '.color', function (e) {
-                    $(this).css('color', 'black');
-                    $('.color').not(this).css('color', 'white');
-                    let value = $(this).text();
-                    let end = value * PageSize;
-                    let start = end - PageSize;
-                    $('.jobs').html('');
-                    $.ajax({
-                        type: "GET",
-                        url: "/api/Company/GetCompanyJobs?start=" + start + "&end=" + end,
-                        success: function (response) {
-                            response['data'].forEach(data => {
-                                $('.jobs').append(`
-                                        <span class="job-listings-featured">
-                                            <div class="row">
-                                                <div class="col-lg-6 col-md-6 col-xs-12">
-                                                    <div class="job-details" style="margin-left:0!important;">
-                                                        <h3>${data.title}</h3>
-                                                        <span class="company-neme">${data.name}</span>
-                                                        <div class="tags">
-                                                            <span><i class="lni-map-marker"></i>${data.address}</span>
-                                                            <span><i class="lni-alarm-clock"></i>${formatDate(new Date(data.created_at))}</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-4 col-md-4 col-xs-12">
-                                                    <div class="tag-type">
-                                                        <span class="${data.jobType == "full-time" ? 'full-time' : 'part-time'}">${data.jobType}</span>
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-2 col-md-2 col-xs-12" style="margin-top:23px;">
-                                                   <a href="/Company/EditJob?Jobid=${btoa(data.id.toString())}" style="background: none; cursor: pointer;" class="edit" data-value="${data.id}">
-                                                       <img src="@Url.Content("~/Content/img/edit.png")" alt="YourAltText" height="25" class="mt-2" />
-                                                   </a>
-                                                    <a style="background: none; cursor: pointer;" class="delete" data-value="${data.id}">
-                                                       <img src="@Url.Content("~/Content/img/delete.png")" alt="YourAltText" height="25" class="mt-2" />
-                                                   </a>
-                                                 </div>
-                                            </div>
-                                        </span>
                                     `);
                             })
+                             $('.jobs').css('min-height', '0px');
                         }
                     });
                 });
 
+                $('.filter').click(function (event) {
+                    event.preventDefault();
+                    $('.jobs').css('min-height', '646px');
+                    filter['title'] = $('#title').val();
+                    filter['jobtype'] = $('#job-type').val();
+                    $('.jobs').html('');
+                    $('#pages').html('');
+                    getCompanyJobs();
+                });
+
+                $.ajax({
+                    type: "GET",
+                    url: "/api/Job/GetJobTypes",
+                    success: function (response) {
+                        response.forEach(item => {
+                            $('#job-type').append("<option value=" + item.id + ">" + item.name + "</option >");
+                        });
+                    }
+                });
 
                 $('#next').click(function () {
                     if (counter != pageTabs) {

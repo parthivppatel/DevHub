@@ -58,11 +58,11 @@ namespace DevHub
             //   appId: "",
             //   appSecret: "");
 
-            //app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
-            //{
-            //    ClientId = "",
-            //    ClientSecret = ""
-            //});
+            app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
+            {
+                ClientId = "908610141864-ik9p3aavgvtabme62qjc3ri6i52ab6fn.apps.googleusercontent.com",
+                ClientSecret = "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"
+            });
         }
     }
 }

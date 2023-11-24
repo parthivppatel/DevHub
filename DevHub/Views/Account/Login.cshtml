@@ -24,7 +24,7 @@
                         <h3>
                             Login
                         </h3>
-                        @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "login-form", role = "form" }))
+                        @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "login-form", role = "form", style = "margin-bottom:10px;" }))
                         {
                             @Html.AntiForgeryToken()
                             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
@@ -46,9 +46,10 @@
                                 @Html.CheckBoxFor(m => m.RememberMe, new { @class = "form-check-input" })
                                 <label class="form-check-label" for="exampleCheck1">Keep Me Signed In</label>
                             </div>
-                            <button class="btn btn-common log-btn">Submit</button>
+                            <button class="btn btn-common log-btn p-2 mb-0">Submit</button>
                         }
-                        <ul class="form-links">
+                        @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
+                        <ul class="form-links mt-3">
                             <li class="text-center"> @Html.ActionLink("Don't have an account?", "Register")</li>
                         </ul>
                     </div>
@@ -57,6 +58,11 @@
         </div>
     </section>
     <!-- Content section End -->
+    @*<div class="col-md-4">
+        <section id="socialLoginForm">
+            @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
+        </section>
+    </div>*@
 
     <!-- Preloader -->
     <div id="preloader">
@@ -80,6 +86,7 @@
             align-items: center;
             height: 100%;
         }
+
     </style>
 </body>
 </html>

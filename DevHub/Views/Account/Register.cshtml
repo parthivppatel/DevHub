@@ -46,7 +46,7 @@
                             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                             <div class="form-group">
                                 <div class="input-icon">
-                                    <i class="lni-user"></i>
+                                    <i class="lni-envelope"></i>
                                     @Html.TextBoxFor(m => m.registerViewModel.Email, new { @class = "form-control", placeholder = "Enter Your Email" })
                                     @Html.ValidationMessageFor(m => m.registerViewModel.Email, "", new { @class = "text-danger" })
                                 </div>
@@ -68,14 +68,17 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div>
-                                    @Html.DropDownListFor(m => m.registerViewModel.RoleId, new SelectList(Model.Role, "Id", "Name"), "select Type", new { @class = "form-control", style = "padding-left:10px;" })
+                                <div class="input-icon">
+                                    <i class="lni-user"></i>
+                                    @Html.DropDownListFor(m => m.registerViewModel.RoleId, new SelectList(Model.Role, "Id", "Name"), "select Type", new { @class = "form-control" })
                                     @Html.ValidationMessageFor(m => m.registerViewModel.RoleId, "", new { @class = "text-danger" })
                                 </div>
                             </div>
 
-                            <button class="btn btn-common log-btn mt-3">Register</button>
-                            <p class="text-center"> Already have an account? @Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</p>
+                            <button class="btn btn-common log-btn mt-2 p-2 mb-2">
+                                Register
+                            </button>
+                            <p class="text-center mt-2"> Already have an account? @Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</p>
                         }
                     </div>
                 </div>
@@ -92,6 +95,7 @@
         .form-control {
             padding-left: 62px;
         }
+
         html,
         body {
             height: 100%;
@@ -103,6 +107,7 @@
             align-items: center;
             height: 100%;
         }
+
     </style>
 </body>
 </html>

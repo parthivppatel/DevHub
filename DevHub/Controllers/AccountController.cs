@@ -308,6 +308,9 @@ namespace DevHub.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult ExternalLogin(string provider, string returnUrl)
         {
+            if (Request.IsAuthenticated)
+                return RedirectToAction("Index", "Home");
+
             // Request a redirect to the external login provider
             return new ChallengeResult(provider, Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl }));
         }
@@ -373,7 +376,13 @@ namespace DevHub.Controllers
                     // If the user does not have an account, then prompt the user to create an account
                     ViewBag.ReturnUrl = returnUrl;
                     ViewBag.LoginProvider = loginInfo.Login.LoginProvider;
-                    return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { Email = loginInfo.Email });
+
+                    var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(_context));
+
+                    RegisterViewModel registerViewModel = new RegisterViewModel();
+                    registerViewModel.Email = loginInfo.Email;
+
+                    return View("ExternalLoginConfirmation", new UserwithRole {registerViewModel=registerViewModel, Role = roleManager.Roles.Where(r => r.Name != "Admin").ToList()});
             }
         }
 
@@ -382,13 +391,14 @@ namespace DevHub.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ExternalLoginConfirmation(ExternalLoginConfirmationViewModel model, string returnUrl)
+        public async Task<ActionResult> ExternalLoginConfirmation(UserwithRole model, string returnUrl)
         {
             if (User.Identity.IsAuthenticated)
             {
                 return RedirectToAction("Index", "Manage");
             }
 
+            var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(_context));
             if (ModelState.IsValid)
             {
                 // Get the information about the user from the external login provider
@@ -397,20 +407,34 @@ namespace DevHub.Controllers
                 {
                     return View("ExternalLoginFailure");
                 }
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
-                var result = await UserManager.CreateAsync(user);
+                var user = new ApplicationUser { UserName = model.registerViewModel.Email, Email = model.registerViewModel.Email };
+                var result = await UserManager.CreateAsync(user, model.registerViewModel.Password);
                 if (result.Succeeded)
                 {
                     result = await UserManager.AddLoginAsync(user.Id, info.Login);
                     if (result.Succeeded)
                     {
+                        var role = await roleManager.FindByIdAsync(model.registerViewModel.RoleId.ToString());
+                        await UserManager.AddToRoleAsync(user.Id, role.Name);
                         await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
                         return RedirectToLocal(returnUrl);
                     }
+                    else
+                    {
+                        var r_error = "";
+                        foreach (var error in result.Errors)
+                        {
+                            r_error = "";
+                            r_error = error;
+                        }
+                        ModelState.AddModelError("", r_error);
+                    }
                 }
-                AddErrors(result);
+                //AddErrors(result);
             }
 
+            model.registerViewModel = model.registerViewModel;
+            model.Role = roleManager.Roles.Where(r => r.Name != "Admin").ToList();
             ViewBag.ReturnUrl = returnUrl;
             return View(model);
         }

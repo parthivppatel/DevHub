@@ -1,36 +1,123 @@
-﻿@model DevHub.Models.ExternalLoginConfirmationViewModel
+﻿@model DevHub.Models.UserwithRole
 @{
     ViewBag.Title = "Register";
+    Layout = null;
 }
-<h2>@ViewBag.Title.</h2>
-<h3>Associate your @ViewBag.LoginProvider account.</h3>
+@Styles.Render("~/Content/css")
+@Scripts.Render("~/bundles/modernizr")
 
-@using (Html.BeginForm("ExternalLoginConfirmation", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-{
-    @Html.AntiForgeryToken()
 
-    <h4>Association Form</h4>
-    <hr />
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-    <p class="text-info">
-        You've successfully authenticated with <strong>@ViewBag.LoginProvider</strong>.
-        Please enter a user name for this site below and click the Register button to finish
-        logging in.
-    </p>
-    <div class="form-group">
-        @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
-            @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="keywords" content="Bootstrap, Landing page, Template, Registration, Landing">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="author" content="UIdeck">
+    <title>Document</title>
+</head>
+<body>
+    <!-- Page Header Start -->
+    @*<div class="page-header">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="inner-header">
+                            <h3>Create Your account</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>*@
+    <!-- Page Header End -->
+    <!-- Content section Start -->
+    <section id="content" class="section-padding">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-5 col-md-6 col-xs-12">
+                    <div class="page-login-form box">
+                        <h3 style="padding: 15px 0 15px;">
+                            Associate your Google account.
+                        </h3>
+                        <p class="text-info mb-3">
+                            You've successfully authenticated with <strong>@ViewBag.LoginProvider</strong>.
+                            Please enter a user name for this site and other details and click the Register button to finish
+                            logging in.
+                        </p>
+                        @using (Html.BeginForm("ExternalLoginConfirmation", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                            <div class="form-group">
+                                <div class="input-icon">
+                                    <i class="lni-envelope"></i>
+                                    @Html.TextBoxFor(m => m.registerViewModel.Email, new { @class = "form-control", placeholder = "Enter Your Email" })
+                                    @Html.ValidationMessageFor(m => m.registerViewModel.Email, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-icon">
+                                    <i class="lni-lock"></i>
+                                    @Html.PasswordFor(m => m.registerViewModel.Password, new { @class = "form-control", placeholder = "Passsword" })
+                                    @Html.ValidationMessageFor(m => m.registerViewModel.Password, "", new { @class = "text-danger" })
+
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-icon">
+                                    <i class="lni-unlock"></i>
+                                    @Html.PasswordFor(m => m.registerViewModel.ConfirmPassword, new { @class = "form-control", placeholder = "Retype Password" })
+                                    @Html.ValidationMessageFor(m => m.registerViewModel.ConfirmPassword, "", new { @class = "text-danger" })
+
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-icon">
+                                    <i class="lni-user"></i>
+                                    @Html.DropDownListFor(m => m.registerViewModel.RoleId, new SelectList(Model.Role, "Id", "Name"), "select Type", new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.registerViewModel.RoleId, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <button class="btn btn-common log-btn mt-2 p-2 mb-2">
+                                Register
+                            </button>
+
+                        }
+                    </div>
+                </div>
+            </div>
         </div>
+    </section>
+    <!-- Content section End -->
+    <!-- Preloader -->
+    <div id="preloader">
+        <div class="loader" id="loader-1"></div>
     </div>
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" class="btn btn-default" value="Register" />
-        </div>
-    </div>
-}
 
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}
+    <style>
+        .form-control {
+            padding-left: 62px;
+        }
+
+        html,
+        body {
+            height: 100%;
+        }
+
+        #content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+    </style>
+</body>
+</html>
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/bootstrap")
+
+
+
+

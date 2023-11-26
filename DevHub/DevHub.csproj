@@ -632,6 +632,7 @@
     <Content Include="Views\Company\EditJob.cshtml" />
     <Content Include="Views\Company\JobDetails.cshtml" />
     <Content Include="Views\Candidate\AppliedJobs.cshtml" />
+    <Content Include="Views\Account\VerifyEmail.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

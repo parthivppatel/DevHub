@@ -11,6 +11,9 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using DevHub.Models;
+using System.Net.Mail;
+using System.Net;
+using System.Configuration;
 
 namespace DevHub
 {
@@ -19,10 +22,40 @@ namespace DevHub
         public Task SendAsync(IdentityMessage message)
         {
             // Plug in your email service here to send an email.
-            return Task.FromResult(0);
+            return configSmtpMail(message);
+        }
+
+        private async Task configSmtpMail(IdentityMessage message)
+        {
+            var mailMessage = new MailMessage();
+            mailMessage.To.Add(new MailAddress(message.Destination));
+            System.Diagnostics.Debug.WriteLine(message.Destination, "destination");
+            mailMessage.From = new MailAddress("patelparthiv798@gmail.com", "JobX");
+            mailMessage.Subject = message.Subject;
+            mailMessage.Body = message.Body;
+            mailMessage.IsBodyHtml = true;
+
+
+            var smtpClient = new SmtpClient("smtp.gmail.com", 587); // Replace "yourSMTPServer" with the actual SMTP server
+            smtpClient.UseDefaultCredentials = false;
+            smtpClient.Credentials = new NetworkCredential(
+                ConfigurationManager.AppSettings["mailAccount"],
+                ConfigurationManager.AppSettings["mailPassword"]
+            );
+            smtpClient.EnableSsl = true;
+
+            try
+            {
+                await smtpClient.SendMailAsync(mailMessage);
+            }
+            catch (Exception ex)
+            {
+                // Handle exceptions here
+                Console.WriteLine("Exception caught in sending email: {0}", ex.ToString());
+                throw;
+            }
         }
     }
-
     public class SmsService : IIdentityMessageService
     {
         public Task SendAsync(IdentityMessage message)

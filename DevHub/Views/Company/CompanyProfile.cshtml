@@ -19,7 +19,6 @@
 </head>
 
 <body>
-
     <!-- Page Header Start -->
     @if (User.IsInRole("Company"))
      {
@@ -167,6 +166,7 @@
 
                         let base64_string = "";
                         response.logo != "" ? base64_string = response.logo : '';
+                        let img = document.getElementById('myImage');
                         // Extract the MIME type from the base64 string
                         if (base64_string != "") {
                             extension = base64_string.split(';')[0].split('/')[1]
@@ -182,8 +182,10 @@
                             let blobUrl = URL.createObjectURL(blob);
 
                             // Set the image source to the Blob URL
-                            let img = document.getElementById('myImage');
                             img.src = blobUrl;
+                        }
+                        else{
+                            img.src="../../Content/img/profile.png";
                         }
                     },
                     error: function (jqXHR) {

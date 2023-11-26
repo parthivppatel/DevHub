@@ -1,7 +1,8 @@
 ﻿@{
-    ViewBag.Title = "Reset password confirmation";
+    ViewBag.Title = "VerifyEmail";
     Layout = null;
 }
+
 @Styles.Render("~/Content/css")
 @Scripts.Render("~/bundles/modernizr")
 <!DOCTYPE html>
@@ -19,9 +20,9 @@
             <div class="row justify-content-center message">
                 <div class="col-lg-5 col-md-6 col-xs-12">
                     <div class="page-login-form box">
-                        <h3>@ViewBag.Title</h3>
+                        <h3>Email Verification</h3>
                         <div class="text-center alert alert-success">
-                            <img src="@Url.Content("~/Content/img/tick.png")" alt="YourAltText" height="25" />Your password has been reset.<br> Please @Html.ActionLink("click here to log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })
+                            <img src="@Url.Content("~/Content/img/tick.png")" alt="YourAltText" height="25" />Registration email sent to your Entered Email Address. Open this email to finish signup.
                         </div>
                     </div>
                 </div>

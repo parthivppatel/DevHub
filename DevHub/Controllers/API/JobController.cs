@@ -337,7 +337,6 @@ namespace DevHub.Controllers.API
             if (role == "Candidate")
             {
                 var candidate_id = _context.candidate.SingleOrDefault(c => c.UserId == userId).id;
-
                 var query = _context.company_job
                          .Join(_context.jobs,
                          com_job => com_job.jobid,

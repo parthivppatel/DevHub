@@ -40,17 +40,19 @@
                                     <i class="lni-lock"></i>
                                     @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Password" })
                                     @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                                    <p class="text-right">@Html.ActionLink("Forgot Password?", "Forgotpassword")</p>
                                 </div>
                             </div>
                             <div class="form-group form-check">
                                 @Html.CheckBoxFor(m => m.RememberMe, new { @class = "form-check-input" })
                                 <label class="form-check-label" for="exampleCheck1">Keep Me Signed In</label>
                             </div>
-                            <button class="btn btn-common log-btn p-2 mb-0">Submit</button>
+                            <button class="btn btn-common log-btn p-2 mb-0">Login</button>
                         }
+                        <div class="text-center mb-2" style="color:black;">OR</div>
                         @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
                         <ul class="form-links mt-3">
-                            <li class="text-center"> @Html.ActionLink("Don't have an account?", "Register")</li>
+                            <li class="text-center">@Html.ActionLink("Don't have an account?", "Register")</li>
                         </ul>
                     </div>
                 </div>

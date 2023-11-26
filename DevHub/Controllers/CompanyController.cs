@@ -89,9 +89,18 @@ namespace DevHub.Controllers
 
         [CustomAuthorization("Admin", "Company","Candidate")]
 
-        public ActionResult JobDetails(int id)
+        public ActionResult JobDetails(string id)
         {
-         
+            int decodedId = 0;
+            try
+            {
+                decodedId = Convert.ToInt32(Encoding.UTF8.GetString(Convert.FromBase64String(id)));
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             var userIdClaim = identity.FindFirst(ClaimTypes.NameIdentifier).Value;
             var role = identity.FindFirst(ClaimTypes.Role).Value;
@@ -100,7 +109,7 @@ namespace DevHub.Controllers
             {
                 var company = _context.company.SingleOrDefault(c => c.UserId == userIdClaim);
 
-                var check = _context.company_job.SingleOrDefault(c => c.companyid == company.id && c.jobid == id);
+                var check = _context.company_job.SingleOrDefault(c => c.companyid == company.id && c.jobid == decodedId);
                 if (check == null)
                 {
                     return View("ManageJobs");// Redirect to unauthorized page
@@ -108,33 +117,41 @@ namespace DevHub.Controllers
 
             }
 
-            ViewBag.message = new { id = id, showbtn = true };
+            ViewBag.message = new { id = decodedId, showbtn = true };
             return View();
         }
         
         [CustomAuthorization("Admin", "Company","Candidate")]
 
-        public ActionResult CandidateJobDetails(int id)
+        public ActionResult CandidateJobDetails(string id)
         {
-         
+            int decodedId = 0;
+            try
+            {
+                decodedId = Convert.ToInt32(Encoding.UTF8.GetString(Convert.FromBase64String(id)));
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             var userIdClaim = identity.FindFirst(ClaimTypes.NameIdentifier).Value;
             var role = identity.FindFirst(ClaimTypes.Role).Value;
 
-            if (role == "Company")
+            if(role == "Candidate")
             {
-                var company = _context.company.SingleOrDefault(c => c.UserId == userIdClaim);
+                var candidate= _context.candidate.SingleOrDefault(c => c.UserId == userIdClaim).id;
 
-                var check = _context.company_job.SingleOrDefault(c => c.companyid == company.id && c.jobid == id);
+                var check = _context.candidate_job.SingleOrDefault(c => c.candidateid == candidate && c.jobid == decodedId);
                 if (check == null)
                 {
-                    return View("ManageJobs");// Redirect to unauthorized page
+                    return RedirectToAction("AppliedJobs","Candidate");// Redirect to unauthorized page
                 }
 
             }
 
-
-            ViewBag.message = new { id = id, showbtn = false };
+            ViewBag.message = new { id = decodedId, showbtn = false };
             return View("JobDetails");
         }
 
@@ -181,13 +198,13 @@ namespace DevHub.Controllers
 
             if (role == "Company")
             {
-                var company_id = _context.company.SingleOrDefault(c => c.UserId == userIdClaim).id;
                 if (CheckCompanyExist() == false)
                 {
                     ViewBag.Message = "Please Create Company First";
                     return View("Add_Company");
                 }
 
+                var company_id = _context.company.SingleOrDefault(c => c.UserId == userIdClaim).id;
                 ViewBag.Message = company_id;
             }
             else

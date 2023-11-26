@@ -27,23 +27,23 @@
                     </a>
                 </div>
                 <div class="collapse navbar-collapse" id="main-navbar">
-                    <ul class="navbar-nav mr-auto w-100 justify-content-end">
+                    <ul class="navbar-nav mr-auto justify-content-end" style="width:95%;">
                         <li class="nav-item active">
                             @Html.ActionLink("Home", "Index", "Home", routeValues: null, htmlAttributes: new { @class = "nav-link" })
                         </li>
                         @*<li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Pages
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="about.html">About</a></li>
-                                    <li><a class="dropdown-item" href="job-page.html">Job Page</a></li>
-                                    <li><a class="dropdown-item" href="job-details.html">Job Details</a></li>
-                                    <li><a class="dropdown-item" href="resume.html">Resume Page</a></li>
-                                    <li><a class="dropdown-item" href="privacy-policy.html">Privacy Policy</a></li>
-                                    <li><a class="dropdown-item" href="contact.html">Contact</a></li>
-                                </ul>
-                            </li>*@
+                            <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Pages
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="about.html">About</a></li>
+                                <li><a class="dropdown-item" href="job-page.html">Job Page</a></li>
+                                <li><a class="dropdown-item" href="job-details.html">Job Details</a></li>
+                                <li><a class="dropdown-item" href="resume.html">Resume Page</a></li>
+                                <li><a class="dropdown-item" href="privacy-policy.html">Privacy Policy</a></li>
+                                <li><a class="dropdown-item" href="contact.html">Contact</a></li>
+                            </ul>
+                        </li>*@
 
                         @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Candidate")))
                         {
@@ -128,10 +128,13 @@
                 </div>
             </div>
         </div>
-        @if (Request.IsAuthenticated)
-        {
-            @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
-        }
+        <div class="navbar-header">
+
+            @if (Request.IsAuthenticated)
+            {
+                <p style="color:#00BCD4">Hello @User.Identity.GetUserName() !</p>
+            }
+        </div>
         <div class="dropdown">
             <button class="btn dropdown-toggle border-0 btn-sm"
                     type="button"
@@ -151,8 +154,9 @@
                     <li>@Html.ActionLink("Profile", "UserProfile", "Home", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })</li>
                     @if (Request.IsAuthenticated)
                     {
-                        <li><a class="dropdown-item" href="javascript:document.getElementById('logoutForm').submit()">Log off</a><</li>
+                        <li>@Html.ActionLink("Change Password", "ChangePassword", "Manage", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })</li>
                         <li><button class="dropdown-item" id="deactivate" style="cursor:pointer;">Delete Account</button></li>
+                        <li><a class="dropdown-item" href="javascript:document.getElementById('logoutForm').submit()">Log off</a><</li>
 
                     }
                     else

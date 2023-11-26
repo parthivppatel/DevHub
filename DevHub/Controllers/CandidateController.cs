@@ -21,14 +21,41 @@ namespace DevHub.Controllers
         [CustomAuthorization("Admin", "Candidate")]
         public ActionResult Jobs()
         {
-            return View();
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var userIdClaim = identity.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var role = identity.FindFirst(ClaimTypes.Role).Value;
+
+            if (role == "Candidate")
+            {
+                var check_candidate_exist = _context.candidate.SingleOrDefault(m => m.UserId == userIdClaim);
+                if (check_candidate_exist == null)
+                {
+                    ViewBag.Message = "Please Create Profile First";
+                    return RedirectToAction("Resume","Candidate");
+                }
+            }
+                return View();
         }
 
         // GET: Candidate
         [CustomAuthorization("Admin", "Candidate")]
         public ActionResult AppliedJobs()
         {
-            return View();
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var userIdClaim = identity.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var role = identity.FindFirst(ClaimTypes.Role).Value;
+
+            if (role == "Candidate")
+            {
+                var check_candidate_exist = _context.candidate.SingleOrDefault(m => m.UserId == userIdClaim);
+                if (check_candidate_exist == null)
+                {
+                    ViewBag.Message = "Please Create Profile First";
+                    return RedirectToAction("Resume", "Candidate");
+                }
+
+            }
+                return View();
         }
         public ActionResult EditResume(string id)
         {

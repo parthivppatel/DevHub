@@ -141,7 +141,7 @@
                                              <div class="row">
                                                 <div class="col-lg-6 col-md-12 col-xs-12">
                                                     <div class="job-details" style="margin-left:0!important;">
-                                                        <h3><a href="/company/CandidateJobDetails/${data.id}">${data.title}</a></h3>
+                                                        <h3><a href="/company/CandidateJobDetails/${btoa(data.id)}">${data.title}</a></h3>
                                                         <a href="/company/CompanyProfile/${btoa(data.company_id.toString())}" class="company-neme">${data.name}</a>
                                                         <div class="tags">
                                                             <span><i class="lni-map-marker"></i>${data.address}</span>
@@ -239,7 +239,7 @@
                                              <div class="row">
                                                 <div class="col-lg-6 col-md-12 col-xs-12">
                                                     <div class="job-details" style="margin-left:0!important;">
-                                                        <h3><a href="/company/CandidateJobDetails/${data.id}">${data.title}</a></h3>
+                                                        <h3><a href="/company/CandidateJobDetails/${btoa(data.id)}">${data.title}</a></h3>
                                                         <a href="/company/CompanyProfile/${btoa(data.company_id.toString())}" class="company-neme">${data.name}</a>
                                                         <div class="tags">
                                                             <span><i class="lni-map-marker"></i>${data.address}</span>

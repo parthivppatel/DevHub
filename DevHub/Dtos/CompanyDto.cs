@@ -28,10 +28,14 @@ namespace DevHub.Dtos
         [Required]
         public string email { get; set; }
 
-        public long phone { get; set; }
+        [StringLength(15)]
+        public string phone { get; set; }
+        
+        [StringLength(2500)]
         public string overview { get; set; }
 
         [Required]
+        [StringLength(2500)]
         public string services { get; set; }
 
         [Required]
@@ -43,9 +47,16 @@ namespace DevHub.Dtos
         [Required]
         public int cityid { get; set; }
 
+        [StringLength(200)]
         public string facebook { get; set; }
+
+        [StringLength(200)]
         public string instagram { get; set; }
+        
+        [StringLength(200)]
         public string linkedin { get; set; }
+
+        [StringLength(200)]
         public string twitter { get; set; }
 
         [Required]

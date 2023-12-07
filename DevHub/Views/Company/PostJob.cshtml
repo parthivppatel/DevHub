@@ -15,7 +15,13 @@
     <meta name="author" content="UIdeck">
     <title>JobX - Bootstrap HTML5 Job Portal Template</title>
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <style>
 
+    .required{
+        color:red;
+    }
+
+    </style>
 </head>
 
 <body>
@@ -42,19 +48,19 @@
                         <h3 class="job-title">Post a new Job</h3>
                         <form class="form-ad" id="Post-Job">
                             <div class="form-group">
-                                <label class="control-label">Job Title</label>
-                                <input type="text" class="form-control" name="title" required placeholder="Write job title">
+                                <label class="control-label">Job Title</label><span class="required"> *</span>
+                                <input type="text" class="form-control" name="title" maxlength="50" required placeholder="Write job title">
                             </div>
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <label class="control-label">Job Type</label>
+                                        <label class="control-label">Job Type</label><span class="required"> *</span>
                                         <select class="form-control" name="job_typeid" id="job-type" required>
                                             <option data-display="General" selected value="">Job Type</option>
                                         </select>
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="control-label">Job Category</label>
+                                        <label class="control-label">Job Category</label><span class="required"> *</span>
                                         <select class="form-control category-selector" name="job_categoryids" multiple required>
                                         </select>
                                     </div>
@@ -63,12 +69,12 @@
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <label class="control-label">Job Mode</label>
+                                        <label class="control-label">Job Mode</label><span class="required"> *</span>
                                         <select class="form-control mode-selector" name="modeids" multiple required>
                                         </select>
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="control-label">Select Skills</label>
+                                        <label class="control-label">Select Skills</label><span class="required"> *</span>
                                         <select class="form-control skill-selector" name="skillids" multiple required>
                                         </select>
                                     </div>
@@ -77,15 +83,15 @@
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-md-4">
-                                        <label class="control-label">Minimum Salary</label>
-                                        <input type="number" min="500" name="min_salary" class="form-control" placeholder="(e.g 500)">
+                                        <label class="control-label">Minimum Salary</label><span class="required"> *</span>
+                                        <input type="number" min="500" required name="min_salary" class="form-control" placeholder="(e.g 500)">
                                     </div>
                                     <div class="col-md-4">
-                                        <label class="control-label">Maximum Salary</label>
-                                        <input type="number" min="1000" name="max_salary" class="form-control" placeholder="(e.g 1000)">
+                                        <label class="control-label">Maximum Salary</label><span class="required"> *</span>
+                                        <input type="number" min="1000" required name="max_salary" class="form-control" placeholder="(e.g 1000)">
                                     </div>
                                     <div class="col-md-4">
-                                        <label class="control-label">Salary Type</label>
+                                        <label class="control-label">Salary Type</label><span class="required"> *</span>
                                         <select class="form-control" name="stype" required id="stype">
                                             <option data-display="General" selected value="">Select Type</option>
                                             <option value="1">Hourly</option>
@@ -100,31 +106,31 @@
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <label class="control-label">Email</label>
-                                        <input type="text" required class="form-control" name="email" placeholder="(e.g abc@gmail.com)">
+                                        <label class="control-label">Email</label><span class="required"> *</span>
+                                        <input type="text" required class="form-control" name="email" maxlength="100" placeholder="(e.g abc@gmail.com)">
                                     </div>
                                     <div class="col-md-6">
                                         <label class="control-label">Phone</label>
-                                        <input type="text" class="form-control" name="phone" placeholder="(e.g 7959650045)">
+                                        <input type="number" min="0" class="form-control" maxlength="15" name="phone" placeholder="(e.g 7959650045)">
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-md-4">
-                                        <label class="control-label">Country</label>
+                                        <label class="control-label">Country</label><span class="required"> *</span>
                                         <select class="form-control" name="countryid" id="country" required>
                                             <option data-display="General" selected value="">Select Country</option>
                                         </select>
                                     </div>
                                     <div class="col-md-4">
-                                        <label class="control-label">State</label>
+                                        <label class="control-label">State</label><span class="required"> *</span>
                                         <select class="form-control" name="stateid" id="state" required>
                                             <option data-display="General" selected value="">Select State</option>
                                         </select>
                                     </div>
                                     <div class="col-md-4">
-                                        <label class="control-label">City</label>
+                                        <label class="control-label">City</label><span class="required"> *</span>
                                         <select class="form-control" name="cityid" id="city" required>
                                             <option data-display="General" selected value="">Select City</option>
                                         </select>
@@ -134,25 +140,25 @@
                             <section id="editor">
                                 <div class="form-group">
                                     <label for="comment">Qualification</label>
-                                    <textarea class="form-control" rows="3" name="qualification"></textarea>
+                                    <textarea class="form-control" rows="3"maxlength="2500" name="qualification"></textarea>
                                 </div>
                             </section>
                             <section id="editor">
                                 <div class="form-group">
                                     <label for="comment">Experience</label>
-                                    <textarea class="form-control" rows="3" name="experience"></textarea>
+                                    <textarea class="form-control" rows="3" maxlength="2500" name="experience"></textarea>
                                 </div>
                             </section>
                             <section id="editor">
                                 <div class="form-group">
                                     <label for="comment">Responsibilities</label>
-                                    <textarea class="form-control" rows="4" name="responsibilities"></textarea>
+                                    <textarea class="form-control" rows="4" maxlength="2500" name="responsibilities"></textarea>
                                 </div>
                             </section>
                             <section id="editor">
                                 <div class="form-group">
-                                    <label for="comment">Description</label>
-                                    <textarea class="form-control" rows="5" name="description" required></textarea>
+                                    <label for="comment">Description</label><span class="required"> *</span>
+                                    <textarea class="form-control" rows="5" maxlength="2500" name="description" required></textarea>
                                 </div>
                             </section>
                             <div class="custom-file mb-3">

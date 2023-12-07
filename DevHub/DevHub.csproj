@@ -365,6 +365,18 @@
     <Compile Include="Migrations\202311201813312_add_stage_column_in_candidate_job.Designer.cs">
       <DependentUpon>202311201813312_add_stage_column_in_candidate_job.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202312070446485_change_data_type_of_phone_field.cs" />
+    <Compile Include="Migrations\202312070446485_change_data_type_of_phone_field.Designer.cs">
+      <DependentUpon>202312070446485_change_data_type_of_phone_field.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202312071853435_added_required_and_string_max_length.cs" />
+    <Compile Include="Migrations\202312071853435_added_required_and_string_max_length.Designer.cs">
+      <DependentUpon>202312071853435_added_required_and_string_max_length.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202312071927310_added_more_lenth_for_large_fields.cs" />
+    <Compile Include="Migrations\202312071927310_added_more_lenth_for_large_fields.Designer.cs">
+      <DependentUpon>202312071927310_added_more_lenth_for_large_fields.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CandidateJobMapper.cs" />
@@ -735,6 +747,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202311201813312_add_stage_column_in_candidate_job.resx">
       <DependentUpon>202311201813312_add_stage_column_in_candidate_job.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202312070446485_change_data_type_of_phone_field.resx">
+      <DependentUpon>202312070446485_change_data_type_of_phone_field.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202312071853435_added_required_and_string_max_length.resx">
+      <DependentUpon>202312071853435_added_required_and_string_max_length.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202312071927310_added_more_lenth_for_large_fields.resx">
+      <DependentUpon>202312071927310_added_more_lenth_for_large_fields.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

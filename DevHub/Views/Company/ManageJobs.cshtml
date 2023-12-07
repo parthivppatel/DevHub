@@ -136,7 +136,9 @@
                 let pages = 0;
                 let pageTabs = 0;
                 let counter = 1;
-                let filter = {'title':'','jobtype':''};
+                let filter = { 'title': '', 'jobtype': '' };
+                let base64_string = "";
+                let url = "";
 
                 function getCompanyJobs() {
                     $.ajax({
@@ -147,11 +149,29 @@
                         contentType: 'application/json',
                         success: function (response) {
                             response['data'].forEach(data => {
+                                base64_string = "";
+                                data.logo != "" ? base64_string = data.logo : '';
+                                if (base64_string != "") {
+                                    extension = base64_string.split(';')[0].split('/')[1]
+                                    // Convert base64 to byte array
+                                    let byteNumbers = new Uint8Array([...atob(base64_string)].map(char => char.charCodeAt(0)));
+
+                                    // Create a Blob from the byte array
+                                    let blob = new Blob([byteNumbers], { type: 'image/' + extension });
+                                    let blobUrl = URL.createObjectURL(blob);
+                                    url = blobUrl;
+                                }
+                                else {
+                                    url = "../../Content/img/jobicon.png";
+                                }
                                 $('.jobs').append(`
                                               <span class="job-listings-featured">
                                                  <div class="row">
                                                     <div class="col-lg-6 col-md-6 col-xs-12">
-                                                        <div class="job-details" style="margin-left:0!important;">
+                                                        <div class="job-company-logo mr-2">
+                                                           <img src="${url}" height="60" alt="">
+                                                        </div>
+                                                        <div class="job-details">
                                                             <h3><a href="/company/JobDetails/${btoa(data.id)}">${data.title}</a></h3>
                                                             <span class="company-neme">${data.name}</span>
                                                             <div class="tags">
@@ -162,7 +182,7 @@
                                                     </div>
                                                     <div class="col-lg-4 col-md-4 col-xs-12">
                                                         <div class="tag-type">
-                                                            <span class="${data.jobType == "full-time" ? 'full-time' : 'part-time'}">${data.jobType}</span>
+                                                            <span class="${data.jobType == "full-time" ? 'full-time' : 'part-time'} ml-0">${data.jobType}</span>
                                                         </div>
                                                     </div>
                                                     <div class="col-lg-2 col-md-2 col-xs-12" style="margin-top:23px;">
@@ -236,11 +256,29 @@
                         contentType: 'application/json',
                         success: function (response) {
                             response['data'].forEach(data => {
+                                base64_string = "";
+                                data.logo != "" ? base64_string = data.logo : '';
+                                if (base64_string != "") {
+                                    extension = base64_string.split(';')[0].split('/')[1]
+                                    // Convert base64 to byte array
+                                    let byteNumbers = new Uint8Array([...atob(base64_string)].map(char => char.charCodeAt(0)));
+
+                                    // Create a Blob from the byte array
+                                    let blob = new Blob([byteNumbers], { type: 'image/' + extension });
+                                    let blobUrl = URL.createObjectURL(blob);
+                                    url = blobUrl;
+                                }
+                                else {
+                                    url = "../../Content/img/jobicon.png";
+                                }
                                 $('.jobs').append(`
                                         <span class="job-listings-featured">
                                             <div class="row">
                                                 <div class="col-lg-6 col-md-6 col-xs-12">
-                                                    <div class="job-details" style="margin-left:0!important;">
+                                                     <div class="job-company-logo mr-2">
+                                                        <img src="${url}" height="60" alt="">
+                                                     </div>
+                                                    <div class="job-details">
                                                         <h3><a href="/company/JobDetails/${btoa(data.id)}">${data.title}</a></h3>
                                                         <span class="company-neme">${data.name}</span>
                                                         <div class="tags">
@@ -251,7 +289,7 @@
                                                 </div>
                                                 <div class="col-lg-4 col-md-4 col-xs-12">
                                                     <div class="tag-type">
-                                                        <span class="${data.jobType == "full-time" ? 'full-time' : 'part-time'}">${data.jobType}</span>
+                                                        <span class="${data.jobType == "full-time" ? 'full-time' : 'part-time'} ml-0">${data.jobType}</span>
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-2 col-md-2 col-xs-12" style="margin-top:23px;">

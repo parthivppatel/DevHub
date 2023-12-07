@@ -32,18 +32,18 @@
                             @Html.ActionLink("Home", "Index", "Home", routeValues: null, htmlAttributes: new { @class = "nav-link" })
                         </li>
                         @*<li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Pages
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="about.html">About</a></li>
-                                <li><a class="dropdown-item" href="job-page.html">Job Page</a></li>
-                                <li><a class="dropdown-item" href="job-details.html">Job Details</a></li>
-                                <li><a class="dropdown-item" href="resume.html">Resume Page</a></li>
-                                <li><a class="dropdown-item" href="privacy-policy.html">Privacy Policy</a></li>
-                                <li><a class="dropdown-item" href="contact.html">Contact</a></li>
-                            </ul>
-                        </li>*@
+                                <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Pages
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="about.html">About</a></li>
+                                    <li><a class="dropdown-item" href="job-page.html">Job Page</a></li>
+                                    <li><a class="dropdown-item" href="job-details.html">Job Details</a></li>
+                                    <li><a class="dropdown-item" href="resume.html">Resume Page</a></li>
+                                    <li><a class="dropdown-item" href="privacy-policy.html">Privacy Policy</a></li>
+                                    <li><a class="dropdown-item" href="contact.html">Contact</a></li>
+                                </ul>
+                            </li>*@
 
                         @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Candidate")))
                         {
@@ -132,7 +132,9 @@
 
             @if (Request.IsAuthenticated)
             {
-                <p style="color:#00BCD4">Hello @User.Identity.GetUserName() !</p>
+                string[] name = @User.Identity.GetUserName().Split('@');
+
+                <p style="color:#00BCD4">Hello @name[0] !</p>
             }
         </div>
         <div class="dropdown">
@@ -144,8 +146,9 @@
                     aria-expanded="false"
                     style="background-color:#f9fcff">
 
-                <img src="@Url.Content("~/Content/img/profile.png")"
+                <img src="../../Content/img/profile.png"
                      class="img-profile rounded-circle me-2"
+                     id="profile"
                      height="40"
                      width="40" />
             </button>
@@ -244,9 +247,30 @@
         }
     </style>
 
-     @Scripts.Render("~/bundles/jquery")
-     @Scripts.Render("~/bundles/bootstrap")
-     @RenderSection("scripts", required: false)
+        @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/bootstrap")
+        @RenderSection("scripts", required: false)
+
+ 
+        <script>
+            $(document).ready(function () {
+                $.ajax({
+                    type: "GET",
+                    url: "/api/profile",
+                    success: function (response) {
+                           if(response['profile']!=null && response['profile']!=""){
+                                let img = document.getElementById('profile');
+                                let base64_string = response['profile'];
+                                extension = base64_string.split(';')[0].split('/')[1]
+                                let byteNumbers = new Uint8Array([...atob(base64_string)].map(char => char.charCodeAt(0)));
+                                let blob = new Blob([byteNumbers], { type: 'image/' + extension });
+                                let blobUrl = URL.createObjectURL(blob);
+                                img.src = blobUrl;
+                           }
+                    }
+                });
+            });
+        </script>
 
     </body>
 </html>

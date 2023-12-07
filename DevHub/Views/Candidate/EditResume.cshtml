@@ -16,7 +16,13 @@
     <title>JobX - Bootstrap HTML5 Job Portal Template</title>
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     @Styles.Render("~/Content/css")
+    <style>
 
+    .required{
+        color:red;
+    }
+
+    </style>
 </head>
 
 <body>
@@ -45,32 +51,32 @@
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-md-4">
-                                            <label class="control-label">First Name</label>
-                                            <input type="text" required class="form-control" name="first_name" placeholder="First Name">
+                                            <label class="control-label">First Name</label><span class="required"> *</span>
+                                            <input type="text" required class="form-control" name="first_name"  maxlength="50" placeholder="First Name">
                                         </div>
                                         <div class="col-md-4">
                                             <label class="control-label">Middle Name</label>
-                                            <input type="text" class="form-control" name="middle_name" placeholder="Middle Name">
+                                            <input type="text" class="form-control" name="middle_name"  maxlength="50" placeholder="Middle Name">
                                         </div>
                                         <div class="col-md-4">
-                                            <label class="control-label">Surname</label>
-                                            <input type="text" required class="form-control" name="surname" placeholder="Last Name">
+                                            <label class="control-label">Surname</label><span class="required"> *</span>
+                                            <input type="text" required class="form-control" name="surname"  maxlength="50" placeholder="Last Name">
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="form-group">
-                                    <label class="control-label">Profession Title</label>
-                                    <input type="text" class="form-control" required name="title" placeholder="Headline (e.g. Front-end developer)">
+                                    <label class="control-label">Profession Title</label><span class="required"> *</span>
+                                    <input type="text" class="form-control" required name="title" maxlength="50" placeholder="Headline (e.g. Front-end developer)">
                                 </div>
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <label class="control-label">Date Of Birth</label>
-                                            <input type="date" name="dob" required class="form-control">
+                                            <label class="control-label">Date Of Birth</label><span class="required"> *</span>
+                                            <input type="date" name="dob" id="dob" required class="form-control">
                                         </div>
                                         <div class="col-md-6">
-                                            <label class="control-label">Gender</label>
+                                            <label class="control-label">Gender</label><span class="required"> *</span>
                                             <select class="form-control" name="gender" required id="gender">
                                                 <option data-display="General" selected value="">Select Gender</option>
                                                 <option value="M">Male</option>
@@ -100,19 +106,19 @@
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-md-4">
-                                            <label class="control-label">Country</label>
+                                            <label class="control-label">Country</label><span class="required"> *</span>
                                             <select class="form-control" name="countryid" id="country" required>
                                                 <option data-display="General" selected value="">Select Country</option>
                                             </select>
                                         </div>
                                         <div class="col-md-4">
-                                            <label class="control-label">State</label>
+                                            <label class="control-label">State</label><span class="required"> *</span>
                                             <select class="form-control" name="stateid" id="state" required>
                                                 <option data-display="General" selected value="">Select State</option>
                                             </select>
                                         </div>
                                         <div class="col-md-4">
-                                            <label class="control-label">City</label>
+                                            <label class="control-label">City</label><span class="required"> *</span>
                                             <select class="form-control" name="cityid" id="city" required>
                                                 <option data-display="General" selected value="">Select City</option>
                                             </select>
@@ -123,25 +129,25 @@
                                     <div class="row">
                                         <div class="col-md-4">
                                             <label class="control-label">Phone</label>
-                                            <input type="text" class="form-control" name="phone" placeholder="(e.g 7959650045)">
+                                            <input type="number" class="form-control" name="phone" min="0" placeholder="(e.g 7959650045)">
                                         </div>
                                         <div class="col-md-4">
-                                            <label class="control-label">Email</label>
-                                            <input type="text" required class="form-control" name="email" placeholder="(e.g abc@gmail.com)">
+                                            <label class="control-label">Email</label><span class="required"> *</span>
+                                            <input type="text" required class="form-control" name="email"  maxlength="100" placeholder="(e.g abc@gmail.com)">
                                         </div>
                                         <div class="col-md-4">
                                             <label class="control-label">Website</label>
-                                            <input type="text" class="form-control" name="portfolio_website" placeholder="(e.g www.google.com)">
+                                            <input type="text" class="form-control" name="portfolio_website"  maxlength="100" placeholder="(e.g www.google.com)">
                                         </div>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label">Address</label>
-                                    <textarea class="form-control" name="address" rows="2"></textarea>
+                                    <textarea class="form-control" name="address"  maxlength="250" rows="2"></textarea>
                                 </div>
                                 <div class="form-group">
-                                    <label class="control-label">About Me</label>
-                                    <textarea class="form-control" required name="about_me" rows="4"></textarea>
+                                    <label class="control-label">About Me</label><span class="required"> *</span>
+                                    <textarea class="form-control" required name="about_me"  maxlength="2500" rows="4"></textarea>
                                 </div>
                             </div>
 
@@ -150,31 +156,31 @@
                                 <div class="border rounded p-4" id="education_row1">
                                     <div class="form-group">
                                         <label class="control-label">Degree</label>
-                                        <input type="text" class="form-control" name="degree1" placeholder="Degree, e.g. Bachelor">
+                                        <input type="text" class="form-control" maxlength="30" name="degree1" placeholder="Degree, e.g. Bachelor">
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label">Field of Study</label>
-                                        <input type="text" class="form-control" name="field1" placeholder="Major, e.g Computer Science">
+                                        <input type="text" class="form-control" maxlength="30" name="field1" placeholder="Major, e.g Computer Science">
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label">School</label>
-                                        <input type="text" class="form-control" name="school1" placeholder="School name, e.g. Massachusetts Institute of Technology">
+                                        <input type="text" class="form-control" maxlength="50" name="school1" placeholder="School name, e.g. Massachusetts Institute of Technology">
                                     </div>
                                     <div class="form-group">
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <label class="control-label">From</label>
-                                                <input type="date" class="form-control" name="from1" placeholder="e.g 2014">
+                                                <input type="date" class="form-control" name="from1" id="from1" placeholder="e.g 2014">
                                             </div>
                                             <div class="col-md-6">
                                                 <label class="control-label">To</label>
-                                                <input type="date" class="form-control" name="to1" placeholder="e.g 2020">
+                                                <input type="date" class="form-control" name="to1" id="to1" placeholder="e.g 2020">
                                             </div>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label">Description</label>
-                                        <textarea class="form-control" name="description1" rows="4"></textarea>
+                                        <textarea class="form-control" maxlength="2500" name="description1" rows="4"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -187,27 +193,27 @@
                                 <div class="border rounded p-4" id="experience_row1">
                                     <div class="form-group">
                                         <label class="control-label">Company Name</label>
-                                        <input type="text" class="form-control" name="company1" placeholder="Company name">
+                                        <input type="text" class="form-control"  maxlength="50" name="company1" placeholder="Company name">
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label">Title</label>
-                                        <input type="text" class="form-control" name="title1" placeholder="e.g UI/UX Researcher">
+                                        <input type="text" class="form-control" maxlength="50" name="title1" placeholder="e.g UI/UX Researcher">
                                     </div>
                                     <div class="form-group">
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <label class="control-label">Date Form</label>
-                                                <input type="date" class="form-control" name="wfrom1" placeholder="e.g 2014">
+                                                <input type="date" class="form-control" name="wfrom1" id="wfrom1" placeholder="e.g 2014">
                                             </div>
                                             <div class="col-md-6">
                                                 <label class="control-label">Date To</label>
-                                                <input type="date" class="form-control" name="wto1" placeholder="e.g 2020">
+                                                <input type="date" class="form-control" name="wto1" id="wto1" placeholder="e.g 2020">
                                             </div>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label">Description</label>
-                                        <textarea class="form-control" name="wdescription1" rows="4"></textarea>
+                                        <textarea class="form-control" maxlength="2500" name="wdescription1" rows="4"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -219,15 +225,15 @@
                                 <div class="border rounded p-4" id="project_row1">
                                     <div class="form-group">
                                         <label class="control-label">Project Name</label>
-                                        <input type="text" class="form-control" name="project1" placeholder="Project name">
+                                        <input type="text" maxlength="30" class="form-control" name="project1" placeholder="Project name">
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label">Project Link</label>
-                                        <input type="text" class="form-control" name="link1" placeholder="e.g www.github.com/xyz/">
+                                        <input type="text" maxlength="200" class="form-control" name="link1" placeholder="e.g www.github.com/xyz/">
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label">Description</label>
-                                        <textarea class="form-control" name="pdescription1" rows="4"></textarea>
+                                        <textarea maxlength="2500" class="form-control" name="pdescription1" rows="4"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -237,7 +243,7 @@
                             <h3 class="mt-5">Skills</h3>
                             <div class="border rounded p-4" id="skill">
                                 <div class="form-group">
-                                    <label class="control-label">Select Skills</label>
+                                    <label class="control-label">Select Skills</label><span class="required"> *</span>
                                     <select class="form-control skill-selector" name="skillids" id="skillids" multiple required>
                                     </select>
 
@@ -247,19 +253,19 @@
                             <div class="border rounded p-4" id="skill">
                                 <div class="form-group">
                                     <label class="control-label">Linkedin</label>
-                                    <input type="text" class="form-control" name="linkedin" placeholder="e.g www.linkedin.com/in/abc-7654884a/">
+                                    <input type="text" class="form-control" maxlength="200" name="linkedin" placeholder="e.g www.linkedin.com/in/abc-7654884a/">
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label">Facebook</label>
-                                    <input type="text" class="form-control" name="facebook" placeholder="e.g www.facebook.com/profile.php?id=468487477">
+                                    <input type="text" class="form-control" maxlength="200" name="facebook" placeholder="e.g www.facebook.com/profile.php?id=468487477">
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label">Instagram</label>
-                                    <input type="text" class="form-control" name="instagram" placeholder="www.instagram.com/xyz/">
+                                    <input type="text" class="form-control" maxlength="200" name="instagram" placeholder="www.instagram.com/xyz/">
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label">Twitter</label>
-                                    <input type="text" class="form-control" name="twitter" placeholder="e.g www.twitter.com/username">
+                                    <input type="text" class="form-control" maxlength="200" name="twitter" placeholder="e.g www.twitter.com/username">
                                 </div>
                             </div>
                             <div class="d-flex justify-content-center">
@@ -296,7 +302,24 @@
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
         <script>
 
+            var dtToday = new Date();
+            var month = dtToday.getMonth() + 1;
+            var day = dtToday.getDate();
+            var year = dtToday.getFullYear();
+
+            if (month < 10)
+                month = '0' + month.toString();
+            if (day < 10)
+                day = '0' + day.toString();
+
+            var maxDate = year + '-' + month + '-' + day;
             $(document).ready(function () {
+                $('#dob').attr('max', maxDate);
+                $('#from1').attr('max', maxDate);
+                $('#to1').attr('max', maxDate);
+                $('#wfrom1').attr('max', maxDate);
+                $('#wto1').attr('max', maxDate);
+
                 $('.skill-selector').select2();
                 let education_counter = 1;
                 let experience_counter = 1;
@@ -344,6 +367,25 @@
                             }
                         });
 
+                        $.ajax({
+                            type: "GET",
+                            url: "/api/Skills",
+                            success: function (sk_response) {
+                                sk_response.forEach(item => {
+                                    $('.skill-selector').append("<option value=" + item.id + ">" + item.name + "</option >");
+                                });
+                            }
+                        }).then(function (result) {
+                            let skill_data = JSON.parse(response.skillids);
+                            for (let item in skill_data) {
+                                for (let key in skill_data[item]) {
+                                    $('#skillids option[value=' + skill_data[item][key] + ']').prop('selected', 'true');
+                                }
+                            }
+                            $('#skillids').trigger('change.select2');
+
+                        });
+
 
                         $('input[name="first_name"]').val(response.first_name)
                         $('input[name="middle_name"]').val(response.middle_name)
@@ -364,143 +406,148 @@
                         user_id = response.userId;
 
 
-                        if (response.education != "") {
-                            let education = JSON.parse(response.education);
-                            $('input[name = "degree1"]').val(education[1]['degree']);
-                            $('input[name = "field1"]').val(education[1]['field']);
-                            $('input[name = "school"]').val(education[1]['school']);
-                            $('input[name = "from1"]').val(education[1]['from']);
-                            $('input[name = "to1"]').val(education[1]['to']);
-                            $('textarea[name = "description1"]').val(education[1]['description']);
-                            education_counter = Object.keys(education).length;
-                            for (let i = 2; i <= education_counter; i++) {
-                                $('#education').append(`
-                                            <div class="border rounded p-4 mt-3"  id="education_row${i}">
-                                                   <div class= "form-group">
-                                                       <label class="control-label">Degree</label>
-                                                       <input type="text" class="form-control" name="degree${i}" value="${education[i]['degree']}" placeholder="Degree, e.g. Bachelor">
-                                                   </div>
-                                                   <div class="form-group">
-                                                       <label class="control-label">Field of Study</label>
-                                                       <input type="text" class="form-control" name="field${i}" value="${education[i]['field']}" placeholder="Major, e.g Computer Science">
-                                                   </div>
-                                                   <div class="form-group">
-                                                       <label class="control-label">School</label>
-                                                       <input type="text" class="form-control" name="school${i}" value="${education[i]['school']}" placeholder="School name, e.g. Massachusetts Institute of Technology">
-                                                   </div>
-                                                   <div class="form-group">
-                                                       <div class="row">
-                                                           <div class="col-md-6">
-                                                               <label class="control-label">From</label>
-                                                               <input type="date" class="form-control" name="from${i}" value="${education[i]['from']}" placeholder="e.g 2014">
-                                                           </div>
-                                                           <div class="col-md-6">
-                                                               <label class="control-label">To</label>
-                                                               <input type="date" class="form-control" name="to${i}" value="${education[i]['to']}" placeholder="e.g 2020">
+                        let education = JSON.parse(response.education);
+                        education_counter = Object.keys(education).length;
+                        if (education_counter > 0) {
+                            for (let i = 1; i <= education_counter; i++) {
+                                if (i == 1) {
+                                    $('input[name = "degree1"]').val(education[1]['degree']);
+                                    $('input[name = "field1"]').val(education[1]['field']);
+                                    $('input[name = "school1"]').val(education[1]['school']);
+                                    $('input[name = "from1"]').val(education[1]['from']);
+                                    $('input[name = "to1"]').val(education[1]['to']);
+                                    $('textarea[name = "description1"]').val(education[1]['description']);
+                                }
+                                else {
+                                    $('#education').append(`
+                                                <div class="border rounded p-4 mt-3"  id="education_row${i}">
+                                                       <div class= "form-group">
+                                                           <label class="control-label">Degree</label>
+                                                           <input type="text" class="form-control" maxlength="30" name="degree${i}" value="${education[i]['degree']}" placeholder="Degree, e.g. Bachelor">
+                                                       </div>
+                                                       <div class="form-group">
+                                                           <label class="control-label">Field of Study</label>
+                                                           <input type="text" class="form-control" maxlength="30" name="field${i}" value="${education[i]['field']}" placeholder="Major, e.g Computer Science">
+                                                       </div>
+                                                       <div class="form-group">
+                                                           <label class="control-label">School</label>
+                                                           <input type="text" class="form-control" maxlength="50" name="school${i}" value="${education[i]['school']}" placeholder="School name, e.g. Massachusetts Institute of Technology">
+                                                       </div>
+                                                       <div class="form-group">
+                                                           <div class="row">
+                                                               <div class="col-md-6">
+                                                                   <label class="control-label">From</label>
+                                                                   <input type="date" class="form-control" name="from${i}" value="${education[i]['from']}" maxlength="${maxDate}" placeholder="e.g 2014">
+                                                               </div>
+                                                               <div class="col-md-6">
+                                                                   <label class="control-label">To</label>
+                                                                   <input type="date" class="form-control" name="to${i}" value="${education[i]['to']}" maxlength="${maxDate}" placeholder="e.g 2020">
+                                                               </div>
                                                            </div>
                                                        </div>
-                                                   </div>
-                                                   <div class="form-group">
-                                                       <label class="control-label">Description</label>
-                                                       <textarea class="form-control" name="description${i}" rows="4">${education[i]['description']}</textarea>
-                                                   </div>
-
-                                                 <div class="d-flex justify-content-end">
-                                                       <button class="btn btn-danger custom-del delete-edu-btn">Delete</button>
-                                                 </div>
-                                            </div>
-                                           `);
-
-                            }
-
-                        }
-
-                        if (response.experience != "") {
-                            let experience = JSON.parse(response.experience);
-                            $('input[name = "company1"]').val(experience[1]['company']);
-                            $('input[name = "title1"]').val(experience[1]['title']);
-                            $('input[name = "wfrom1"]').val(experience[1]['wfrom']);
-                            $('input[name = "wto1"]').val(experience[1]['wto']);
-                            $('textarea[name = "wdescription1"]').val(experience[1]['wdescription']);
-                            experience_counter = Object.keys(experience).length;
-                            for (let i = 2; i <= experience_counter; i++) {
-                                $('#experience').append(`
-                                             <div class="border rounded p-4 mt-3" id="experience_row${i}">
-                                                   <div class="form-group">
-                                                       <label class="control-label">Company Name</label>
-                                                       <input type="text" class="form-control" name="company${i}" value="${experience[i]['company']}" placeholder="Company name">
-                                                   </div>
-                                                   <div class="form-group">
-                                                       <label class="control-label">Title</label>
-                                                       <input type="text" class="form-control" name="title${i}" value="${experience[i]['title']}" placeholder="e.g UI/UX Researcher">
-                                                   </div>
-                                                   <div class="form-group">
-                                                       <div class="row">
-                                                           <div class="col-md-6">
-                                                               <label class="control-label">Date Form</label>
-                                                               <input type="date" name="wfrom${i}" class="form-control"value="${experience[i]['wfrom']}"  placeholder="e.g 2014">
-                                                           </div>
-                                                           <div class="col-md-6">
-                                                               <label class="control-label">Date To</label>
-                                                               <input type="date" class="form-control" name="wto${i}" value="${experience[i]['wto']}" placeholder="e.g 2020">
-                                                           </div>
+                                                       <div class="form-group">
+                                                           <label class="control-label">Description</label>
+                                                           <textarea class="form-control" maxlength="2500" name="description${i}" rows="4">${education[i]['description']}</textarea>
                                                        </div>
-                                                   </div>
-                                                   <div class="form-group">
-                                                       <label class="control-label">Description</label>
-                                                       <textarea class="form-control"  name="wdescription${i}" value="${experience[i]['wdescription']}"  rows="4"></textarea>
-                                                   </div>
-                                                   <div class="d-flex justify-content-end">
-                                                      <button class="btn btn-danger custom-del delete-edu-btn">Delete</button>
-                                                  </div>
-                                             </div>
-                                             `);
 
-                            }
-
-                        }
-
-                        if (response.project != "") {
-                            let project = JSON.parse(response.project);
-                            $('input[name = "project1"]').val(project[1]['project']);
-                            $('input[name = "link1"]').val(project[1]['link']);
-                            $('textarea[name = "pdescription1"]').val(project[1]['pdescription']);
-
-                            project_counter = Object.keys(project).length;
-
-                            for (let i = 2; i <= project_counter; i++) {
-                                $('#project').append(`
-                                             <div class="border rounded p-4 mt-3" id="project_row${i}">
-                                                    <div class="form-group">
-                                                        <label class="control-label">Project Name</label>
-                                                        <input type="text" class="form-control" name="project${i}" value="${project[i]['project']}" placeholder="Project name">
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label class="control-label">Project Link</label>
-                                                        <input type="text" class="form-control" name="link${i}"   value="${project[i]['link']}" placeholder="e.g www.github.com/xyz/">
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label class="control-label">Description</label>
-                                                        <textarea class="form-control" name="pdescription${i}" rows="4"> value="${project[i]['pdescription']}"</textarea>
-                                                    </div>
-                                                    <div class="d-flex justify-content-end">
-                                                      <button class="btn btn-danger custom-del delete-edu-btn">Delete</button>
-                                                    </div>
+                                                     <div class="d-flex justify-content-end">
+                                                           <button class="btn btn-danger custom-del delete-edu-btn">Delete</button>
+                                                     </div>
                                                 </div>
-                                      `);
+                                               `);
+
+                                }
 
                             }
 
                         }
 
-                        let skill_data = JSON.parse(response.skillids);
-                        for (let item in skill_data) {
-                            for (let key in skill_data[item]) {
-                                $('#skillids option[value=' + skill_data[item][key] + ']').prop('selected', 'true');
-                                console.log(skill_data[item][key]);
+                        let experience = JSON.parse(response.experience);
+                        experience_counter = Object.keys(experience).length;
+                        if (experience_counter > 0) {
+                            for (let i = 1; i <= experience_counter; i++) {
+                                if (i == 1) {
+                                    $('input[name = "company1"]').val(experience[1]['company']);
+                                    $('input[name = "title1"]').val(experience[1]['title']);
+                                    $('input[name = "wfrom1"]').val(experience[1]['wfrom']);
+                                    $('input[name = "wto1"]').val(experience[1]['wto']);
+                                    $('textarea[name = "wdescription1"]').val(experience[1]['wdescription']);
+                                }
+                                else {
+                                    $('#experience').append(`
+                                                 <div class="border rounded p-4 mt-3" id="experience_row${i}">
+                                                       <div class="form-group">
+                                                           <label class="control-label">Company Name</label>
+                                                           <input type="text" maxlength="50" class="form-control" name="company${i}" value="${experience[i]['company']}" placeholder="Company name">
+                                                       </div>
+                                                       <div class="form-group">
+                                                           <label class="control-label">Title</label>
+                                                           <input type="text" maxlength="50" class="form-control" name="title${i}" value="${experience[i]['title']}" placeholder="e.g UI/UX Researcher">
+                                                       </div>
+                                                       <div class="form-group">
+                                                           <div class="row">
+                                                               <div class="col-md-6">
+                                                                   <label class="control-label">Date Form</label>
+                                                                   <input type="date" name="wfrom${i}" class="form-control"value="${experience[i]['wfrom']}"  maxlength="${maxDate}" placeholder="e.g 2014">
+                                                               </div>
+                                                               <div class="col-md-6">
+                                                                   <label class="control-label">Date To</label>
+                                                                   <input type="date" class="form-control" name="wto${i}" value="${experience[i]['wto']}" maxlength="${maxDate}" placeholder="e.g 2020">
+                                                               </div>
+                                                           </div>
+                                                       </div>
+                                                       <div class="form-group">
+                                                           <label class="control-label">Description</label>
+                                                           <textarea class="form-control" maxlength="2500" name="wdescription${i}" value="${experience[i]['wdescription']}"  rows="4"></textarea>
+                                                       </div>
+                                                       <div class="d-flex justify-content-end">
+                                                          <button class="btn btn-danger custom-del delete-edu-btn">Delete</button>
+                                                      </div>
+                                                 </div>
+                                    `);
+
+                                }
+
                             }
+
                         }
-                        $('#skillids').trigger('change.select2');
+
+                        let project = JSON.parse(response.project);
+                        project_counter = Object.keys(project).length;
+                        if (project_counter > 0) {
+                            for (let i = 1; i <= project_counter; i++) {
+                                if (i == 1) {
+                                    $('input[name = "project1"]').val(project[1]['project']);
+                                    $('input[name = "link1"]').val(project[1]['link']);
+                                    $('textarea[name = "pdescription1"]').val(project[1]['pdescription']);
+
+                                }
+                                else {
+                                    $('#project').append(`
+                                                 <div class="border rounded p-4 mt-3" id="project_row${i}">
+                                                        <div class="form-group">
+                                                            <label class="control-label">Project Name</label>
+                                                            <input type="text" class="form-control" maxlength="30" name="project${i}" value="${project[i]['project']}" placeholder="Project name">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="control-label">Project Link</label>
+                                                            <input type="text" class="form-control" maxlength="200" name="link${i}"   value="${project[i]['link']}" placeholder="e.g www.github.com/xyz/">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="control-label">Description</label>
+                                                            <textarea class="form-control" maxlength="2500" name="pdescription${i}" rows="4"> value="${project[i]['pdescription']}"</textarea>
+                                                        </div>
+                                                        <div class="d-flex justify-content-end">
+                                                          <button class="btn btn-danger custom-del delete-edu-btn">Delete</button>
+                                                        </div>
+                                                    </div>
+                                          `);
+
+                                }
+
+                            }
+
+                        }
 
                         let base64_string = "";
                         response.image != "" ? base64_string = response.image : '';
@@ -525,16 +572,6 @@
                     }
                 });
 
-                $.ajax({
-                    type: "GET",
-                    url: "/api/Skills",
-                    success: function (response) {
-                        response.forEach(item => {
-                            $('.skill-selector').append("<option value=" + item.id + ">" + item.name + "</option >");
-                        });
-                    }
-                });
-
                 $('#country').change(function () {
                     $('#state').html("<option selected value=''>Select State</option >");
                     $('#city').html("<option selected value=''>Select City</option >");
@@ -563,39 +600,6 @@
                         }
                     });
                 });
-
-
-
-
-                $('#country').change(function () {
-                    $('#state').html("<option selected value=''>Select State</option >");
-                    $('#city').html("<option selected value=''>Select City</option >");
-                    let country_id = $(this).val();
-                    $.ajax({
-                        type: "GET",
-                        url: "/api/State?id=" + country_id,
-                        success: function (response) {
-                            response.forEach(item => {
-                                $('#state').append("<option value=" + item.id + ">" + item.statename + "</option >");
-                            });
-                        }
-                    });
-                });
-
-                $('#state').change(function () {
-                    $('#city').html("<option selected value=''>Select City</option >");
-                    let state_id = $(this).val();
-                    $.ajax({
-                        type: "GET",
-                        url: "/api/City?id=" + state_id,
-                        success: function (response) {
-                            response.forEach(item => {
-                                $('#city').append("<option value=" + item.id + ">" + item.cityname + "</option >");
-                            });
-                        }
-                    });
-                });
-
 
                 $('.add-edu-btn').click(function (event) {
                     education_counter++;
@@ -604,31 +608,31 @@
                                             <div class="border rounded p-4 mt-3"  id="education_row${education_counter}">
                                                    <div class= "form-group">
                                                        <label class="control-label">Degree</label>
-                                                       <input type="text" class="form-control" name="degree${education_counter}" placeholder="Degree, e.g. Bachelor">
+                                                       <input type="text" class="form-control" maxlength="30" name="degree${education_counter}" placeholder="Degree, e.g. Bachelor">
                                                    </div>
                                                    <div class="form-group">
                                                        <label class="control-label">Field of Study</label>
-                                                       <input type="text" class="form-control" name="field${education_counter}" placeholder="Major, e.g Computer Science">
+                                                       <input type="text" class="form-control" maxlength="30" name="field${education_counter}" placeholder="Major, e.g Computer Science">
                                                    </div>
                                                    <div class="form-group">
                                                        <label class="control-label">School</label>
-                                                       <input type="text" class="form-control" name="school${education_counter}" placeholder="School name, e.g. Massachusetts Institute of Technology">
+                                                       <input type="text" class="form-control" maxlength="50" name="school${education_counter}" placeholder="School name, e.g. Massachusetts Institute of Technology">
                                                    </div>
                                                    <div class="form-group">
                                                        <div class="row">
                                                            <div class="col-md-6">
                                                                <label class="control-label">From</label>
-                                                               <input type="date" class="form-control" name="from${education_counter}" placeholder="e.g 2014">
+                                                               <input type="date" class="form-control" name="from${education_counter}" maxlength="${maxDate}" placeholder="e.g 2014">
                                                            </div>
                                                            <div class="col-md-6">
                                                                <label class="control-label">To</label>
-                                                               <input type="date" class="form-control" name="to${education_counter}" placeholder="e.g 2020">
+                                                               <input type="date" class="form-control" name="to${education_counter}" maxlength="${maxDate}"  placeholder="e.g 2020">
                                                            </div>
                                                        </div>
                                                    </div>
                                                    <div class="form-group">
                                                        <label class="control-label">Description</label>
-                                                       <textarea class="form-control" name="description${education_counter}" rows="4"></textarea>
+                                                       <textarea class="form-control" maxlength="2500" name="description${education_counter}" rows="4"></textarea>
                                                    </div>
 
                                                  <div class="d-flex justify-content-end">
@@ -645,27 +649,27 @@
                                              <div class="border rounded p-4 mt-3" id="experience_row${experience_counter}">
                                                    <div class="form-group">
                                                        <label class="control-label">Company Name</label>
-                                                       <input type="text" class="form-control" name="company${experience_counter}" placeholder="Company name">
+                                                       <input type="text" class="form-control" maxlength="50" name="company${experience_counter}" placeholder="Company name">
                                                    </div>
                                                    <div class="form-group">
                                                        <label class="control-label">Title</label>
-                                                       <input type="text" class="form-control" name="title${experience_counter}" placeholder="e.g UI/UX Researcher">
+                                                       <input type="text" class="form-control" maxlength="50" name="title${experience_counter}" placeholder="e.g UI/UX Researcher">
                                                    </div>
                                                    <div class="form-group">
                                                        <div class="row">
                                                            <div class="col-md-6">
                                                                <label class="control-label">Date Form</label>
-                                                               <input type="date" name="wfrom${experience_counter}" class="form-control" placeholder="e.g 2014">
+                                                               <input type="date" name="wfrom${experience_counter}" class="form-control" maxlength="${maxDate}" placeholder="e.g 2014">
                                                            </div>
                                                            <div class="col-md-6">
                                                                <label class="control-label">Date To</label>
-                                                               <input type="date" class="form-control" name="wto${experience_counter}" placeholder="e.g 2020">
+                                                               <input type="date" class="form-control" name="wto${experience_counter}" maxlength="${maxDate}" placeholder="e.g 2020">
                                                            </div>
                                                        </div>
                                                    </div>
                                                    <div class="form-group">
                                                        <label class="control-label">Description</label>
-                                                       <textarea class="form-control"  name="wdescription${experience_counter}" rows="4"></textarea>
+                                                       <textarea class="form-control" maxlength="2500" name="wdescription${experience_counter}" rows="4"></textarea>
                                                    </div>
                                                    <div class="d-flex justify-content-end">
                                                       <button class="btn btn-danger custom-del delete-edu-btn">Delete</button>
@@ -682,15 +686,15 @@
                                               <div class="border rounded p-4" id="project_row${project_counter}">
                                                     <div class="form-group">
                                                         <label class="control-label">Project Name</label>
-                                                        <input type="text" class="form-control" name="project${project_counter}" placeholder="project name">
+                                                        <input type="text" class="form-control" maxlength="30" name="project${project_counter}" placeholder="project name">
                                                     </div>
                                                     <div class="form-group">
                                                         <label class="control-label">Project Link</label>
-                                                        <input type="text" class="form-control" name="link${project_counter}" placeholder="e.g www.github.com/xyz/">
+                                                        <input type="text" class="form-control" maxlength="200" name="link${project_counter}" placeholder="e.g www.github.com/xyz/">
                                                     </div>
                                                     <div class="form-group">
                                                         <label class="control-label">Description</label>
-                                                        <textarea class="form-control" name="pdescription${project_counter}" rows="4"></textarea>
+                                                        <textarea class="form-control" maxlength="2500" name="pdescription${project_counter}" rows="4"></textarea>
                                                     </div>
                                                   <div class="d-flex justify-content-end">
                                                       <button class="btn btn-danger custom-del delete-edu-btn">Delete</button>
@@ -717,20 +721,38 @@
                     let counter = 1;
                     let row = 0;
 
+
+                    education_counter = education_counter == 0 ? 1 : education_counter;
                     for (let i = 1; i <= education_counter; i++) {
                         row = $('#education_row' + i).length;
                         if (row != 0) {
-                            let edu_data = {
-                                degree: formDataJson['degree' + i],
-                                field: formDataJson['field' + i],
-                                school: formDataJson['school' + i],
-                                from: formDataJson['from' + i],
-                                to: formDataJson['to' + i],
-                                description: formDataJson['description' + i],
+                            if (formDataJson['degree' + i] != "" && formDataJson['school' + i] != "" && formDataJson['from' + i] != "") {
+                                if (formDataJson['to' + i] != "" && formDataJson['from' + i] > formDataJson['to' + i]) {
+                                    alert('to date should be equal to or greater than from date');//replace with message toast
+                                    return;
+                                }
+                                let edu_data = {
+                                    degree: formDataJson['degree' + i],
+                                    field: formDataJson['field' + i],
+                                    school: formDataJson['school' + i],
+                                    from: formDataJson['from' + i],
+                                    to: formDataJson['to' + i],
+                                    description: formDataJson['description' + i],
+                                }
+                                education_data[counter] = edu_data;
+                                counter++;
                             }
+                            else if (formDataJson['degree' + i] != "" || formDataJson['field' + i] != "" || formDataJson['school' + i] != "" || formDataJson['from' + i] != ""
+                                || formDataJson['to' + i] != "" || formDataJson['description' + i] != "") {
 
-                            education_data[counter] = edu_data;
-                            counter++;
+                                if (formDataJson['degree' + i] == "")
+                                    $('input[name="degree' + i + '"]').focus();
+                                else if (formDataJson['school' + i] == "")
+                                    $('input[name="school' + i + '"]').focus();
+                                else if (formDataJson['from' + i] == "")
+                                    $('input[name="from' + i + '"]').focus();
+                                return;
+                            }
 
                             delete formDataJson['degree' + i];
                             delete formDataJson['field' + i];
@@ -739,6 +761,7 @@
                             delete formDataJson['to' + i];
                             delete formDataJson['description' + i];
                         }
+                        
 
                     }
 
@@ -746,19 +769,37 @@
                     counter = 1;
                     row = 0;
 
+                    experience_counter = experience_counter == 0 ? 1 : experience_counter;
                     for (let i = 1; i <= experience_counter; i++) {
                         row = $('#experience_row' + i).length;
                         if (row != 0) {
-                            let exp_data = {
-                                company: formDataJson['company' + i],
-                                title: formDataJson['title' + i],
-                                wfrom: formDataJson['wfrom' + i],
-                                wto: formDataJson['wto' + i],
-                                wdescription: formDataJson['wdescription' + i],
-                            }
+                            if (formDataJson['company' + i] != "" && formDataJson['title' + i] != "" && formDataJson['wfrom' + i] != "") {
+                                if (formDataJson['wto' + i] != "" && formDataJson['wfrom' + i] > formDataJson['wto' + i]) {
+                                    alert('to date should be equal to or greater than from date'); //replace with message toast
+                                    return;
+                                }
+                                let exp_data = {
+                                    company: formDataJson['company' + i],
+                                    title: formDataJson['title' + i],
+                                    wfrom: formDataJson['wfrom' + i],
+                                    wto: formDataJson['wto' + i],
+                                    wdescription: formDataJson['wdescription' + i],
+                                }
 
-                            experience_data[counter] = exp_data;
-                            counter++;
+                                experience_data[counter] = exp_data;
+                                counter++;
+                            }
+                            else if (formDataJson['company' + i] != "" || formDataJson['title' + i] != "" || formDataJson['wfrom' + i] != "" || formDataJson['wto' + i] != ""
+                                || formDataJson['wdescription' + i] != "") {
+
+                                if (formDataJson['company' + i] == "")
+                                    $('input[name="company' + i + '"]').focus();
+                                else if (formDataJson['title' + i] == "")
+                                    $('input[name="title' + i + '"]').focus();
+                                else if (formDataJson['wfrom' + i] == "")
+                                    $('input[name="wfrom' + i + '"]').focus();
+                                return;
+                            }
 
                             delete formDataJson['company' + i];
                             delete formDataJson['title' + i];
@@ -774,17 +815,28 @@
                     counter = 1;
                     row = 0;
 
+                    project_counter = project_counter == 0 ? 1 : project_counter;
                     for (let i = 1; i <= project_counter; i++) {
                         row = $('#project_row' + i).length;
                         if (row != 0) {
-                            let pro_data = {
-                                project: formDataJson['project' + i],
-                                link: formDataJson['link' + i],
-                                pdescription: formDataJson['pdescription' + i],
-                            }
+                            if (formDataJson['project' + i] != "" && formDataJson['link' + i] != "") {
+                                let pro_data = {
+                                    project: formDataJson['project' + i],
+                                    link: formDataJson['link' + i],
+                                    pdescription: formDataJson['pdescription' + i],
+                                }
 
-                            project_data[counter] = pro_data;
-                            counter++;
+                                project_data[counter] = pro_data;
+                                counter++;
+                            }
+                            else if (formDataJson['project' + i] != "" || formDataJson['link' + i] != "" || formDataJson['pdescription' + i] != "") {
+
+                                if (formDataJson['project' + i] == "")
+                                    $('input[name="project' + i + '"]').focus();
+                                else if (formDataJson['link' + i] == "")
+                                    $('input[name="link' + i + '"]').focus();
+                                return;
+                            }
 
                             delete formDataJson['project' + i];
                             delete formDataJson['link' + i];

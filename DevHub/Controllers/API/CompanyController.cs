@@ -261,6 +261,20 @@ namespace DevHub.Controllers.API
         }
 
         //[Authorize(Roles = "Admin,Company")]
+        [Route("api/Company/GetCompanies")]
+        [HttpGet]
+        public IHttpActionResult GetCompanyNames()
+        {
+            var companylist = _context.company.ToList().Select(c => new
+            {
+                id = c.id,
+                name = c.name,
+            });
+
+            return Ok(companylist);
+        }
+        
+        //[Authorize(Roles = "Admin,Company")]
         [Route("api/Company/GetCompanyJobs")]
         [HttpPost]
         public IHttpActionResult CompanyJobs(int start,int end, [FromBody] Dictionary<string, object> filter)
@@ -297,7 +311,8 @@ namespace DevHub.Controllers.API
                     address = jm.job.city.cityname,
                     name = jm.company.name,
                     created_at = jm.job.created_at,
-                    JobType = _context.job_type.FirstOrDefault(j => j.id == jm.job.job_typeid).name
+                    JobType = _context.job_type.FirstOrDefault(j => j.id == jm.job.job_typeid).name,
+                    logo = jm.company.logo,
                 })
                 .Skip(start)
                 .Take(end - start)
@@ -365,12 +380,13 @@ namespace DevHub.Controllers.API
                     company_name = jm.company_job.comjobmapper.company.name,
                     stage = jm.candidate_job.stage,
                     created_at = jm.candidate_job.created_at,
-                    JobType = _context.job_type.FirstOrDefault(j => j.id == jm.company_job.Job.job_typeid).name
+                    JobType = _context.job_type.FirstOrDefault(j => j.id == jm.company_job.Job.job_typeid).name,
+                    profile =jm.candidate_job.candidate.image,
+
                 })
                 .Skip(start)
                 .Take(end - start)
                 .ToList();
-
 
             var result = new
             {

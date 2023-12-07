@@ -275,6 +275,7 @@ namespace DevHub.Controllers.API
         }
         
         [Authorize(Roles = "Admin,Candidate,Company")]
+        [HttpGet]
         public IHttpActionResult GetJob(int id)
         {
             var job = _context.jobs
@@ -319,8 +320,8 @@ namespace DevHub.Controllers.API
             if (job == null)
                 return BadRequest("Job Not Found");
 
-            var country_name = _context.country.SingleOrDefault(C => C.id == job.countryid).name;
-            job.country_name = country_name;
+            var city_name = _context.city.SingleOrDefault(C => C.id == job.cityid).cityname;
+            job.city_name = city_name;
             var data = Mapper.Map<JobDto>(job);
 
             return Ok(data);
@@ -328,6 +329,7 @@ namespace DevHub.Controllers.API
 
         [Authorize(Roles = "Admin,Company,Candidate")]
         [HttpPost]
+        [Route("api/Job/JobList")]
         public IHttpActionResult GetJobs(int start,int end, [FromBody] Dictionary<string, object> filter)
         {
             var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
@@ -386,7 +388,8 @@ namespace DevHub.Controllers.API
                              name = jm.company_job.comjobmapper.company.name,
                              company_id=jm.company_job.comjobmapper.company.id,
                              created_at = jm.company_job.Job.created_at,
-                             JobType = _context.job_type.FirstOrDefault(j => j.id == jm.company_job.Job.job_typeid).name
+                             JobType = _context.job_type.FirstOrDefault(j => j.id == jm.company_job.Job.job_typeid).name,
+                             logo = jm.company_job.comjobmapper.company.logo 
                          }
                       )
                      .OrderByDescending(j => j.created_at)
@@ -439,7 +442,8 @@ namespace DevHub.Controllers.API
                              name = jm.company.name,
                              company_id = jm.company.id,
                              created_at = jm.job.created_at,
-                             JobType = _context.job_type.FirstOrDefault(j => j.id == jm.job.job_typeid).name
+                             JobType = _context.job_type.FirstOrDefault(j => j.id == jm.job.job_typeid).name,
+                             logo = jm.company.logo
                          }
                       )
                      .OrderByDescending(j => j.created_at)

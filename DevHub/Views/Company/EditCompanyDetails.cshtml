@@ -18,6 +18,13 @@
     <meta name="author" content="UIdeck">
     <title>JobX - Bootstrap HTML5 Job Portal Template</title>
     @Styles.Render("~/Content/css")
+    <style>
+
+    .required{
+        color:red;
+    }
+
+    </style>
 </head>
 
 <body>
@@ -45,15 +52,15 @@
                             <h3>Company Details</h3>
                             <div class="border rounded p-4">
                                 <div class="form-group">
-                                    <label class="control-label">Company Name</label>
-                                    <input type="text" class="form-control" required name="name" placeholder="company name">
+                                    <label class="control-label">Company Name</label><span class="required"> *</span>
+                                    <input type="text" class="form-control" required name="name" maxlength="50" placeholder="company name">
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label">Website</label>
-                                    <input type="text" class="form-control" name="website" placeholder="e.g www.google.com">
+                                    <input type="text" class="form-control" name="website" maxlength="100" placeholder="e.g www.google.com">
                                 </div>
                                 <div class="form-group">
-                                    <label class="control-label">How many people are in your company?</label>
+                                    <label class="control-label">How many people are in your company?</label><span class="required"> *</span>
                                     <select class="form-control" name="people" id="people" required>
                                         <option data-display="General" selected value="">Select Option</option>
                                         <option value="1">It's Just Me</option>
@@ -83,19 +90,19 @@
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-md-4">
-                                            <label class="control-label">Country</label>
+                                            <label class="control-label">Country</label><span class="required"> *</span>
                                             <select class="form-control" name="countryid" id="country" required>
                                                 <option data-display="General" selected value="">Select Country</option>
                                             </select>
                                         </div>
                                         <div class="col-md-4">
-                                            <label class="control-label">State</label>
+                                            <label class="control-label">State</label><span class="required"> *</span>
                                             <select class="form-control" name="stateid" id="state" required>
                                                 <option data-display="General" selected value="">Select State</option>
                                             </select>
                                         </div>
                                         <div class="col-md-4">
-                                            <label class="control-label">City</label>
+                                            <label class="control-label">City</label><span class="required"> *</span>
                                             <select class="form-control" name="cityid" id="city" required>
                                                 <option data-display="General" selected value="">Select City</option>
                                             </select>
@@ -106,17 +113,17 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <label class="control-label">Phone</label>
-                                            <input type="text" class="form-control" name="phone" placeholder="e.g 7959650045">
+                                            <input type="number" class="form-control" name="phone" min="0" placeholder="e.g 7959650045">
                                         </div>
                                         <div class="col-md-6">
-                                            <label class="control-label">Email</label>
-                                            <input type="text" required class="form-control" name="email" placeholder="e.g abc@gmail.com">
+                                            <label class="control-label">Email</label><span class="required"> *</span>
+                                            <input type="text" required class="form-control" name="email" maxlength="100" placeholder="e.g abc@gmail.com">
                                         </div>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label">Address</label>
-                                    <textarea class="form-control" name="address" rows="2"></textarea>
+                                    <textarea class="form-control" name="address" maxlength="250" rows="2"></textarea>
                                 </div>
                             </div>
                             <h3 class="mt-5">Other Details</h3>
@@ -124,11 +131,11 @@
                                 <div class="border rounded p-4">
                                     <div class="form-group">
                                         <label class="control-label">Overview</label>
-                                        <textarea class="form-control" name="overview" rows="4"></textarea>
+                                        <textarea class="form-control" name="overview" maxlength="2500" rows="4"></textarea>
                                     </div>
                                     <div class="form-group">
-                                        <label class="control-label">Services</label>
-                                        <textarea class="form-control" required name="services" rows="4"></textarea>
+                                        <label class="control-label">Services</label><span class="required"> *</span>
+                                        <textarea class="form-control" required name="services" maxlength="2500" rows="4"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -137,19 +144,19 @@
                             <div class="border rounded p-4" id="skill">
                                 <div class="form-group">
                                     <label class="control-label">Linkedin</label>
-                                    <input type="text" class="form-control" name="linkedin" placeholder="e.g www.linkedin.com/in/abc-7654884a/">
+                                    <input type="text" class="form-control" name="linkedin" maxlength="200" placeholder="e.g www.linkedin.com/in/abc-7654884a/">
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label">Facebook</label>
-                                    <input type="text" class="form-control" name="facebook" placeholder="e.g www.facebook.com/profile.php?id=468487477">
+                                    <input type="text" class="form-control" name="facebook" maxlength="200" placeholder="e.g www.facebook.com/profile.php?id=468487477">
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label">Instagram</label>
-                                    <input type="text" class="form-control" name="instagram" placeholder="e.g www.instagram.com/profile.php?id=468487477">
+                                    <input type="text" class="form-control" name="instagram" maxlength="200" placeholder="e.g www.instagram.com/profile.php?id=468487477">
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label">Twitter</label>
-                                    <input type="text" class="form-control" name="twitter" placeholder="e.g www.twitter.com/username">
+                                    <input type="text" class="form-control" name="twitter" maxlength="200" placeholder="e.g www.twitter.com/username">
                                 </div>
                             </div>
 

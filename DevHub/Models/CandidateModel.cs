@@ -48,7 +48,8 @@ namespace DevHub.Models
         public int cityid { get; set; }
         public CityModel city { get; set; }
 
-        public long phone { get; set; }
+        [StringLength(15)]
+        public string phone { get; set; }
 
         [Required]
         [StringLength(100)]
@@ -61,15 +62,21 @@ namespace DevHub.Models
         public string address { get; set; }
 
         [Required]
+        [StringLength(2500)]
         public string about_me { get; set; } // overview as template
         public string education { get; set; } //json 
         public string experience { get; set; } //json
         public string project { get; set; } //json
         //[DataType(DataType.MultilineText)]
         public string skillids { get; set; } //json
+
+        [StringLength(200)]
         public string linkedin { get; set; }
+        [StringLength(200)]
         public string facebook { get; set; }
+        [StringLength(200)]
         public string instagram { get; set; }
+        [StringLength(200)]
         public string twitter { get; set; }
 
         [Required]

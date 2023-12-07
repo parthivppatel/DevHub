@@ -411,8 +411,10 @@ namespace DevHub.Controllers.API
                     address = _context.city.FirstOrDefault(city=> city.id== mapper.can_job.Job.city.id).cityname,
                     created_at = mapper.can_job.CandidateJobMapper.created_at,
                     stage=mapper.can_job.CandidateJobMapper.stage,
-                    JobType = _context.job_type.FirstOrDefault(j => j.id == mapper.can_job.Job.job_typeid).name
-                })
+                    JobType = _context.job_type.FirstOrDefault(j => j.id == mapper.can_job.Job.job_typeid).name,
+                    logo = company.logo 
+
+                  })
                 .OrderByDescending(j=>j.created_at)
                 .Skip(start)
                 .Take(end - start)

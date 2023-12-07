@@ -46,7 +46,7 @@
 
                                 <h3 id="full_name"></h3>
                                 <p id="title" class="sub-title"></p>
-                                <p><span class="address d-none" id="address"><i class="lni-map-marker"></i></span> ,<span class="d-none" id="phone"><i class="ti-phone"></i></span></p>
+                                <p><span class="address d-none" id="address"><i class="lni-map-marker"></i></span> <span class="d-none" id="phone"><i class="lni-phone"></i></span></p>
                                 <div class="social-link">
                                     <a href="#" class="facebook d-none" target="_blank"><i class="lni-facebook-filled"></i></a>
                                     <a href="#" class="linkedin d-none" target="_blank"><i class="lni-linkedin-fill"></i></a>
@@ -94,9 +94,12 @@
     @section scripts {
 
         <script>
+            const options = { month: 'short', year: 'numeric' };
             $(document).ready(function () {
 
                 let id =@ViewBag.Message;
+                let dates = {};
+
                 $.ajax({
                     type: "GET",
                     url: "/api/Candidate/CandidateDetails?id="+id,
@@ -109,8 +112,8 @@
                             $('#address').append(response.address, ",");
                         }
                         if (response.phone != "") {
-                            $('#phone').text(response.phone);
                             $('#phone').removeClass('d-none');
+                            $('#phone').append(" ",response.phone);
                         }
 
                         $('#about_me').text(response.about_me);
@@ -148,47 +151,42 @@
                             }
                         });
 
-                        let from = "";
-                        let to = "";
-                        if (response.education != "") {
+                        let education = JSON.parse(response.education);
+                        if (Object.keys(education).length > 0) {
                             $('.education').removeClass('d-none');
-                            let education = JSON.parse(response.education);
                             for (let key in education) {
-                                from = education[key][`from`].slice(0, 4);
-                                to = education[key][`to`].slice(0, 4);
+                                dates = dateformatter(education[key][`from`], education[key][`to`])
 
                                 $('.education').append(`
                                             <h4>${education[key][`school`]}</h4>
-                                            <p>${education[key][`degree`]}</p>
-                                            <span class="date">${from}-${to}</span>
+                                            <h5>${education[key][`degree`]}</h5>
+                                            <p>${education[key][`field`]}</p>
+                                            <span class="date">${dates['to'] == "" ? dates['from'] + " - Present" : dates['from'] + " - " + dates['to']  }</span>
                                             <p>${education[key][`description`]}</p>
-                                            <br>
-                                                 `);
+                                            <br>    
+                                `);
                             }
 
                         }
-                        if (response.experience != "") {
+
+                        let experience = JSON.parse(response.experience);
+                        if (Object.keys(experience).length > 0) {
                             $('.work-experience').removeClass('d-none');
-                            let experience = JSON.parse(response.experience);
                             for (let key in experience) {
-                                from = experience[key][`wfrom`].slice(0, 4);
-                                to = experience[key][`wto`].slice(0, 4);
-                                $('.work-experience').append(`
+                                dates=dateformatter(experience[key][`wfrom`], experience[key][`wto`])
+;                                $('.work-experience').append(`
                                     <h4>${experience[key][`title`]}</h4>
                                     <h5>${experience[key][`company`]}</h5>
-                                    <span class="exp-date"></span>
+                                    <span class="exp-date">${dates['to'] == "" ? dates['from'] + " - Present" : dates['from'] + " - " + dates['to']  }</span>
                                     <p>${experience[key][`wdescription`]}</p>
                                     <br>
-                                         `);
-
-                                to == "" ? $('.exp-date').text(`${from}` - present) : $('.exp-date').text(`${from}-${to}`);
+                                      `);
                             }
-
                         }
 
-                        if (response.project != "") {
+                        let project = JSON.parse(response.project);
+                        if (Object.keys(project).length > 0) {
                             $('.project').removeClass('d-none');
-                            let project = JSON.parse(response.project);
                             for (let key in project) {
                                 $('.project').append(`
                                    <div style="display: flex; align-items: center;">
@@ -239,6 +237,19 @@
                 })
             });
 
+            function dateformatter(from_date, to_date) {
+
+                if (from_date != "") {
+                    const fromdateobj = new Date(from_date);
+                    from_date = fromdateobj.toLocaleDateString(undefined, options);
+                }
+                if (to_date != "") {
+                    const todateobj = new Date(to_date);
+                    to_date = todateobj.toLocaleDateString(undefined, options);
+                }
+
+                return { 'from': from_date, 'to': to_date };
+            }
         </script>
     }
         <style>

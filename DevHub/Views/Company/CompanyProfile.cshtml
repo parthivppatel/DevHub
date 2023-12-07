@@ -72,6 +72,7 @@
                                         <span class="d-none" id="website"><i class="lni-chrome mr-2"></i></span> &nbsp; <span class="d-none" id="phone"><i class="lni-phone-handset mr-2"></i> </span>
                                         &nbsp; <span class="d-none" id="email"><i class="lni-envelope mr-2"></i> </span>
                                     </p>
+                                    <p class="people"><i class="lni-users"></i> &nbsp;</p>
                                     <div class="social-link">
                                         <a href="#" class="facebook d-none" target="_blank"><i class="lni-facebook-filled"></i></a>
                                         <a href="#" class="linkedin d-none" target="_blank"><i class="lni-linkedin-fill"></i></a>
@@ -108,6 +109,13 @@
     @section scripts {
 
         <script>
+            let people = {
+                    '1': 'It\'s Just Me',
+                    '2': '2-10 employees',
+                    '3': '10-99 employees',
+                    '4': '100-1000 employees',
+                    '5': 'More Than 1000 employees',
+                };
             $(document).ready(function () {
                 if (!@User.IsInRole("Company").ToString().ToLower()) {
                     $('.company').removeClass('col-lg-8 col-md-12');
@@ -144,6 +152,7 @@
                             let overview = response.overview.replace(/\n/g, '<br>');
                             $('#overview').html(overview);
                         }
+                        $('.people').append(people[response.people])
 
                         let services = response.services.replace(/\n/g, '<br>');
                         $('#services').html(services);

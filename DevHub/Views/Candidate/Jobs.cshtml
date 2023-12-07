@@ -47,17 +47,17 @@
                         <div class="col-lg-3 col-md-3 col-xs-12 pl-2 pr-2">
                             <input type="text" class="form-control"  id="city" autocomplete="off" placeholder="Location: City">
                         </div>
+                        <div class="col-lg-3 col-md-3 offset-lg-3 col-xs-12 pl-2 pr-2" style="position: absolute; margin-top: 41px; z-index: 1;">
+                            <div class="list-group" style="max-height: 229px; overflow-y: auto;" id="show-list">
+                            </div>
+                        </div>
                         <div class="col-lg-3 col-md-3 col-xs-12 pl-2 pr-2">
                             <select class="form-control" id="job-type">
                                 <option value="">Select Type</option>
                             </select>
                         </div>
                         <div class="col-lg-3 col-md-3 col-xs-12">
-                            <button type="submit" class="btn btn-common float-right mr-3 filter">Filter</button>
-                        </div>
-                        <div class="col-lg-3 col-md-3 offset-lg-3 col-xs-12 pl-2 pr-2" style="position: absolute; margin-top: 41px; z-index: 1">
-                            <div class="list-group" style="max-height: 229px; overflow-y: auto;" id="show-list">
-                            </div>
+                            <button type="submit" class="btn btn-common float-right filter" style="z-index:-1;">Filter</button>
                         </div>
                     </div>
                 </div>
@@ -131,22 +131,42 @@
                 let counter = 1;
                 let city_data;
                 let filter = { 'title': '', 'jobtype': '' };
+                let base64_string = "";
+                let url = "";
 
                 function jobs() {
                     $.ajax({
                         type: "POST",
-                        url: "/api/Job?start=" + 0 + "&end=" + PageSize,
+                        url: "/api/Job/JobList?start=" + 0 + "&end=" + PageSize,
                         data: JSON.stringify(filter),
                         processData: false,
                         contentType: 'application/json',
                         success: function (response) {
                             response['data'].forEach(data => {
+                                base64_string = "";
+                                data.logo != "" ? base64_string = data.logo : '';
+                                if (base64_string != "") {
+                                    extension = base64_string.split(';')[0].split('/')[1]
+                                    // Convert base64 to byte array
+                                    let byteNumbers = new Uint8Array([...atob(base64_string)].map(char => char.charCodeAt(0)));
+
+                                    // Create a Blob from the byte array
+                                    let blob = new Blob([byteNumbers], { type: 'image/' + extension });
+                                    let blobUrl = URL.createObjectURL(blob);
+                                    url = blobUrl;
+                                }
+                                else {
+                                    url = "../../Content/img/jobicon.png";
+                                }
                                 $('.jobs').append(`
                                         <div class="col-lg-6 col-md-12 col-xs-12">
                                           <span class="job-listings-featured">
                                              <div class="row">
-                                                <div class="col-lg-6 col-md-12 col-xs-12">
-                                                    <div class="job-details" style="margin-left:0!important;">
+                                                <div class="col-lg-9 col-md-12 col-xs-12">
+                                                    <div class="job-company-logo mr-2">
+                                                       <img src="${url}" height="60" alt="">
+                                                    </div>
+                                                    <div class="job-details">
                                                         <h3><a href="/company/JobDetails/${btoa(data.id)}">${data.title}</a></h3>
                                                         <a href="/company/CompanyProfile/${btoa(data.company_id.toString())}" class="company-neme">${data.name}</a>
                                                         <div class="tags">
@@ -155,11 +175,11 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-lg-6 col-md-6 col-xs-12 text-right">
+                                                <div class="col-lg-3 col-md-6 col-xs-12 text-right">
                                                    <div class="tag-type mt-0">
-                                                        <span class="${data.jobType == "full-time" ? 'full-time' : 'part-time'}">${data.jobType}</span>
+                                                        <span class="${data.jobType == "full-time" ? 'full-time' : 'part-time'} ml-0">${data.jobType}</span>
                                                     </div>
-                                                    <button style="cursor: pointer;" class="btn btn-success apply" value="${data.id}">
+                                                    <button style="cursor: pointer;" class="btn btn-success apply mr-2" value="${data.id}">
                                                       Apply
                                                    </button>
                                                 </div>
@@ -220,18 +240,35 @@
                     $('.jobs').html('');
                     $.ajax({
                         type: "POST",
-                        url: "/api/Job?start=" + start + "&end=" + end,
+                        url: "/api/Job/JobList?start=" + start + "&end=" + end,
                         data: JSON.stringify(filter),
                         processData: false,
                         contentType: 'application/json',
                         success: function (response) {
                             response['data'].forEach(data => {
+                                    base64_string = "";
+                                    data.logo != "" ? base64_string = data.logo : '';
+                                    if (base64_string != "") {
+                                        extension = base64_string.split(';')[0].split('/')[1]
+                                        // Convert base64 to byte array
+                                        let byteNumbers = new Uint8Array([...atob(base64_string)].map(char => char.charCodeAt(0)));
+                                        // Create a Blob from the byte array
+                                        let blob = new Blob([byteNumbers], { type: 'image/' + extension });
+                                        let blobUrl = URL.createObjectURL(blob);
+                                        url = blobUrl;
+                                    }
+                                    else {
+                                        url = "../../Content/img/jobicon.png";
+                                    }
                                 $('.jobs').append(`
                                       <div class="col-lg-6 col-md-12 col-xs-12">
                                           <span class="job-listings-featured">
                                              <div class="row">
-                                                <div class="col-lg-6 col-md-12 col-xs-12">
-                                                    <div class="job-details" style="margin-left:0!important;">
+                                                <div class="col-lg-9 col-md-12 col-xs-12">
+                                                    <div class="job-company-logo mr-2">
+                                                       <img src="${url}" height="60" alt="">
+                                                    </div>
+                                                    <div class="job-details">
                                                         <h3><a href="/company/JobDetails/${btoa(data.id)}">${data.title}</a></h3>
                                                         <a href="/company/CompanyProfile/${btoa(data.company_id.toString())}" class="company-neme">${data.name}</a>
                                                         <div class="tags">
@@ -240,13 +277,15 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-lg-6 col-md-6 col-xs-12 text-right">
+                                                <div class="col-lg-3 col-md-6 col-xs-12 text-right">
                                                    <div class="tag-type mt-0">
-                                                        <span class="${data.jobType == "full-time" ? 'full-time' : 'part-time'}">${data.jobType}</span>
+                                                        <span class="${data.jobType == "full-time" ? 'full-time' : 'part-time'} ml-0">${data.jobType}</span>
                                                     </div>
-                                                    <button style="cursor: pointer;" class="btn btn-success apply" value="${data.id}">
+                                                    <div>
+                                                    <button style="cursor: pointer;" class="btn btn-success apply mr-2" value="${data.id}">
                                                       Apply
                                                    </button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </span>
@@ -336,6 +375,16 @@
                         });
                     }
                 });
+                    
+                $.ajax({
+                    type: "GET",
+                    url: "/api/Company/GetCompanies",
+                    success: function (response) {
+                        response.forEach(item => {
+                            $('#company').append("<option value=" + item.id + ">" + item.name + "</option >");
+                        });
+                    }
+                });
 
                 $('#next').click(function () {
                     if (counter != pageTabs) {
@@ -379,7 +428,7 @@
         </script>
     }
 
-    <style>
+<style>
         .apply {
             margin-top: 8px;
             padding:5px 15px;
@@ -389,6 +438,20 @@
         .full-time .part-time{
             font-size:6px!important;
         }
-    </style>
+        @@media (min-width: 300px) and (max-width:766px) {
+            .col-lg-3.offset-lg-3 {
+                position: static; /* Reset position */
+                margin-top: 97px!important; /* Adjust margin as needed */
+            }
+        }
+        @@media (min-width: 768px) and (max-width:991px) {
+        .col-lg-3.offset-lg-3 {
+            position: static; /* Reset position */
+            margin-left:180px;
+            }
+        }
+       
+
+</style>
 </body>
 </html>

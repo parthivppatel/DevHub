@@ -88,7 +88,7 @@
     </header>
     <!-- Header Section End -->
     <!-- Category Section Start -->
-    <section class="category section bg-gray">
+    <!-- <section class="category section bg-gray">
         <div class="container">
             <div class="section-header">
                 <h2 class="section-title">Browse Categories</h2>
@@ -169,7 +169,7 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> -->
     <!-- Category Section End -->
     <!-- Listings Section Start -->
     <!-- <section id="job-listings" class="section">
@@ -187,9 +187,9 @@
                 <div class="col-lg-6 col-md-12 col-sm-12">
                     <div class="text-wrapper">
                         <div>
-                            <h3>7,000+ Browse Jobs</h3>
-                            <p>Search all the open positions on the web. Get your own personalized salary estimate. Read reviews on over 600,000 companies worldwide. The right job is out there.</p>
-                            <a class="btn btn-common" href="#">Search jobs</a>
+                            <h3>Browse Jobs</h3>
+                            <p>Search all the open positions on the web. Get your own personalized salary estimate. The right job is out there.</p>
+                           @Html.ActionLink("Search jobs", "Jobs", "Candidate", routeValues: null, htmlAttributes: new { @class = "btn btn-common" })
                         </div>
                     </div>
                 </div>
@@ -211,7 +211,7 @@
                     <div class="counter-box">
                         <div class="icon"><i class="lni-home"></i></div>
                         <div class="fact-count">
-                            <h3><span class="counter">800</span></h3>
+                            <h3><span id="jobs"></span></h3>
                             <p>Jobs Posted</p>
                         </div>
                     </div>
@@ -222,7 +222,7 @@
                     <div class="counter-box">
                         <div class="icon"><i class="lni-briefcase"></i></div>
                         <div class="fact-count">
-                            <h3><span class="counter">80</span></h3>
+                            <h3><span id="companies"></span></h3>
                             <p>All Companies</p>
                         </div>
                     </div>
@@ -233,7 +233,7 @@
                     <div class="counter-box">
                         <div class="icon"><i class="lni-pencil-alt"></i></div>
                         <div class="fact-count">
-                            <h3><span class="counter">900</span></h3>
+                            <h3><span id="resumes"></span></h3>
                             <p>Resumes</p>
                         </div>
                     </div>
@@ -244,7 +244,7 @@
                     <div class="counter-box">
                         <div class="icon"><i class="lni-save"></i></div>
                         <div class="fact-count">
-                            <h3><span class="counter">1200</span></h3>
+                            <h3><span id="applications"></span></h3>
                             <p>Applications</p>
                         </div>
                     </div>
@@ -536,7 +536,33 @@
                         }
                     });
                 });
-        
+
+                $.ajax({
+                        type: "GET",
+                        url: "/api/summary",
+                        success: function (response,status_code) {
+                           $('#applications').text(response['applications']);
+                           $('#jobs').text(response['jobs']);
+                           $('#resumes').text(response['resumes']);
+                           $('#companies').text(response['companies']);
+                        
+                        }
+                }).then(function(result) {
+                    $('#applications').addClass('counter');
+                    $('#jobs').addClass('counter');
+                    $('#resumes').addClass('counter');
+                    $('#companies').addClass('counter');
+
+                      if($(".fact-count").length > 0) {
+                           $(".counter").counterUp({
+                            delay: 10,
+                            time: 500
+                          });
+                        }
+
+                })
+             
+
             })
         </script>
     }

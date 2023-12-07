@@ -53,7 +53,7 @@
                             </select>
                         </div>
                         <div class="col-lg-3 col-md-3 col-xs-12">
-                            <button type="submit" class="btn btn-common float-right mr-3 filter">Filter</button>
+                            <button type="submit" class="btn btn-common float-right filter">Filter</button>
                         </div>
                     </div>
                 </div>
@@ -125,6 +125,8 @@
                 let pageTabs = 0;
                 let counter = 1;
                 let filter = { 'stage': 'Applied' };
+                let base64_string = "";
+                let url = "";
 
                 function CandidateApplications() {
                     $.ajax({
@@ -135,12 +137,30 @@
                         contentType: 'application/json',
                         success: function (response) {
                             response['data'].forEach(data => {
+                                base64_string = "";
+                                data.logo != "" ? base64_string = data.logo : '';
+                                if (base64_string != "") {
+                                    extension = base64_string.split(';')[0].split('/')[1]
+                                    // Convert base64 to byte array
+                                    let byteNumbers = new Uint8Array([...atob(base64_string)].map(char => char.charCodeAt(0)));
+
+                                    // Create a Blob from the byte array
+                                    let blob = new Blob([byteNumbers], { type: 'image/' + extension });
+                                    let blobUrl = URL.createObjectURL(blob);
+                                    url = blobUrl;
+                                }
+                                else {
+                                    url = "../../Content/img/jobicon.png";
+                                }
                                 $('.jobs').append(`
                                         <div class="col-lg-6 col-md-12 col-xs-12">
                                           <span class="job-listings-featured">
                                              <div class="row">
-                                                <div class="col-lg-6 col-md-12 col-xs-12">
-                                                    <div class="job-details" style="margin-left:0!important;">
+                                                <div class="col-lg-9 col-md-12 col-xs-12">
+                                                     <div class="job-company-logo mr-2">
+                                                       <img src="${url}" height="60" alt="">
+                                                    </div>
+                                                    <div class="job-details"">
                                                         <h3><a href="/company/CandidateJobDetails/${btoa(data.id)}">${data.title}</a></h3>
                                                         <a href="/company/CompanyProfile/${btoa(data.company_id.toString())}" class="company-neme">${data.name}</a>
                                                         <div class="tags">
@@ -149,11 +169,11 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-lg-6 col-md-6 col-xs-12 text-right">
+                                                <div class="col-lg-3 col-md-6 col-xs-12 text-right">
                                                    <div class="tag-type mt-0">
-                                                        <span class="${data.jobType == "full-time" ? 'full-time' : 'part-time'}">${data.jobType}</span>
+                                                        <span class="${data.jobType == "full-time" ? 'full-time' : 'part-time'} ml-0">${data.jobType}</span>
                                                     </div>
-                                                    <a style="pointer-events:none;" class="${data.stage == "Approved" ? 'btn btn-success' : data.stage == 'Applied' ? 'btn btn-primary' : 'btn btn-danger'} stage">
+                                                    <a style="pointer-events:none;" class="${data.stage == "Approved" ? 'btn btn-success' : data.stage == 'Applied' ? 'btn btn-primary' : 'btn btn-danger'} mr-2 stage">
                                                       ${data.stage}
                                                    </a>
                                                 </div>
@@ -233,11 +253,29 @@
                         contentType: 'application/json',
                         success: function (response) {
                             response['data'].forEach(data => {
+                                base64_string = "";
+                                data.logo != "" ? base64_string = data.logo : '';
+                                if (base64_string != "") {
+                                    extension = base64_string.split(';')[0].split('/')[1]
+                                    // Convert base64 to byte array
+                                    let byteNumbers = new Uint8Array([...atob(base64_string)].map(char => char.charCodeAt(0)));
+
+                                    // Create a Blob from the byte array
+                                    let blob = new Blob([byteNumbers], { type: 'image/' + extension });
+                                    let blobUrl = URL.createObjectURL(blob);
+                                    url = blobUrl;
+                                }
+                                else {
+                                    url = "../../Content/img/jobicon.png";
+                                }
                                 $('.jobs').append(`
                                         <div class="col-lg-6 col-md-12 col-xs-12">
                                           <span class="job-listings-featured">
                                              <div class="row">
-                                                <div class="col-lg-6 col-md-12 col-xs-12">
+                                                <div class="col-lg-9 col-md-12 col-xs-12">
+                                                    <div class="job-company-logo mr-2">
+                                                       <img src="${url}" height="60" alt="">
+                                                    </div>
                                                     <div class="job-details" style="margin-left:0!important;">
                                                         <h3><a href="/company/CandidateJobDetails/${btoa(data.id)}">${data.title}</a></h3>
                                                         <a href="/company/CompanyProfile/${btoa(data.company_id.toString())}" class="company-neme">${data.name}</a>
@@ -247,10 +285,13 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-lg-6 col-md-6 col-xs-12 text-right">
+                                                <div class="col-lg-3 col-md-6 col-xs-12 text-right">
                                                    <div class="tag-type">
-                                                        <span class="${data.jobType == "full-time" ? 'full-time' : 'part-time'}">${data.jobType}</span>
+                                                        <span class="${data.jobType == "full-time" ? 'full-time' : 'part-time'} ml-0">${data.jobType}</span>
                                                     </div>
+                                                    <a style="pointer-events:none;" class="${data.stage == "Approved" ? 'btn btn-success' : data.stage == 'Applied' ? 'btn btn-primary' : 'btn btn-danger'} mr-2 stage">
+                                                      ${data.stage}
+                                                   </a>
                                                 </div>
                                             </div>
                                         </span>

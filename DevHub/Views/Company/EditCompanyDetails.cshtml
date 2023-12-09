@@ -3,10 +3,6 @@
     ViewBag.Title = "EditCompanyDetails";
 }
 
-@{
-    ViewBag.Title = "Add_Company";
-}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,8 +12,9 @@
     <meta name="keywords" content="Bootstrap, Landing page, Template, Registration, Landing">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <meta name="author" content="UIdeck">
-    <title>JobX - Bootstrap HTML5 Job Portal Template</title>
+    <title>JobX</title>
     @Styles.Render("~/Content/css")
+
     <style>
 
     .required{
@@ -47,6 +44,12 @@
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-lg-9 col-md-12 col-xs-12">
+                    <div class="alert alert-danger alert-dismissible fade show d-none" role="alert">
+                        <span id="message"></span>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
                     <div class="add-resume box">
                         <form class="form-ad" id="company-form" enctype="multipart/form-data">
                             <h3>Company Details</h3>
@@ -190,7 +193,8 @@
     </style>
 
 
-
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
     @section scripts {
         <script>
 
@@ -259,20 +263,23 @@
                         // Extract the MIME type from the base64 string
                         if (base64_string != "") {
                             extension = base64_string.split(';')[0].split('/')[1]
-                            let byteCharacters = atob(base64_string);
-                            let byteNumbers = new Array(byteCharacters.length);
-                            for (let i = 0; i < byteCharacters.length; i++) {
-                                byteNumbers[i] = byteCharacters.charCodeAt(i);
-                            }
-                            let byteArray = new Uint8Array(byteNumbers);
-                            let blob = new Blob([byteArray], { type: 'image/' + extension }); // Adjust the image type accordingly
-
-                            // Create a URL for the Blob
+                            // Convert base64 to byte array
+                            let byteNumbers = new Uint8Array([...atob(base64_string)].map(char => char.charCodeAt(0)));
+                            // Create a Blob from the byte array
+                            let blob = new Blob([byteNumbers], { type: 'image/' + extension });
                             let blobUrl = URL.createObjectURL(blob);
-
-                            // Set the image source to the Blob URL
                             let img = document.getElementById('logo');
                             img.src = blobUrl;
+                            // extension = base64_string.split(';')[0].split('/')[1]
+                            // let byteCharacters = atob(base64_string);
+                            // let byteNumbers = new Array(byteCharacters.length);
+                            // for (let i = 0; i < byteCharacters.length; i++) {
+                            //     byteNumbers[i] = byteCharacters.charCodeAt(i);
+                            // }
+                            // let byteArray = new Uint8Array(byteNumbers);
+                            // let blob = new Blob([byteArray], { type: 'image/' + extension }); // Adjust the image type accordingly
+                            // // Create a URL for the Blob
+                            // let blobUrl = URL.createObjectURL(blob);
                         }
                     }
                 });
@@ -328,8 +335,15 @@
                         contentType: false,
                         processData: false,
                         dataType: 'json',
-                        success: function (response) {
-                            $(location).attr('href', '/Company/CompanyProfile');
+                        success: function (response, status_code) {
+                            if (status_code == "success") {
+                                $(location).attr('href', '/Company/CompanyProfile');
+                            }
+                        },
+                        error: function (jqXHR) {
+                            $('#message').text(jqXHR.responseJSON['message']);
+                            $('.back-to-top').click();
+                            $('.alert').removeClass('d-none');
                         }
                     });
                 });

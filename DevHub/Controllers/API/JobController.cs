@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DevHub.Dtos;
 using DevHub.Models;
+using Microsoft.AspNet.Identity.Owin;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -10,6 +11,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 
@@ -265,12 +267,47 @@ namespace DevHub.Controllers.API
 
         //[Authorize(Roles = "Admin,Candidate")]
         [Route("api/Job/JobStatus")]
-        public IHttpActionResult ApproveRejectJob(int candidate_id,int job_id,string stage)
+        public async Task<IHttpActionResult> ApproveRejectJob(int candidate_id,int job_id,string stage)
         {
-            var candidate_job = _context.candidate_job.SingleOrDefault(cj => cj.jobid == job_id && cj.candidateid == candidate_id);
-            candidate_job.stage = stage;
+            var candidate_job = _context.candidate_job;
+            var temp= candidate_job.SingleOrDefault(cj => cj.jobid == job_id && cj.candidateid == candidate_id);
+            temp.stage = stage;
             _context.SaveChanges();
 
+
+            if (stage == "Approved")
+            {
+
+                var data = candidate_job
+                .Join(_context.jobs,
+                 cj => cj.jobid,
+                 j => j.id,
+                 (cj, j) => new { Job = j, CandidateJobMapper = cj })
+                .Join(_context.company_job,
+                 can_job => can_job.Job.id,
+                 company_job => company_job.jobid,
+                 (can_job, company_job) => new { can_job = can_job, com_job = company_job })
+                .Join(_context.company,
+                 mapper => mapper.com_job.companyid,
+                 company => company.id,
+                 (mapper, company) => new
+                 {
+                     title=mapper.can_job.Job.title,
+                     name = company.name,
+                     job_id= mapper.can_job.Job.id,
+                     can_id=mapper.can_job.CandidateJobMapper.candidate.id,
+                     user_id=mapper.can_job.CandidateJobMapper.candidate.UserId
+
+                 }).Where(result => result.job_id == job_id && result.can_id == candidate_id).SingleOrDefault();
+
+                var jobtitle = data.title;
+                var userManager = HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>();
+                string userId = data.user_id;
+
+                await userManager.SendEmailAsync(userId, "Job Application", "<p>Your Job Application for "+ jobtitle +" is Approved by "+ data.name +" </P>");
+
+
+            }
             return Ok("Job "+ stage + " Succesfully");
         }
         

@@ -12,7 +12,7 @@
     <meta name="keywords" content="Bootstrap, Landing page, Template, Registration, Landing">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <meta name="author" content="UIdeck">
-    <title>JobX - Bootstrap HTML5 Job Portal Template</title>
+    <title>JobX </title>
 
 </head>
 
@@ -110,6 +110,8 @@
     </div>
     <!-- End Preloader -->
     @section scripts{
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
         <script>
             function formatDate(date) {
@@ -200,7 +202,7 @@
                                                        `<a style="background: none; cursor: pointer;" class="approve" data-candidate="${data.candidate_id}" data-job="${data.id}">
                                                            <img src="@Url.Content("~/Content/img/approve.svg")" alt="YourAltText" height="25" class="mt-2" />
                                                        </a>
-                                                        <a style="background: none; cursor: pointer;" class="reject" data-candidate="${data.candidate_id} data-job="${data.id}">
+                                                        <a style="background: none; cursor: pointer;" class="reject" data-candidate="${data.candidate_id}" data-job="${data.id}">
                                                            <img src="@Url.Content("~/Content/img/reject.svg")" alt="YourAltText" height="25" class="mt-2" />
                                                        </a>`
                                                      : data.stage == 'Approved' ?
@@ -267,16 +269,35 @@
                     getCompanyApplications();
 
                 });
-
+                    
                 $(document).on('click', '.approve', function (e) {
                     job_id = $(this).data('job');
                     candidate_id = $(this).data('candidate');
-
+                    Swal.fire({
+                        allowOutsideClick: false,
+                        customClass: {
+                            popup: 'custom-swal-container',
+                            loader: 'custom-swal-loader'
+                        },
+                        didOpen: () => {
+                            Swal.showLoading();
+                        },
+                    });
                     $.ajax({
                         type: "POST",
                         url: "/api/Job/JobStatus?candidate_id=" + candidate_id + "&job_id=" + job_id + "&stage=Approved",
                         success: function (response) {
-                            console.log(response);
+                            $('.applications').css('min-height', '646px');
+                            filter['stage'] = $('#stage').val();
+                            filter['title'] = $('#title').val();
+                            filter['jobtype'] = $('#job-type').val();
+                            $('.applications').html('');
+                            $('#pages').html('');
+                            getCompanyApplications();
+                            Swal.close();
+                        },
+                        error:function(error){
+                            Swal.close();
                         }
                     });
                 })
@@ -286,10 +307,16 @@
                     candidate_id = $(this).data('candidate');
 
                     $.ajax({
-                        type: "GET",
+                        type: "POST",
                         url: "/api/Job/JobStatus?candidate_id=" + candidate_id + "&job_id=" + job_id + "&stage=Rejected",
                         success: function (response) {
-                            console.log(response);
+                            $('.applications').css('min-height', '646px');
+                            filter['stage'] = $('#stage').val();
+                            filter['title'] = $('#title').val();
+                            filter['jobtype'] = $('#job-type').val();
+                            $('.applications').html('');
+                            $('#pages').html('');
+                            getCompanyApplications();
                         }
                     });
                 })
@@ -351,7 +378,7 @@
                                                        `<a style="background: none; cursor: pointer;" class="approve" data-candidate="${data.candidate_id}" data-job="${data.id}">
                                                            <img src="@Url.Content("~/Content/img/approve.svg")" alt="YourAltText" height="25" class="mt-2" />
                                                        </a>
-                                                        <a style="background: none; cursor: pointer;" class="reject" data-candidate="${data.candidate_id} data-job="${data.id}">
+                                                        <a style="background: none; cursor: pointer;" class="reject" data-candidate="${data.candidate_id}" data-job="${data.id}">
                                                            <img src="@Url.Content("~/Content/img/reject.svg")" alt="YourAltText" height="25" class="mt-2" />
                                                        </a>`
                                                      : data.stage == 'Approved' ?
@@ -424,6 +451,13 @@
             font-size: 12px;
             margin-top:5px;
             text-transform: capitalize;
+        }
+        .custom-swal-container {
+            height: 200px;
+        }
+        .custom-swal-loader {
+            height: 60px;
+            width: 60px;
         }
     </style>
 </body>

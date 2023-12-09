@@ -376,15 +376,15 @@
                     }
                 });
                     
-                $.ajax({
-                    type: "GET",
-                    url: "/api/Company/GetCompanies",
-                    success: function (response) {
-                        response.forEach(item => {
-                            $('#company').append("<option value=" + item.id + ">" + item.name + "</option >");
-                        });
-                    }
-                });
+                // $.ajax({
+                //     type: "GET",
+                //     url: "/api/Company/GetCompanies",
+                //     success: function (response) {
+                //         response.forEach(item => {
+                //             $('#company').append("<option value=" + item.id + ">" + item.name + "</option >");
+                //         });
+                //     }
+                // });
 
                 $('#next').click(function () {
                     if (counter != pageTabs) {

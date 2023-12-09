@@ -36,7 +36,7 @@ namespace DevHub.Filters
 
                 if (!authorized)
                 {
-                    filterContext.Result = new RedirectResult("/Home/Index"); // Redirect to a custom page if the user is authenticated but does not have the required role
+                    filterContext.Result = new RedirectResult("https://localhost:44305/ErrorPages/Forbidden.html"); // Redirect to a custom page if the user is authenticated but does not have the required role
                 }
             }
 

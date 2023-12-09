@@ -369,15 +369,36 @@
                 });
 
                 $(document).on('click', '.delete', function (e) {
+                    e.preventDefault();
                     let id = $(this).data('value');
-                    $.ajax({
-                        type: "DELETE",
-                        url: "/api/Job/"+ id,
-                        success: function (response) {
-                            console.log(response);
-                            $(location).attr('href', '/Company/ManageJobs');
+                    Swal.fire({
+                        title: "Are you sure want to Delete this Job?",
+                        text: "Your all applications will be deleted!",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Yes, delete it!"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            $.ajax({
+                                type: "DELETE",
+                                url: "/api/Job/"+ id,
+                                success: function (response,status_code) {
+                                    if (status_code == "success") {
+                                        Swal.fire({
+                                            title: "Job Deleted Successfully!",
+                                            icon: "success",
+                                            timer: 1300
+                                        }).then(function () {
+                                            $(location).attr('href', '/Company/ManageJobs');
+                                        });
+                                    }
+                                }
+                            });
                         }
                     });
+                    
                 });
 
             });

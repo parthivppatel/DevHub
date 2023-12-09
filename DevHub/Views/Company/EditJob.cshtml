@@ -43,6 +43,12 @@
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-lg-9 col-md-12 col-xs-12">
+                    <div class="alert alert-danger d-none alert-dismissible fade show" role="alert">
+                        <span id="message"></span>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
                     <div class="post-job box">
                         <form class="form-ad" id="Edit-Job">
                             <div class="form-group">
@@ -178,6 +184,8 @@
         <div class="loader" id="loader-1"></div>
     </div>
     <!-- End Preloader -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
     @section scripts{
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
         <script>
@@ -385,6 +393,11 @@
                         dataType: 'json',
                         success: function (response) {
                             $(location).attr('href', '/Company/ManageJobs');
+                        },
+                        error: function (jqXHR) {
+                            $('#message').text(jqXHR.responseJSON['message']);
+                            $('.back-to-top').click();
+                            $('.alert').removeClass('d-none');
                         }
                     });
 

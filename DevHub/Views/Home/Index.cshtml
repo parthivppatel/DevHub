@@ -523,20 +523,6 @@
         @Scripts.Render("~/bundles/bootstrap")
         <script>
             $(document).ready(function () {
-                $('#deactivate').on('click', function () {
-                    $.ajax({
-                        type: "DELETE",
-                        url: "/api/User",
-                        success: function (response,status_code) {
-                            console.log(response);
-                            console.log(status_code);
-                            if (status_code == "success") {
-                                $(location).attr('href', '/ ');
-                            }
-                        }
-                    });
-                });
-
                 $.ajax({
                         type: "GET",
                         url: "/api/summary",

@@ -44,6 +44,12 @@
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-lg-9 col-md-12 col-xs-12">
+                    <div class="alert alert-danger d-none alert-dismissible fade show" role="alert">
+                        <span id="message"></span>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
                     <div class="add-resume box">
                         <form class="form-ad" id="candidate-form" enctype="multipart/form-data">
                             <h3>Basic information</h3>
@@ -90,7 +96,7 @@
                                     <div class="button-group">
                                         <div class="action-buttons">
                                             <div class="thumb">
-                                                <img src="" id="profile" alt="" height="160">
+                                                <img src="" id="logo" alt="" height="110">
                                             </div>
                                             <div class="upload-button mt-2">
                                                 <button class="btn custom">Add a Profile Photo</button>
@@ -298,8 +304,10 @@
     </style>
 
 
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
     @section scripts {
-        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
         <script>
 
             var dtToday = new Date();
@@ -554,20 +562,28 @@
                         // Extract the MIME type from the base64 string
                         if (base64_string != "") {
                             extension = base64_string.split(';')[0].split('/')[1]
-                            let byteCharacters = atob(base64_string);
-                            let byteNumbers = new Array(byteCharacters.length);
-                            for (let i = 0; i < byteCharacters.length; i++) {
-                                byteNumbers[i] = byteCharacters.charCodeAt(i);
-                            }
-                            let byteArray = new Uint8Array(byteNumbers);
-                            let blob = new Blob([byteArray], { type: 'image/' + extension }); // Adjust the image type accordingly
-
-                            // Create a URL for the Blob
+                            // Convert base64 to byte array
+                            let byteNumbers = new Uint8Array([...atob(base64_string)].map(char => char.charCodeAt(0)));
+                            // Create a Blob from the byte array
+                            let blob = new Blob([byteNumbers], { type: 'image/' + extension });
                             let blobUrl = URL.createObjectURL(blob);
-
-                            // Set the image source to the Blob URL
-                            let img = document.getElementById('profile');
+                            let img = document.getElementById('logo');
                             img.src = blobUrl;
+                            // extension = base64_string.split(';')[0].split('/')[1]
+                            // let byteCharacters = atob(base64_string);
+                            // let byteNumbers = new Array(byteCharacters.length);
+                            // for (let i = 0; i < byteCharacters.length; i++) {
+                            //     byteNumbers[i] = byteCharacters.charCodeAt(i);
+                            // }
+                            // let byteArray = new Uint8Array(byteNumbers);
+                            // let blob = new Blob([byteArray], { type: 'image/' + extension }); // Adjust the image type accordingly
+
+                            // // Create a URL for the Blob
+                            // let blobUrl = URL.createObjectURL(blob);
+
+                            // // Set the image source to the Blob URL
+                            // let img = document.getElementById('profile');
+                            // img.src = blobUrl;
                         }
                     }
                 });
@@ -871,6 +887,11 @@
                         dataType: 'json',
                         success: function (response) {
                             $(location).attr('href', '/Candidate/Resume');
+                        },
+                        error: function (jqXHR) {
+                            $('#message').text(jqXHR.responseJSON['message']);
+                            $('.back-to-top').click();
+                            $('.alert').removeClass('d-none');
                         }
                     });
                 });

@@ -441,7 +441,7 @@ namespace DevHub.Controllers
                 return RedirectToAction("Index", "Manage");
             }
 
-            System.Diagnostics.Debug.WriteLine(model.registerViewModel.Email,"email");
+            System.Diagnostics.Debug.WriteLine("check request 2");
             var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(_context));
             if (ModelState.IsValid)
             {
@@ -451,40 +451,34 @@ namespace DevHub.Controllers
                 {
                     return View("ExternalLoginFailure");
                 }
-
                 var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(_context));
                 var verify_email_user = userManager.FindByEmail(model.registerViewModel.Email);
 
                 if (verify_email_user != null && verify_email_user.EmailConfirmed == false)
                     userManager.Delete(verify_email_user);
 
-
                 var user = new ApplicationUser { UserName = model.registerViewModel.Email, Email = model.registerViewModel.Email ,EmailConfirmed=true};
                 var result = await UserManager.CreateAsync(user, model.registerViewModel.Password);
                 if (result.Succeeded)
                 {
-                    result = await UserManager.AddLoginAsync(user.Id, info.Login);
-                    if (result.Succeeded)
-                    {
+                        await UserManager.AddLoginAsync(user.Id, info.Login);
                         var role = await roleManager.FindByIdAsync(model.registerViewModel.RoleId.ToString());
                         await UserManager.AddToRoleAsync(user.Id, role.Name);
                         await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
                         return RedirectToLocal(returnUrl);
-                    }
-                    else
+                }
+                else
+                {
+                    var r_error = "";
+                    foreach (var error in result.Errors)
                     {
-                        var r_error = "";
-                        foreach (var error in result.Errors)
-                        {
-                            r_error = "";
-                            r_error = error;
-                        }
-                        ModelState.AddModelError("", r_error);
+                        r_error = "";
+                        r_error = error;
                     }
+                    ModelState.AddModelError("", r_error);
                 }
                 //AddErrors(result);
             }
-
             model.registerViewModel = model.registerViewModel;
             model.Role = roleManager.Roles.Where(r => r.Name != "Admin").ToList();
             ViewBag.ReturnUrl = returnUrl;

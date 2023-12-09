@@ -473,6 +473,8 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\css\animate.css" />
     <Content Include="Content\css\bootstrap.min.css" />
+    <Content Include="Content\css\defaulterror.css" />
+    <Content Include="Content\css\error.css" />
     <Content Include="Content\css\line-icons.css" />
     <Content Include="Content\css\main.css" />
     <Content Include="Content\css\owl.carousel.min.css" />
@@ -538,6 +540,9 @@
     <Content Include="Content\img\testimonial\img4.png" />
     <Content Include="Content\img\testimonial\img5.png" />
     <Content Include="Content\LogRegForm.css" />
+    <Content Include="ErrorPages\Forbidden.html" />
+    <Content Include="ErrorPages\NotFound.html" />
+    <Content Include="ErrorPages\Default.html" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />

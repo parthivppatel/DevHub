@@ -261,18 +261,18 @@ namespace DevHub.Controllers.API
         }
 
         //[Authorize(Roles = "Admin,Company")]
-        [Route("api/Company/GetCompanies")]
-        [HttpGet]
-        public IHttpActionResult GetCompanyNames()
-        {
-            var companylist = _context.company.ToList().Select(c => new
-            {
-                id = c.id,
-                name = c.name,
-            });
+        // [Route("api/Company/GetCompanies")]
+        // [HttpGet]
+        // public IHttpActionResult GetCompanyNames()
+        // {
+        //     var companylist = _context.company.ToList().Select(c => new
+        //     {
+        //         id = c.id,
+        //         name = c.name,
+        //     });
 
-            return Ok(companylist);
-        }
+        //     return Ok(companylist);
+        // }
         
         //[Authorize(Roles = "Admin,Company")]
         [Route("api/Company/GetCompanyJobs")]

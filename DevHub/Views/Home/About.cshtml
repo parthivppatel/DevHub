@@ -32,12 +32,11 @@
     <div class="about section">
         <div class="container">
             <div class="row">
-                <div class="col-lg-6 col-md-6 col-xs-12">
+                <div class="col-lg-12 col-md-12 col-xs-12">
                     <div class="about-content">
                         <h3>About Job Career</h3>
                         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Est modi, saepe hic esse maxime quasi, sapiente ex debitis quis dolorum unde, neque quibusdam eveniet nobis enim porro repudiandae nesciunt quidem.</p>
                         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Magni delectus soluta adipisci beatae ullam quisquam, quia recusandae rem assumenda, praesentium porro sequi eaque doloremque tenetur incidunt officiis explicabo optio perferendis.</p>
-                        <a href="#" class="btn btn-common">Learn More</a>
                     </div>
                 </div>
                 <div class="col-lg-6 col-md-6 col-xs-12">
@@ -56,7 +55,7 @@
                     <div class="counter-box">
                         <div class="icon"><i class="lni-home"></i></div>
                         <div class="fact-count">
-                            <h3><span class="counter">800</span></h3>
+                            <h3><span id="jobs"></span></h3>
                             <p>Jobs Posted</p>
                         </div>
                     </div>
@@ -67,7 +66,7 @@
                     <div class="counter-box">
                         <div class="icon"><i class="lni-briefcase"></i></div>
                         <div class="fact-count">
-                            <h3><span class="counter">80</span></h3>
+                            <h3><span id="companies"></span></h3>
                             <p>All Companies</p>
                         </div>
                     </div>
@@ -78,7 +77,7 @@
                     <div class="counter-box">
                         <div class="icon"><i class="lni-pencil-alt"></i></div>
                         <div class="fact-count">
-                            <h3><span class="counter">900</span></h3>
+                            <h3><span id="resumes"></span></h3>
                             <p>Resumes</p>
                         </div>
                     </div>
@@ -89,7 +88,7 @@
                     <div class="counter-box">
                         <div class="icon"><i class="lni-save"></i></div>
                         <div class="fact-count">
-                            <h3><span class="counter">1200</span></h3>
+                            <h3><span id="applications"></span></h3>
                             <p>Applications</p>
                         </div>
                     </div>
@@ -145,6 +144,40 @@
     </div>
     <!-- End Preloader -->
 
+    @section scripts {
 
+        @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/bootstrap")
+        <script>
+            $(document).ready(function () {
+                $.ajax({
+                        type: "GET",
+                        url: "/api/summary",
+                        success: function (response,status_code) {
+                           $('#applications').text(response['applications']);
+                           $('#jobs').text(response['jobs']);
+                           $('#resumes').text(response['resumes']);
+                           $('#companies').text(response['companies']);
+                        
+                        }
+                }).then(function(result) {
+                    $('#applications').addClass('counter');
+                    $('#jobs').addClass('counter');
+                    $('#resumes').addClass('counter');
+                    $('#companies').addClass('counter');
+
+                      if($(".fact-count").length > 0) {
+                           $(".counter").counterUp({
+                            delay: 10,
+                            time: 500
+                          });
+                        }
+
+                })
+             
+
+            })
+        </script>
+    }
 </body>
 </html>

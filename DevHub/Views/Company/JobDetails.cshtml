@@ -81,7 +81,7 @@
                             <h4 class="mb-3">Skills</h4>
                         </div>
                             <div class="mb-4">
-                                 @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Candidate")))
+                                 @if (Request.IsAuthenticated &&  User.IsInRole("Candidate"))
                                   { 
                                       <a href="" class="btn btn-common apply mt-5">Apply job</a>
                                   }

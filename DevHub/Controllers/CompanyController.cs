@@ -30,7 +30,7 @@ namespace DevHub.Controllers
             return true;
         }
         // GET: Company
-        [CustomAuthorization("Admin", "Company")]
+        [CustomAuthorization("Company")]
         public ActionResult PostJob()
         {
             if (CheckCompanyExist() == false)
@@ -41,30 +41,46 @@ namespace DevHub.Controllers
 
             return View();
         }
+
+        [CustomAuthorization("Admin")]
+        public ActionResult Companies()
+        {
+            return View();
+        }
+
         [CustomAuthorization("Admin", "Company")]
         public ActionResult ManageJobs()
         {
-            if (CheckCompanyExist() == false)
+            if (User.IsInRole("Company"))
             {
-                ViewBag.Message = "Please Create Company First";
-                return View("Add_Company");
+                if (CheckCompanyExist() == false)
+                {
+                    ViewBag.Message = "Please Create Company First";
+                    return View("Add_Company");
+                }
+
             }
 
             return View();
         }
+
         [CustomAuthorization("Admin", "Company")]
         public ActionResult ManageApplications()
         {
-            if (CheckCompanyExist() == false)
+            if (User.IsInRole("Company"))
             {
-                ViewBag.Message = "Please Create Company First";
-                return View("Add_Company");
+                if (CheckCompanyExist() == false)
+                {
+                    ViewBag.Message = "Please Create Company First";
+                    return View("Add_Company");
+                }
+
             }
 
             return View();
         }
         
-        [CustomAuthorization("Admin", "Company")]
+        [CustomAuthorization("Company")]
         public ActionResult EditCompanyDetails(string id)
         {
             if (CheckCompanyExist() == false)
@@ -88,7 +104,6 @@ namespace DevHub.Controllers
         }
 
         [CustomAuthorization("Admin", "Company","Candidate")]
-
         public ActionResult JobDetails(string id)
         {
             int decodedId = 0;
@@ -121,8 +136,7 @@ namespace DevHub.Controllers
             return View();
         }
         
-        [CustomAuthorization("Admin", "Company","Candidate")]
-
+        [CustomAuthorization("Candidate")]
         public ActionResult CandidateJobDetails(string id)
         {
             int decodedId = 0;
@@ -146,7 +160,7 @@ namespace DevHub.Controllers
                 var check = _context.candidate_job.SingleOrDefault(c => c.candidateid == candidate && c.jobid == decodedId);
                 if (check == null)
                 {
-                    return RedirectToAction("AppliedJobs","Candidate");// Redirect to unauthorized page
+                    return Redirect("https://localhost:44305/ErrorPages/Forbidden.html");// Redirect to unauthorized page
                 }
 
             }
@@ -155,8 +169,7 @@ namespace DevHub.Controllers
             return View("JobDetails");
         }
 
-        [CustomAuthorization("Admin", "Company")]
-
+        [CustomAuthorization("Company")]
         public ActionResult EditJob(string jobId)
         {
             if (CheckCompanyExist() == false)

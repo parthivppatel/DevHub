@@ -650,6 +650,8 @@
     <Content Include="Views\Company\JobDetails.cshtml" />
     <Content Include="Views\Candidate\AppliedJobs.cshtml" />
     <Content Include="Views\Account\VerifyEmail.cshtml" />
+    <Content Include="Views\Candidate\BrowseResumes.cshtml" />
+    <Content Include="Views\Company\Companies.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

@@ -35,7 +35,7 @@ namespace DevHub.Controllers.API
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin,Candidate")]
+        [Authorize(Roles = "Candidate")]
         public IHttpActionResult PostCandidate()
         {
             var HttpCtx = HttpContext.Current.Request;
@@ -131,7 +131,7 @@ namespace DevHub.Controllers.API
         }
 
         [HttpPut]
-        [Authorize(Roles = "Admin,Candidate")]
+        [Authorize(Roles = "Candidate")]
         public IHttpActionResult UpdateCandidate(int id)
         {
             var old_candidate = _context.candidate.SingleOrDefault(c => c.id == id);
@@ -274,42 +274,68 @@ namespace DevHub.Controllers.API
             return Ok(data);
         }
 
-        //[Authorize(Roles = "Admin,Company")]
-        public IHttpActionResult GetCandidates()
+        [Authorize(Roles = "Admin")]
+        [Route("api/Candidate/Resumes")]
+        [HttpPost]
+        public IHttpActionResult GetCandidates(int start, int end, [FromBody] Dictionary<string, object> filter)
         {
-            var candidatelist = _context.candidate.ToList().Select(c => new CandidateDto
+            var query = _context.candidate.AsQueryable();
+
+            if (filter != null)
             {
-                id = c.id,
-                first_name = c.first_name,
-                middle_name = c.middle_name,
-                surname = c.surname,
-                dob = c.dob,
-                gender = c.gender,
-                countryid = c.countryid,
-                stateid = c.stateid,
-                cityid = c.cityid,
-                phone = c.phone,
-                email = c.email,
-                portfolio_website = c.portfolio_website,
-                address = c.address,
-                about_me = c.about_me,
-                education = c.education,
-                experience = c.experience,
-                project=c.project,
-                skillids = c.skillids,
-                linkedin = c.linkedin,
-                facebook = c.facebook,
-                instagram=c.instagram,
-                twitter=c.twitter,
-                UserId = c.UserId,
-                title = c.title,
-                image = c.image != null ? Convert.ToBase64String(c.image) : null,
-            });
-            var data = Mapper.Map<IEnumerable<CandidateDto>>(candidatelist);
-            return Ok(data);
+                if (filter.ContainsKey("title") && filter["title"].ToString() != "")
+                {
+                    var titleFilter = filter["title"].ToString().ToLower();
+                    query = query.Where(r => r.title.ToLower().Contains(titleFilter));
+                }
+                if (filter.ContainsKey("cityid") && filter["cityid"].ToString() != "")
+                {
+                    var cityFilter = int.Parse(filter["cityid"].ToString());
+                    query = query.Where(r => r.cityid == cityFilter);
+                }
+                if (filter.ContainsKey("name") && filter["name"].ToString() != "")
+                {
+                    var nameFilter = filter["name"].ToString().ToLower();
+                    query = query.Where(r => r.first_name.ToLower().Contains(nameFilter) || r.surname.ToLower().Contains(nameFilter));
+                }
+            }
+
+            var totalRecords = query.Count();
+
+            var candidatelist = query
+            .Join(_context.country,
+            candidate=>candidate.countryid,
+            country=>country.id,
+            (candidate,country)=>new { candidate=candidate,country=country})
+            .Join(_context.city,
+            mapper=> mapper.candidate.cityid,
+            city => city.id,
+            (mapper,city)=> new
+            {
+                id = mapper.candidate.id,
+                name = mapper.candidate.first_name+" "+mapper.candidate.surname,
+                countryname = mapper.country.name,
+                cityname = city.cityname,
+                about_me = mapper.candidate.about_me,
+                skillids = mapper.candidate.skillids,
+                title = mapper.candidate.title,
+                image=mapper.candidate.image
+            })
+           .OrderBy(data => data.name)
+           .Skip(start)
+           .Take(end - start)
+           .ToList();
+
+            var result = new
+            {
+                TotalRecords = totalRecords,
+                data = candidatelist
+            };
+
+            return Ok(result);
         }
 
-        //[Authorize(Roles = "Admin,Company")]
+        [Authorize(Roles = "Candidate")]
         [Route("api/Candidate/ApplyJob")]
         public IHttpActionResult ApplyJob(int id)
         {
@@ -358,7 +384,7 @@ namespace DevHub.Controllers.API
             return BadRequest("You are Not Authorized, please Login!");
         }
 
-        //[Authorize(Roles = "Admin,Company")]
+        [Authorize(Roles = "Candidate")]
         [Route("api/Candidate/GetCandidateJobs")]
         [HttpPost]
         public IHttpActionResult CanidateJobs(int start,int end, [FromBody] Dictionary<string, object> filter)

@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewBag.Title = "MyJobs";
+    ViewBag.Title = "BrowseResumes";
 }
 
 <!DOCTYPE html>
@@ -12,8 +12,7 @@
     <meta name="keywords" content="Bootstrap, Landing page, Template, Registration, Landing">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <meta name="author" content="UIdeck">
-    <title>JobX - Bootstrap HTML5 Job Portal Template</title>
-
+    <title>JobX </title>
 </head>
 
 <body>
@@ -23,45 +22,42 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="inner-header">
-                        <h3>Applied Jobs</h3>
+                        <h3>Browse Resumes</h3>
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <!-- Page Header End -->
-    <!-- Job Browse Section Start -->
-    <section class="job-browse section">
+    <!-- Start Content -->
+    <div id="content">
         <div class="container">
             <div class="row">
-                <div class="col-lg-12 col-md-12 col-xs-12">
+                <div class="col-lg-12 col-md-12 col-xs-12 mb-3">
                     <div class="wrap-search-filter row">
                         <div class="col-lg-3 col-md-3 col-xs-12 pl-2 pr-2">
-                            <input type="text" id="title" class="form-control" placeholder="Keyword: Title">
+                            <input type="text" class="form-control" placeholder="Keyword: Title" id="title">
                         </div>
                         <div class="col-lg-3 col-md-3 col-xs-12 pl-2 pr-2">
-                            <select class="form-control" id="stage">
-                                <option value="All">All</option>
-                                <option value="Applied" selected>Applied</option>
-                                <option value="Approved">Approved</option>
-                                <option value="Rejected">Rejected</option>
-                            </select>
+                            <input type="text" class="form-control" id="city" autocomplete="off" placeholder="Location: City">
+                        </div>
+                        <div class="col-lg-3 col-md-3 offset-lg-3 col-xs-12 pl-2 pr-2" style="position: absolute; margin-top: 41px; z-index: 1;">
+                            <div class="list-group" style="max-height: 229px; overflow-y: auto;" id="show-list">
+                            </div>
                         </div>
                         <div class="col-lg-3 col-md-3 col-xs-12 pl-2 pr-2">
-                            <select class="form-control" id="job-type">
-                                <option value="">Select Type</option>
-                            </select>
+                            <input type="text" class="form-control" placeholder="Keyword: Name" id="name">
                         </div>
                         <div class="col-lg-3 col-md-3 col-xs-12">
-                            <button type="submit" class="btn btn-common float-right filter">Filter</button>
+                            <button type="submit" class="btn btn-common float-right filter" style="z-index:0;">Filter</button>
                         </div>
                     </div>
                 </div>
-                <div class="row jobs" style="width:100%;">
+                <div class="row resumes" style="width:100%;">
+
                 </div>
-                <br>
                 <!-- Start Pagination -->
-                <div class="d-none justify-content-start flex-wrap" id="pagination">
+                <div class="justify-content-start flex-wrap" id="pagination">
                     <!-- left arrow -->
                     <div class="arrow-button">
                         <a style="background:none; cursor:pointer;" class="m-0 p-0" id="prev">
@@ -82,9 +78,8 @@
                 <!-- End Pagination -->
             </div>
         </div>
-    </section>
-    <!-- Job Browse Section End -->
-
+    </div>
+    <!-- End Content -->
     <!-- Preloader -->
     <div id="preloader">
         <div class="loader" id="loader-1"></div>
@@ -93,30 +88,6 @@
     @section scripts{
 
         <script>
-            function formatDate(date) {
-                const currentDate = new Date();
-                const diffTime = Math.abs(currentDate - date);
-                const diffSeconds = diffTime / 1000;
-                const diffMinutes = Math.floor(diffSeconds / 60);
-                const diffHours = Math.floor(diffMinutes / 60);
-                const diffDays = Math.floor(diffHours / 24);
-                const diffMonths = Math.floor(diffDays / 30);
-                const diffYears = Math.floor(diffMonths / 12);
-
-                if (diffSeconds < 60) {
-                    return Math.floor(diffSeconds) + " seconds ago";
-                } else if (diffMinutes < 60) {
-                    return diffMinutes + " minutes ago";
-                } else if (diffHours < 24) {
-                    return diffHours + " hours ago";
-                } else if (diffDays < 30) {
-                    return diffDays + " days ago";
-                } else if (diffMonths < 12) {
-                    return diffMonths + " months ago";
-                } else {
-                    return diffYears + " years ago";
-                }
-            }
 
             $(document).ready(function () {
                 let TotalRecords = 0;
@@ -124,21 +95,35 @@
                 let pages = 0;
                 let pageTabs = 0;
                 let counter = 1;
-                let filter = { 'stage': 'Applied' };
+                let city_data;
+                let filter = { 'title': '', 'name': '' };
                 let base64_string = "";
                 let url = "";
+                let skill_data={};
+                let ids=[];
 
-                function CandidateApplications() {
+                $.ajax({
+                        type: "GET",
+                        url: "/api/Skills",
+                        success: function (response) {
+                            response.forEach(element=>{
+                                skill_data[element['id']]=element['name'];
+                            });
+                        }
+                    });
+
+                function Resumes() {
+
                     $.ajax({
                         type: "POST",
-                        url: "/api/Candidate/GetCandidateJobs?start=" + 0 + "&end=" + PageSize,
+                        url: "/api/Candidate/Resumes?start=" + 0 + "&end=" + PageSize,
                         data: JSON.stringify(filter),
                         processData: false,
                         contentType: 'application/json',
                         success: function (response) {
                             response['data'].forEach(data => {
                                 base64_string = "";
-                                data.logo != "" ? base64_string = data.logo : '';
+                                data.image != "" ? base64_string = data.image : '';
                                 if (base64_string != "") {
                                     extension = base64_string.split(';')[0].split('/')[1]
                                     // Convert base64 to byte array
@@ -150,49 +135,48 @@
                                     url = blobUrl;
                                 }
                                 else {
-                                    url = "../../Content/img/jobicon.png";
+                                    url = "../../Content/img/profile.png";
                                 }
-                                $('.jobs').append(`
-                                        <div class="col-lg-6 col-md-12 col-xs-12">
-                                          <span class="job-listings-featured">
-                                             <div class="row">
-                                                <div class="col-lg-9 col-md-12 col-xs-12">
-                                                     <div class="job-company-logo mr-2">
-                                                       <img src="${url}" height="60" alt="">
+                                ids = JSON.parse(data.skillids);
+
+                                $('.resumes').append(`
+                                    <div class="col-lg-6 col-md-12 col-xs-12">
+                                        <div class="manager-resumes-item">
+                                            <div class="manager-content">
+                                                <a href="resume.html"><img class="resume-thumb" src="${url}" alt=""></a>
+                                                <div class="manager-info">
+                                                    <div class="manager-name">
+                                                        <h4><a style="text-transform:capitalize;" href="/candidate/Resume/${btoa(data.id.toString())}">${data.name}</a></h4>
+                                                        <h5>${data.title}</h5>
                                                     </div>
-                                                    <div class="job-details"">
-                                                        <h3><a href="/company/CandidateJobDetails/${btoa(data.id)}">${data.title}</a></h3>
-                                                        <a href="/company/CompanyProfile/${btoa(data.company_id.toString())}" class="company-neme">${data.name}</a>
-                                                        <div class="tags">
-                                                            <span><i class="lni-map-marker"></i>${data.address}</span>
-                                                            <span><i class="lni-alarm-clock"></i>${formatDate(new Date(data.created_at))}</span>
-                                                        </div>
+                                                    <div class="manager-meta">
+                                                        <span class="location"><i class="lni-map-marker"></i> ${data.cityname}, ${data.countryname}</span>
                                                     </div>
-                                                </div>
-                                                <div class="col-lg-3 col-md-6 col-xs-12 text-right">
-                                                   <div class="tag-type mt-0">
-                                                        <span class="${data.jobType == "full-time" ? 'full-time' : 'part-time'} ml-0">${data.jobType}</span>
-                                                    </div>
-                                                    <a style="pointer-events:none;" class="${data.stage == "Approved" ? 'btn btn-success' : data.stage == 'Applied' ? 'btn btn-primary' : 'btn btn-danger'} mr-2 stage">
-                                                      ${data.stage}
-                                                   </a>
                                                 </div>
                                             </div>
-                                        </span>
-                                      </div>
+                                            <div class="item-body">
+                                                <div class="content">
+                                                    <p>${data.about_me}</p>
+                                                </div>
+                                                <div class="resume-skills">
+                                                    <div class="tag-list float-left">
+                                                        ${ids['id'].map(element => `<span>${skill_data[element]}</span>`).join('')}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                      `);
 
                             })
-                            $('.jobs').css('min-height', '0px');
-
+                            $('.resumes').css('min-height', '0px');
                             TotalRecords = response['totalRecords'];
                             pages = Math.ceil(TotalRecords / PageSize);
                             pageTabs = Math.ceil(pages / 5);
                             $('#prev img').css('filter', '');
                             $('#next img').css('filter', '');
                             if (pages == 0) {
-                                $('.jobs').css('min-height', '52px');
-                                $('.jobs').html('<div class="mt-3" style="width:100%; text-align:center;"><p class="font-weight-bold" style="font-size:20px;">No Data Available</h6><p>');
+                                $('.resumes').html('<div style="width:100%; margin-top:18px; text-align:center;"><p class="font-weight-bold" style="font-size:20px;">No Data Available</h6><p>');
                                 $('#pagination').removeClass('d-flex');
                                 $('#pagination').addClass('d-none');
                             }
@@ -224,20 +208,8 @@
                         }
                     });
                 }
-            
-                CandidateApplications();
 
-                $('.filter').click(function (event) {
-                    event.preventDefault();
-                    $('.jobs').css('min-height', '646px');
-                    filter['stage'] = $('#stage').val();
-                    filter['title'] = $('#title').val();
-                    filter['jobtype'] = $('#job-type').val();
-                    $('.jobs').html('');
-                    $('#pages').html('');
-                    CandidateApplications();
-
-                });
+                Resumes();
 
                 $(document).on('click', '.color', function (e) {
                     $(this).css('color', 'black');
@@ -245,74 +217,120 @@
                     let value = $(this).text();
                     let end = value * PageSize;
                     let start = end - PageSize;
-                    $('.jobs').css('min-height', '646px');
-                    $('.jobs').html('');
+                    $('.resumes').css('min-height', '249px');
+                    $('.resumes').html('');
                     $.ajax({
                         type: "POST",
-                        url: "/api/Candidate/GetCandidateJobs?start=" + start + "&end=" + end,
+                        url: "/api/Candidate/Resumes?start=" + start + "&end=" + end,
                         data: JSON.stringify(filter),
                         processData: false,
                         contentType: 'application/json',
                         success: function (response) {
                             response['data'].forEach(data => {
                                 base64_string = "";
-                                data.logo != "" ? base64_string = data.logo : '';
+                                data.image != "" ? base64_string = data.image : '';
                                 if (base64_string != "") {
                                     extension = base64_string.split(';')[0].split('/')[1]
                                     // Convert base64 to byte array
                                     let byteNumbers = new Uint8Array([...atob(base64_string)].map(char => char.charCodeAt(0)));
-
                                     // Create a Blob from the byte array
                                     let blob = new Blob([byteNumbers], { type: 'image/' + extension });
                                     let blobUrl = URL.createObjectURL(blob);
                                     url = blobUrl;
                                 }
                                 else {
-                                    url = "../../Content/img/jobicon.png";
+                                    url = "../../Content/img/profile.png";
                                 }
-                                $('.jobs').append(`
-                                        <div class="col-lg-6 col-md-12 col-xs-12">
-                                          <span class="job-listings-featured">
-                                             <div class="row">
-                                                <div class="col-lg-9 col-md-12 col-xs-12">
-                                                    <div class="job-company-logo mr-2">
-                                                       <img src="${url}" height="60" alt="">
+                                ids = JSON.parse(data.skillids);
+                                $('.resumes').append(`
+                                    <div class="col-lg-6 col-md-12 col-xs-12">
+                                        <div class="manager-resumes-item">
+                                            <div class="manager-content">
+                                                <a href="resume.html"><img class="resume-thumb" src="${url}" alt=""></a>
+                                                <div class="manager-info">
+                                                    <div class="manager-name">
+                                                        <h4><a style="text-transform:capitalize;" href="/candidate/Resume/${btoa(data.id.toString())}">${data.name}</a></h4>
+                                                        <h5>${data.title}</h5>
                                                     </div>
-                                                    <div class="job-details" style="margin-left:0!important;">
-                                                        <h3><a href="/company/CandidateJobDetails/${btoa(data.id)}">${data.title}</a></h3>
-                                                        <a href="/company/CompanyProfile/${btoa(data.company_id.toString())}" class="company-neme">${data.name}</a>
-                                                        <div class="tags">
-                                                            <span><i class="lni-map-marker"></i>${data.address}</span>
-                                                            <span><i class="lni-alarm-clock"></i>${formatDate(new Date(data.created_at))}</span>
-                                                        </div>
+                                                    <div class="manager-meta">
+                                                        <span class="location"><i class="lni-map-marker"></i> ${data.cityname}, ${data.countryname}</span>
                                                     </div>
-                                                </div>
-                                                <div class="col-lg-3 col-md-6 col-xs-12 text-right">
-                                                   <div class="tag-type">
-                                                        <span class="${data.jobType == "full-time" ? 'full-time' : 'part-time'} ml-0">${data.jobType}</span>
-                                                    </div>
-                                                    <a style="pointer-events:none;" class="${data.stage == "Approved" ? 'btn btn-success' : data.stage == 'Applied' ? 'btn btn-primary' : 'btn btn-danger'} mr-2 stage">
-                                                      ${data.stage}
-                                                   </a>
                                                 </div>
                                             </div>
-                                        </span>
-                                      </div>
-                                    `);
+                                            <div class="item-body">
+                                                <div class="content">
+                                                    <p>${data.about_me}</p>
+                                                </div>
+                                                <div class="resume-skills">
+                                                    <div class="tag-list float-left">
+                                                        ${ids['id'].map(element => `<span>${skill_data[element]}</span>`).join('')}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `);
                             })
-                            $('.jobs').css('min-height', '0px');
+                            $('.resumes').css('min-height', '0px');
                         }
                     });
                 });
 
-                $.ajax({
-                    type: "GET",
-                    url: "/api/Job/GetJobTypes",
-                    success: function (response) {
-                        response.forEach(item => {
-                            $('#job-type').append("<option value=" + item.id + ">" + item.name + "</option >");
+                $('#city').keyup(function () {
+                    let value = $(this).val();
+                    $('#show-list').css('min-height', '229px');
+                    $('#city').data('value', 0);
+                    $('#show-list').html('');
+                    if (value != "") {
+                        $.ajax({
+                            type: "GET",
+                            url: "/api/City?letter=" + value,
+                            success: function (response) {
+                                city_data = response;
+                                response.forEach(item => {
+                                    $('#show-list').append("<a href=''class='list-group-item list-group-item-action' data-value=" + item.id + ">" + item.cityname + "</a>");
+                                });
+                            }
                         });
                     }
+                    else {
+                        $('#show-list').html('');
+                    }
+                    $('#show-list').css('min-height', '0px');
+                });
+
+                $(document).on('click', '#show-list a', function (e) {
+                    e.preventDefault();
+                    $('#city').val($(this).text());
+                    $('#city').data('value', $(this).data('value'));
+                    $('#show-list').html('');
+                });
+
+                $('.filter').click(function (event) {
+                    $('#show-list').html('');
+                    event.preventDefault();
+                    $('.resumes').css('min-height', '249px');
+                    filter['title'] = $('#title').val();
+                    filter['name'] = $('#name').val();
+
+                    let city_value = $('#city').val();
+                    let city_id = $('#city').data('value');
+                    filter['cityid'] = city_id;
+
+                    if (city_value != "" && city_id == 0) {
+                        city_value = city_value.toLowerCase();
+                        let city = city_data.filter(data => data.cityname.toLowerCase() == city_value);
+                        if (city.length > 0) {
+                            city_id = city[0].id;
+                            filter['cityid'] = city_id;
+                        }
+                    }
+                    if (city_value == "")
+                        delete filter.cityid;
+
+                    $('.resumes').html('');
+                    $('#pages').html('');
+                    Resumes();
                 });
 
                 $('#next').click(function () {
@@ -358,15 +376,19 @@
     }
 
     <style>
-        .stage {
-            margin-top: 8px;
-            padding: 6px;
-            font-size: 12px;
-            text-transform: capitalize;
+
+        @@media (min-width: 300px) and (max-width:766px) {
+            .col-lg-3.offset-lg-3 {
+                position: static; /* Reset position */
+                margin-top: 97px !important; /* Adjust margin as needed */
+            }
         }
 
-        .full-time .part-time {
-            font-size: 6px !important;
+        @@media (min-width: 768px) and (max-width:991px) {
+            .col-lg-3.offset-lg-3 {
+                position: static; /* Reset position */
+                margin-left: 180px;
+            }
         }
     </style>
 </body>

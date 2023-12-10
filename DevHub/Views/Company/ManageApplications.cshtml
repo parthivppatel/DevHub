@@ -39,9 +39,17 @@
                     <div class="right-sideabr">
                         <h4>Manage Account</h4>
                         <ul class="list-item">
-                            <li>@Html.ActionLink("Company Profile", "CompanyProfile", "Company")</li>
+                            @if (User.IsInRole("Company"))
+                            {
+                                <li>@Html.ActionLink("Company Profile", "CompanyProfile", "Company")</li>
+                            }
+                            else
+                            {
+                                <li>@Html.ActionLink("Manage Companies", "Companies", "Company")</li>
+
+                            }
                             <li>@Html.ActionLink("Manage Jobs", "ManageJobs", "Company")</li>
-                            <li>@Html.ActionLink("Manage Applications", "ManageApplications", "Company",routeValues: null, htmlAttributes: new { @class = "active" })</li>
+                            <li>@Html.ActionLink("Manage Applications", "ManageApplications", "Company", routeValues: null, htmlAttributes: new { @class = "active" })</li>
                         </ul>
                     </div>
                 </div>
@@ -146,6 +154,7 @@
                 let filter = { 'stage': 'Applied' };
                 let base64_string = "";
                 let url = "";
+                let company=@User.IsInRole("Company").ToString().ToLower()
 
                 function getCompanyApplications() {
 
@@ -156,23 +165,24 @@
                         processData: false,
                         contentType: 'application/json',
                         success: function (response) {
-                            response['data'].forEach(data => {
-                                base64_string = "";
-                                data.profile != "" ? base64_string = data.profile : '';
-                                if (base64_string != "") {
-                                    extension = base64_string.split(';')[0].split('/')[1]
-                                    // Convert base64 to byte array
-                                    let byteNumbers = new Uint8Array([...atob(base64_string)].map(char => char.charCodeAt(0)));
+                            if (company == true) {
+                                response['data'].forEach(data => {
+                                    base64_string = "";
+                                    data.profile != "" ? base64_string = data.profile : '';
+                                    if (base64_string != "") {
+                                        extension = base64_string.split(';')[0].split('/')[1]
+                                        // Convert base64 to byte array
+                                        let byteNumbers = new Uint8Array([...atob(base64_string)].map(char => char.charCodeAt(0)));
 
-                                    // Create a Blob from the byte array
-                                    let blob = new Blob([byteNumbers], { type: 'image/' + extension });
-                                    let blobUrl = URL.createObjectURL(blob);
-                                    url = blobUrl;
-                                }
-                                else {
-                                    url = "../../Content/img/profile.png";
-                                }
-                                $('.applications').append(`
+                                        // Create a Blob from the byte array
+                                        let blob = new Blob([byteNumbers], { type: 'image/' + extension });
+                                        let blobUrl = URL.createObjectURL(blob);
+                                        url = blobUrl;
+                                    }
+                                    else {
+                                        url = "../../Content/img/profile.png";
+                                    }
+                                    $('.applications').append(`
                                               <span class="job-listings-featured">
                                                  <div class="row">
                                                     <div class="col-lg-6 col-md-6 col-xs-12">
@@ -195,21 +205,66 @@
                                                     </div>
                                                     <div class="col-lg-2 col-md-2 col-xs-12" style="margin-top:23px;">
                                                      ${data.stage == 'Applied' ?
-                                                       `<a style="background: none; cursor: pointer;" class="approve" data-candidate="${data.candidate_id}" data-job="${data.id}">
+                                            `<a style="background: none; cursor: pointer;" class="approve" data-candidate="${data.candidate_id}" data-job="${data.id}">
                                                            <img src="@Url.Content("~/Content/img/approve.svg")" alt="YourAltText" height="25" class="mt-2" />
                                                        </a>
                                                         <a style="background: none; cursor: pointer;" class="reject" data-candidate="${data.candidate_id}" data-job="${data.id}">
                                                            <img src="@Url.Content("~/Content/img/reject.svg")" alt="YourAltText" height="25" class="mt-2" />
                                                        </a>`
-                                                     : data.stage == 'Approved' ?
-                                                      '<a style="pointer-events:none;" class="btn btn-success stage">Approved</a>'
-                                                     : '<a style="pointer-events:none;" class="btn btn-danger stage">Rejected</a>'}
+                                            : data.stage == 'Approved' ?
+                                                '<a style="pointer-events:none;" class="btn btn-success stage">Approved</a>'
+                                                : '<a style="pointer-events:none;" class="btn btn-danger stage">Rejected</a>'}
                                                      </div>
                                                 </div>
                                             </span>
                                          `);
 
-                            });
+                                });
+                            }
+                            else {
+                                response['data'].forEach(data => {
+                                    base64_string = "";
+                                    data.profile != "" ? base64_string = data.profile : '';
+                                    if (base64_string != "") {
+                                        extension = base64_string.split(';')[0].split('/')[1]
+                                        // Convert base64 to byte array
+                                        let byteNumbers = new Uint8Array([...atob(base64_string)].map(char => char.charCodeAt(0)));
+
+                                        // Create a Blob from the byte array
+                                        let blob = new Blob([byteNumbers], { type: 'image/' + extension });
+                                        let blobUrl = URL.createObjectURL(blob);
+                                        url = blobUrl;
+                                    }
+                                    else {
+                                        url = "../../Content/img/profile.png";
+                                    }
+                                    $('.applications').append(`
+                                              <span class="job-listings-featured">
+                                                 <div class="row">
+                                                    <div class="col-lg-6 col-md-6 col-xs-12">
+                                                        <div class="job-company-logo mr-2">
+                                                           <img src="${url}" height="60" alt="">
+                                                        </div>
+                                                        <div class="job-details">
+                                                            <h3><a href="/company/JobDetails/${btoa(data.id)}">${data.title}</a></h3>
+                                                            <span class="company-neme">${data.company_name}</span>
+                                                            <div class="tags">
+                                                                <span><i class="lni-user"></i><a style="text-transform:capitalize;" href="/candidate/Resume/${btoa(data.candidate_id.toString())}">${data.candidate_name}</a></span>
+                                                                <span><i class="lni-alarm-clock"></i>${formatDate(new Date(data.created_at))}</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6 col-md-6 col-xs-12 text-right">
+                                                        <div class="tag-type">
+                                                            <span class="${data.jobType == "full-time" ? 'full-time' : 'part-time'} ml-0">${data.jobType}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </span>
+                                         `);
+
+                                });
+                            }
                             $('.applications').css('min-height', '0px');
 
                             TotalRecords = response['totalRecords'];
@@ -219,6 +274,7 @@
                             $('#next img').css('filter', '');
 
                             if (pages == 0) {
+                                $('.applications').html('<div class="mt-4" style="width:100%; text-align:center;"><p class="font-weight-bold" style="font-size:20px;">No Data Available</h6><p>');
                                 $('#pagination').removeClass('d-flex');
                                 $('#pagination').addClass('d-none');
                             }
@@ -265,7 +321,7 @@
                     getCompanyApplications();
 
                 });
-                    
+
                 $(document).on('click', '.approve', function (e) {
                     job_id = $(this).data('job');
                     candidate_id = $(this).data('candidate');
@@ -278,6 +334,12 @@
                         didOpen: () => {
                             Swal.showLoading();
                         },
+                    }).then(function(){
+                         Swal.fire({
+                                    title: "Job Approved Successfully!",
+                                    icon: "success",
+                                    timer: 1300
+                                })
                     });
                     $.ajax({
                         type: "POST",
@@ -332,23 +394,24 @@
                         processData: false,
                         contentType: 'application/json',
                         success: function (response) {
-                            response['data'].forEach(data => {
-                                base64_string = "";
-                                data.profile != "" ? base64_string = data.profile : '';
-                                if (base64_string != "") {
-                                    extension = base64_string.split(';')[0].split('/')[1]
-                                    // Convert base64 to byte array
-                                    let byteNumbers = new Uint8Array([...atob(base64_string)].map(char => char.charCodeAt(0)));
+                            if (company == true) {
+                                response['data'].forEach(data => {
+                                    base64_string = "";
+                                    data.profile != "" ? base64_string = data.profile : '';
+                                    if (base64_string != "") {
+                                        extension = base64_string.split(';')[0].split('/')[1]
+                                        // Convert base64 to byte array
+                                        let byteNumbers = new Uint8Array([...atob(base64_string)].map(char => char.charCodeAt(0)));
 
-                                    // Create a Blob from the byte array
-                                    let blob = new Blob([byteNumbers], { type: 'image/' + extension });
-                                    let blobUrl = URL.createObjectURL(blob);
-                                    url = blobUrl;
-                                }
-                                else {
-                                    url = "../../Content/img/profile.png";
-                                }
-                                $('.applications').append(`
+                                        // Create a Blob from the byte array
+                                        let blob = new Blob([byteNumbers], { type: 'image/' + extension });
+                                        let blobUrl = URL.createObjectURL(blob);
+                                        url = blobUrl;
+                                    }
+                                    else {
+                                        url = "../../Content/img/profile.png";
+                                    }
+                                    $('.applications').append(`
                                         <span class="job-listings-featured">
                                              <div class="row">
                                                 <div class="col-lg-6 col-md-6 col-xs-12">
@@ -371,20 +434,66 @@
                                                 </div>
                                                  <div class="col-lg-2 col-md-2 col-xs-12" style="margin-top:23px;">
                                                    ${data.stage == 'Applied' ?
-                                                       `<a style="background: none; cursor: pointer;" class="approve" data-candidate="${data.candidate_id}" data-job="${data.id}">
+                                            `<a style="background: none; cursor: pointer;" class="approve" data-candidate="${data.candidate_id}" data-job="${data.id}">
                                                            <img src="@Url.Content("~/Content/img/approve.svg")" alt="YourAltText" height="25" class="mt-2" />
                                                        </a>
                                                         <a style="background: none; cursor: pointer;" class="reject" data-candidate="${data.candidate_id}" data-job="${data.id}">
                                                            <img src="@Url.Content("~/Content/img/reject.svg")" alt="YourAltText" height="25" class="mt-2" />
                                                        </a>`
-                                                     : data.stage == 'Approved' ?
-                                                      '<a style="pointer-events:none;" class="btn btn-success stage">Approved</a>'
-                                                     : '<a style="pointer-events:none;" class="btn btn-danger stage">Rejected</a>'}
+                                            : data.stage == 'Approved' ?
+                                                '<a style="pointer-events:none;" class="btn btn-success stage">Approved</a>'
+                                                : '<a style="pointer-events:none;" class="btn btn-danger stage">Rejected</a>'}
                                                  </div>
                                             </div>
                                         </span>
                                     `);
-                            })
+                                })
+                            }
+                            else {
+                                response['data'].forEach(data => {
+                                    base64_string = "";
+                                    data.profile != "" ? base64_string = data.profile : '';
+                                    if (base64_string != "") {
+                                        extension = base64_string.split(';')[0].split('/')[1]
+                                        // Convert base64 to byte array
+                                        let byteNumbers = new Uint8Array([...atob(base64_string)].map(char => char.charCodeAt(0)));
+
+                                        // Create a Blob from the byte array
+                                        let blob = new Blob([byteNumbers], { type: 'image/' + extension });
+                                        let blobUrl = URL.createObjectURL(blob);
+                                        url = blobUrl;
+                                    }
+                                    else {
+                                        url = "../../Content/img/profile.png";
+                                    }
+                                    $('.applications').append(`
+                                              <span class="job-listings-featured">
+                                                 <div class="row">
+                                                    <div class="col-lg-6 col-md-6 col-xs-12">
+                                                        <div class="job-company-logo mr-2">
+                                                           <img src="${url}" height="60" alt="">
+                                                        </div>
+                                                        <div class="job-details">
+                                                            <h3><a href="/company/JobDetails/${btoa(data.id)}">${data.title}</a></h3>
+                                                            <span class="company-neme">${data.company_name}</span>
+                                                            <div class="tags">
+                                                                <span><i class="lni-user"></i><a style="text-transform:capitalize;" href="/candidate/Resume/${btoa(data.candidate_id.toString())}">${data.candidate_name}</a></span>
+                                                                <span><i class="lni-alarm-clock"></i>${formatDate(new Date(data.created_at))}</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6 col-md-6 col-xs-12 text-right">
+                                                        <div class="tag-type">
+                                                            <span class="${data.jobType == "full-time" ? 'full-time' : 'part-time'} ml-0">${data.jobType}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </span>
+                                    `);
+
+                                });
+
+                            }
                             $('.applications').css('min-height', '0px');
                         }
                     });

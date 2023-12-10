@@ -38,8 +38,16 @@
                     <div class="right-sideabr">
                         <h4>Manage Account</h4>
                         <ul class="list-item">
-                            <li>@Html.ActionLink("Company Profile", "CompanyProfile", "Company")</li>
-                            <li>@Html.ActionLink("Manage Jobs", "ManageJobs", "Company",routeValues: null, htmlAttributes: new { @class = "active" })</li>
+                            @if (User.IsInRole("Company"))
+                            {
+                                <li>@Html.ActionLink("Company Profile", "CompanyProfile", "Company")</li>
+                            }
+                            else
+                            {
+                                <li>@Html.ActionLink("Manage Companies", "Companies", "Company")</li>
+
+                            }
+                            <li>@Html.ActionLink("Manage Jobs", "ManageJobs", "Company", routeValues: null, htmlAttributes: new { @class = "active" })</li>
                             <li>@Html.ActionLink("Manage Applications", "ManageApplications", "Company")</li>
                         </ul>
                     </div>
@@ -99,8 +107,8 @@
     </div>
     <!-- End Preloader -->
     @section scripts{
-
         <script>
+            let company=@User.IsInRole("Company").ToString().ToLower()
             function formatDate(date) {
                 const currentDate = new Date();
                 const diffTime = Math.abs(currentDate - date);
@@ -144,23 +152,24 @@
                         processData: false,
                         contentType: 'application/json',
                         success: function (response) {
-                            response['data'].forEach(data => {
-                                base64_string = "";
-                                data.logo != "" ? base64_string = data.logo : '';
-                                if (base64_string != "") {
-                                    extension = base64_string.split(';')[0].split('/')[1]
-                                    // Convert base64 to byte array
-                                    let byteNumbers = new Uint8Array([...atob(base64_string)].map(char => char.charCodeAt(0)));
+                            if (company == true) {
+                                response['data'].forEach(data => {
+                                    base64_string = "";
+                                    data.logo != "" ? base64_string = data.logo : '';
+                                    if (base64_string != "") {
+                                        extension = base64_string.split(';')[0].split('/')[1]
+                                        // Convert base64 to byte array
+                                        let byteNumbers = new Uint8Array([...atob(base64_string)].map(char => char.charCodeAt(0)));
 
-                                    // Create a Blob from the byte array
-                                    let blob = new Blob([byteNumbers], { type: 'image/' + extension });
-                                    let blobUrl = URL.createObjectURL(blob);
-                                    url = blobUrl;
-                                }
-                                else {
-                                    url = "../../Content/img/jobicon.png";
-                                }
-                                $('.jobs').append(`
+                                        // Create a Blob from the byte array
+                                        let blob = new Blob([byteNumbers], { type: 'image/' + extension });
+                                        let blobUrl = URL.createObjectURL(blob);
+                                        url = blobUrl;
+                                    }
+                                    else {
+                                        url = "../../Content/img/jobicon.png";
+                                    }
+                                    $('.jobs').append(`
                                               <span class="job-listings-featured">
                                                  <div class="row">
                                                     <div class="col-lg-6 col-md-6 col-xs-12">
@@ -188,12 +197,57 @@
                                                         <a style="background: none; cursor: pointer;" class="delete" data-value="${data.id}">
                                                            <img src="@Url.Content("~/Content/img/delete.png")" alt="YourAltText" height="25" class="mt-2" />
                                                        </a>
-                                                     </div>
+                                                    </div>
                                                 </div>
                                             </span>
                                          `);
 
-                            })
+                                })
+                            }
+                            else {
+                                response['data'].forEach(data => {
+                                    base64_string = "";
+                                    data.logo != "" ? base64_string = data.logo : '';
+                                    if (base64_string != "") {
+                                        extension = base64_string.split(';')[0].split('/')[1]
+                                        // Convert base64 to byte array
+                                        let byteNumbers = new Uint8Array([...atob(base64_string)].map(char => char.charCodeAt(0)));
+
+                                        // Create a Blob from the byte array
+                                        let blob = new Blob([byteNumbers], { type: 'image/' + extension });
+                                        let blobUrl = URL.createObjectURL(blob);
+                                        url = blobUrl;
+                                    }
+                                    else {
+                                        url = "../../Content/img/jobicon.png";
+                                    }
+                                    $('.jobs').append(`
+                                              <span class="job-listings-featured">
+                                                 <div class="row">
+                                                    <div class="col-lg-6 col-md-6 col-xs-12">
+                                                        <div class="job-company-logo mr-2">
+                                                           <img src="${url}" height="60" alt="">
+                                                        </div>
+                                                        <div class="job-details">
+                                                            <h3><a href="/company/JobDetails/${btoa(data.id)}">${data.title}</a></h3>
+                                                            <span class="company-neme">${data.name}</span>
+                                                            <div class="tags">
+                                                                <span><i class="lni-map-marker"></i>${data.address}</span>
+                                                                <span><i class="lni-alarm-clock"></i>${formatDate(new Date(data.created_at))}</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6 col-md-6 col-xs-12 text-right">
+                                                        <div class="tag-type">
+                                                            <span class="${data.jobType == "full-time" ? 'full-time' : 'part-time'} ml-0">${data.jobType}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </span>
+                                         `);
+
+                                })
+                            }
                             $('.jobs').css('min-height', '0px');
                             TotalRecords = response['totalRecords'];
                             pages = Math.ceil(TotalRecords / PageSize);
@@ -201,6 +255,7 @@
                             $('#prev img').css('filter', '');
                             $('#next img').css('filter', '');
                             if (pages == 0) {
+                                $('.jobs').html('<div class="mt-4" style="width:100%; text-align:center;"><p class="font-weight-bold" style="font-size:20px;">No Data Available</h6><p>');
                                 $('#pagination').removeClass('d-flex');
                                 $('#pagination').addClass('d-none');
                             }
@@ -251,23 +306,24 @@
                         processData: false,
                         contentType: 'application/json',
                         success: function (response) {
-                            response['data'].forEach(data => {
-                                base64_string = "";
-                                data.logo != "" ? base64_string = data.logo : '';
-                                if (base64_string != "") {
-                                    extension = base64_string.split(';')[0].split('/')[1]
-                                    // Convert base64 to byte array
-                                    let byteNumbers = new Uint8Array([...atob(base64_string)].map(char => char.charCodeAt(0)));
+                            if (company == true) {
+                                response['data'].forEach(data => {
+                                    base64_string = "";
+                                    data.logo != "" ? base64_string = data.logo : '';
+                                    if (base64_string != "") {
+                                        extension = base64_string.split(';')[0].split('/')[1]
+                                        // Convert base64 to byte array
+                                        let byteNumbers = new Uint8Array([...atob(base64_string)].map(char => char.charCodeAt(0)));
 
-                                    // Create a Blob from the byte array
-                                    let blob = new Blob([byteNumbers], { type: 'image/' + extension });
-                                    let blobUrl = URL.createObjectURL(blob);
-                                    url = blobUrl;
-                                }
-                                else {
-                                    url = "../../Content/img/jobicon.png";
-                                }
-                                $('.jobs').append(`
+                                        // Create a Blob from the byte array
+                                        let blob = new Blob([byteNumbers], { type: 'image/' + extension });
+                                        let blobUrl = URL.createObjectURL(blob);
+                                        url = blobUrl;
+                                    }
+                                    else {
+                                        url = "../../Content/img/jobicon.png";
+                                    }
+                                    $('.jobs').append(`
                                         <span class="job-listings-featured">
                                             <div class="row">
                                                 <div class="col-lg-6 col-md-6 col-xs-12">
@@ -299,8 +355,54 @@
                                             </div>
                                         </span>
                                     `);
-                            })
-                             $('.jobs').css('min-height', '0px');
+                                })
+                            }
+                            else
+                            {
+                                response['data'].forEach(data => {
+                                    base64_string = "";
+                                    data.logo != "" ? base64_string = data.logo : '';
+                                    if (base64_string != "") {
+                                        extension = base64_string.split(';')[0].split('/')[1]
+                                        // Convert base64 to byte array
+                                        let byteNumbers = new Uint8Array([...atob(base64_string)].map(char => char.charCodeAt(0)));
+
+                                        // Create a Blob from the byte array
+                                        let blob = new Blob([byteNumbers], { type: 'image/' + extension });
+                                        let blobUrl = URL.createObjectURL(blob);
+                                        url = blobUrl;
+                                    }
+                                    else {
+                                        url = "../../Content/img/jobicon.png";
+                                    }
+                                    $('.jobs').append(`
+                                              <span class="job-listings-featured">
+                                                 <div class="row">
+                                                    <div class="col-lg-6 col-md-6 col-xs-12">
+                                                        <div class="job-company-logo mr-2">
+                                                           <img src="${url}" height="60" alt="">
+                                                        </div>
+                                                        <div class="job-details">
+                                                            <h3><a href="/company/JobDetails/${btoa(data.id)}">${data.title}</a></h3>
+                                                            <span class="company-neme">${data.name}</span>
+                                                            <div class="tags">
+                                                                <span><i class="lni-map-marker"></i>${data.address}</span>
+                                                                <span><i class="lni-alarm-clock"></i>${formatDate(new Date(data.created_at))}</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6 col-md-6 col-xs-12 text-right">
+                                                        <div class="tag-type">
+                                                            <span class="${data.jobType == "full-time" ? 'full-time' : 'part-time'} ml-0">${data.jobType}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </span>
+                                    `);
+
+                                })
+                            }
+                            $('.jobs').css('min-height', '0px');
                         }
                     });
                 });
@@ -394,7 +496,7 @@
                             });
                         }
                     });
-                    
+
                 });
 
             });

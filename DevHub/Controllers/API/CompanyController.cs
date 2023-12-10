@@ -37,7 +37,7 @@ namespace DevHub.Controllers.API
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin,Company")]
+        [Authorize(Roles = "Company")]
         public IHttpActionResult PostCompany()
         {
             var HttpCtx = HttpContext.Current.Request;
@@ -119,7 +119,7 @@ namespace DevHub.Controllers.API
         }
 
         [HttpPut]
-        [Authorize(Roles = "Admin,Company")]
+        [Authorize(Roles = "Company")]
         public IHttpActionResult UpdateCompany(int id)
         {
             var old_company = _context.company.SingleOrDefault(c => c.id == id);
@@ -230,34 +230,56 @@ namespace DevHub.Controllers.API
             var data = Mapper.Map<CompanyDto>(company);
             return Ok(data);
         }
-        
-        //[Authorize(Roles = "Admin")]
-        public IHttpActionResult GetCompanies()
-        {
-            var companylist = _context.company.ToList().Select(c => new CompanyDto
-            {
-                id = c.id,
-                name = c.name,
-                overview = c.overview,
-                services = c.services,
-                website = c.website,
-                countryid = c.countryid,
-                stateid = c.stateid,
-                cityid = c.cityid,
-                people=c.people,
-                phone = c.phone,
-                email = c.email,
-                address = c.address,
-                linkedin = c.linkedin,
-                twitter = c.twitter,
-                instagram = c.instagram,
-                facebook = c.facebook,
-                UserId = c.UserId,
-                logo = c.logo != null ? Convert.ToBase64String(c.logo) : null,
-            });
 
-            var data = Mapper.Map<IEnumerable<CompanyDto>>(companylist);
-            return Ok(data);
+        [Authorize(Roles = "Admin")]
+        [Route("api/Company/GetCompanies")]
+        [HttpPost]
+        public IHttpActionResult GetCompanies(int start, int end, [FromBody] Dictionary<string, object> filter)
+        {
+
+            var query = _context.company.AsQueryable();
+
+            if (filter != null)
+            {
+                if (filter.ContainsKey("name") && filter["name"].ToString() != "")
+                {
+                    var nameFilter = filter["name"].ToString().ToLower();
+                    query = query.Where(r => r.name.ToLower().Contains(nameFilter));
+                }
+                if (filter.ContainsKey("people") && filter["people"].ToString() != "")
+                {
+                    var peopleFilter = int.Parse(filter["people"].ToString());
+                    query = query.Where(r => r.people == peopleFilter);
+                }
+            }
+
+            var totalRecords = query.Count();
+
+            var companylist = query
+                .Join(_context.city,
+                company => company.cityid,
+                city => city.id,
+                (company,city) => new
+                {
+                    id = company.id,
+                    name = company.name,
+                    cityname = city.cityname,
+                    people= company.people,
+                    logo = company.logo,
+                    created_at= company.created_at
+                })
+            .OrderBy(c => c.name)
+            .Skip(start)
+            .Take(end - start)
+            .ToList();
+
+            var result = new
+            {
+                TotalRecords = totalRecords,
+                data = companylist
+            };
+
+            return Ok(result);
         }
 
         //[Authorize(Roles = "Admin,Company")]
@@ -274,7 +296,7 @@ namespace DevHub.Controllers.API
         //     return Ok(companylist);
         // }
         
-        //[Authorize(Roles = "Admin,Company")]
+        [Authorize(Roles = "Admin,Company")]
         [Route("api/Company/GetCompanyJobs")]
         [HttpPost]
         public IHttpActionResult CompanyJobs(int start,int end, [FromBody] Dictionary<string, object> filter)
@@ -282,9 +304,13 @@ namespace DevHub.Controllers.API
             var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
             var userId = identity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            var query = _context.company_job
-                    .Where(jm => jm.company.UserId == userId);
+            var query = _context.company_job.AsQueryable();
 
+            if (User.IsInRole("Company"))
+            {
+                query= query.Where(jm => jm.company.UserId == userId);
+            }
+        
             if (filter != null)
             {
                 if (filter.ContainsKey("jobtype") && filter["jobtype"].ToString() != "")
@@ -328,7 +354,7 @@ namespace DevHub.Controllers.API
             return Ok(result);
         }
         
-        //[Authorize(Roles = "Admin,Company")]
+        [Authorize(Roles = "Admin,Company")]
         [Route("api/Company/GetCompanyApplications")]
         [HttpPost]
         public IHttpActionResult CompanyApplications(int start,int end, [FromBody] Dictionary<string, object> filter)
@@ -344,8 +370,12 @@ namespace DevHub.Controllers.API
                          .Join(_context.candidate_job,
                          company_job => company_job.Job.id,
                          candidate_job => candidate_job.jobid,
-                         (company_job, candidate_job) => new { candidate_job = candidate_job, company_job = company_job })
-                    .Where(r => r.company_job.comjobmapper.company.UserId == userId); 
+                         (company_job, candidate_job) => new { candidate_job = candidate_job, company_job = company_job });
+        
+            if(User.IsInRole("Company"))
+            {
+                query=query.Where(r => r.company_job.comjobmapper.company.UserId == userId);
+            }
 
             if (filter != null)
             {

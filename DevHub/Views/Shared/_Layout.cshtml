@@ -45,7 +45,7 @@
                                 </ul>
                             </li>*@
 
-                        @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Candidate")))
+                        @if (Request.IsAuthenticated && User.IsInRole("Candidate"))
                         {
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -58,6 +58,18 @@
                                 </ul>
                             </li>
                         }
+                        @if (Request.IsAuthenticated && User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Candidates
+                                </a>
+                                <ul class="dropdown-menu">
+                                    @Html.ActionLink("Browse Jobs", "Jobs", "Candidate", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
+                                    @Html.ActionLink("Browse Resumes", "BrowseResumes", "Candidate", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
+                                </ul>
+                            </li>
+                        }
                         @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Company")))
                         {
                             <li class="nav-item dropdown">
@@ -65,7 +77,15 @@
                                     Employers
                                 </a>
                                 <ul class="dropdown-menu">
-                                    @Html.ActionLink("Company", "CompanyProfile", "Company", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        @Html.ActionLink("Manage Companies", "Companies", "Company", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
+                                    }
+                                    else
+                                    {
+                                        @Html.ActionLink("Company", "CompanyProfile", "Company", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
+
+                                    }
                                     @Html.ActionLink("Manage Jobs", "ManageJobs", "Company", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
                                     @Html.ActionLink("Manage Applications", "ManageApplications", "Company", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
 
@@ -118,7 +138,7 @@
                                 @Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { @class = "nav-link" })
                             </li>
                         }
-                        @if (User.IsInRole("Admin") || User.IsInRole("Company"))
+                        @if (User.IsInRole("Company"))
                         {
                             <li class="button-group">
                                 @Html.ActionLink("Post a Job", "PostJob", "Company", routeValues: null, htmlAttributes: new { @class = "button btn btn-common" })
@@ -154,7 +174,10 @@
             </button>
             <div class="nav-item dropdown">
                 <ul class="dropdown-menu" style="right:0;left:auto;" aria-labelledby="dropdownMenuButton">
-                    <li>@Html.ActionLink("Profile", "UserProfile", "Home", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })</li>
+                    @if (!User.IsInRole("Admin"))
+                     {
+                        <li>@Html.ActionLink("Profile", "UserProfile", "Home", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })</li>
+                     }
                     @if (Request.IsAuthenticated)
                     {
                         <li>@Html.ActionLink("Change Password", "ChangePassword", "Manage", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })</li>

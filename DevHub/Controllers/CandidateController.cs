@@ -38,7 +38,7 @@ namespace DevHub.Controllers
         }
 
         // GET: Candidate
-        [CustomAuthorization("Admin", "Candidate")]
+        [CustomAuthorization("Candidate")]
         public ActionResult AppliedJobs()
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
@@ -57,6 +57,8 @@ namespace DevHub.Controllers
             }
                 return View();
         }
+
+        [CustomAuthorization("Candidate")]
         public ActionResult EditResume(string id)
         {
             int decodedId = 0;
@@ -69,6 +71,12 @@ namespace DevHub.Controllers
                 return RedirectToAction("Resume", "Candidate");
             }
             ViewBag.Message = decodedId;
+            return View();
+        }
+
+        [CustomAuthorization("Admin")]
+        public ActionResult BrowseResumes()
+        {
             return View();
         }
 

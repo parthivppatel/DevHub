@@ -20,67 +20,30 @@
 
 <body>
 
-    <!-- Header Section Start -->
     <header id="home" class="hero-area">
 
         <div class="container">
             <div class="row space-100 justify-content-center">
                 <div class="col-lg-10 col-md-12 col-xs-12">
                     <div class="contents">
-                        <h2 class="head-title">Find the job that fits your life</h2>
-                        <p>Aliquam vestibulum cursus felis. In iaculis iaculis sapien ac condimentum. Vestibulum congue posuere lacus, <br> id tincidunt nisi porta sit amet. Suspendisse et sapien varius, pellentesque dui non.</p>
-                        <div class="job-search-form">
-                            <form>
-                                <div class="row">
-                                    <div class="col-lg-5 col-md-6 col-xs-12">
-                                        <div class="form-group">
-                                            <input class="form-control" type="text" placeholder="Job Title or Company Name">
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-3 col-md-6 col-xs-12">
-                                        <div class="form-group">
-                                            <div class="search-category-container">
-                                                <label class="styled-select">
-                                                    <select>
-                                                        <option value="none">Locations</option>
-                                                        <option value="none">New York</option>
-                                                        <option value="none">California</option>
-                                                        <option value="none">Washington</option>
-                                                        <option value="none">Birmingham</option>
-                                                        <option value="none">Chicago</option>
-                                                        <option value="none">Phoenix</option>
-                                                    </select>
-                                                </label>
-                                            </div>
-                                            <i class="lni-map-marker"></i>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-3 col-md-6 col-xs-12">
-                                        <div class="form-group">
-                                            <div class="search-category-container">
-                                                <label class="styled-select">
-                                                    <select>
-                                                        <option>All Categories</option>
-                                                        <option>Finance</option>
-                                                        <option>IT & Engineering</option>
-                                                        <option>Education/Training</option>
-                                                        <option>Art/Design</option>
-                                                        <option>Sale/Markting</option>
-                                                        <option>Healthcare</option>
-                                                        <option>Science</option>
-                                                        <option>Food Services</option>
-                                                    </select>
-                                                </label>
-                                            </div>
-                                            <i class="lni-layers"></i>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-1 col-md-6 col-xs-12">
-                                        <button type="submit" class="button"><i class="lni-search"></i></button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
+                        @if (User.IsInRole("Candidate"))
+                        {
+                            <h2 class="head-title">Find the job that fits your life</h2>
+                            <p>Discover your next career move effortlessly with our job portal. Our user-friendly platform streamlines your search, ensuring you find the right fit with ease. Your dream job is just a click away – start your journey today.</p>
+                            @Html.ActionLink("Browse Jobs", "Jobs", "Candidate", routeValues: null, htmlAttributes: new { @class = "btn btn-common" })
+                        }
+                        @if (User.IsInRole("Company"))
+                        {
+                           <h2 class="head-title">Post Jobs Effortlessly, Connect Instantly!</h2>
+                           <p>Our user-friendly interface ensures a seamless process, allowing you to reach qualified candidates effortlessly. Join us in shaping your team's success – post a job today and unlock a world of possibilities.</p>
+                            @Html.ActionLink("Post Job", "PostJob", "Company", routeValues: null, htmlAttributes: new { @class = "btn btn-common" })
+                        }
+                        @if (!Request.IsAuthenticated || User.IsInRole("Admin"))
+                        {
+                            <h2 class="head-title">The India's Work Marketplace</h2>
+                            <p>Welcome to our comprehensive job portal, the nexus for companies and candidates. Streamline your hiring process or find your dream job effortlessly. Elevate your career or build your team with us. Welcome to success.                            </p>
+                            @Html.ActionLink("Create Account", "Register", "Account", routeValues: null, htmlAttributes: new { @class = "btn btn-common" })
+                        }
                     </div>
                 </div>
             </div>
@@ -187,9 +150,18 @@
                 <div class="col-lg-6 col-md-12 col-sm-12">
                     <div class="text-wrapper">
                         <div>
+                         @if (User.IsInRole("Candidate") || User.IsInRole("Admin") || !Request.IsAuthenticated)
+                         {
                             <h3>Browse Jobs</h3>
                             <p>Search all the open positions on the web. Get your own personalized salary estimate. The right job is out there.</p>
-                           @Html.ActionLink("Search jobs", "Jobs", "Candidate", routeValues: null, htmlAttributes: new { @class = "btn btn-common" })
+                            @Html.ActionLink("Search jobs", "Jobs", "Candidate", routeValues: null, htmlAttributes: new { @class = "btn btn-common" })
+                         }
+                         @if (User.IsInRole("Company"))
+                         {
+                            <h3>Manage Jobs</h3>
+                            <p>Simplify your hiring process with our easy-to-use job management tools. Post, edit, and track listings effortlessly, monitor candidate applications, and gain valuable insights—all in one streamlined platform</p>
+                            @Html.ActionLink("Manage jobs", "ManageJobs", "Company", routeValues: null, htmlAttributes: new { @class = "btn btn-common" })
+                         }
                         </div>
                     </div>
                 </div>
@@ -202,6 +174,9 @@
         </div>
     </div>
     <!-- Browse jobs Section End -->
+
+
+
     <!-- Counter Section Start -->
     <section id="counter" class="section bg-gray">
         <div class="container">
@@ -259,7 +234,6 @@
         <div class="container">
             <div class="section-header">
                 <h2 class="section-title">How It Works?</h2>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit ellentesque dignissim quam et <br> metus effici turac fringilla lorem facilisis.</p>
             </div>
             <div class="row">
                 <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
@@ -268,7 +242,7 @@
                             <i class="lni-user"></i>
                         </span>
                         <h4>Create an Account</h4>
-                        <p>Post a job to tell us about your project. We'll quickly match you with the right freelancers find place best.</p>
+                        <p>First Create An Account with your desired role then create Your Profile and Submit the detail.</p>
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
@@ -277,7 +251,7 @@
                             <i class="lni-search"></i>
                         </span>
                         <h4>Search Jobs</h4>
-                        <p>Post a job to tell us about your project. We'll quickly match you with the right freelancers find place best.</p>
+                        <p>If You are Candidate then you can browse differnet jobs and if you are Emplyer then you can post a job.</p>
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
@@ -286,7 +260,7 @@
                             <i class="lni-cup"></i>
                         </span>
                         <h4>Apply</h4>
-                        <p>Post a job to tell us about your project. We'll quickly match you with the right freelancers find place best.</p>
+                        <p>Apply for differnet jobs and this applications will be send to company and company can approve your applications.</p>
                     </div>
                 </div>
             </div>
@@ -294,7 +268,7 @@
     </section>
     <!-- How It Work Section End -->
     <!-- Latest Section Start -->
-    <section id="latest-jobs" class="section bg-gray">
+    <!-- <section id="latest-jobs" class="section bg-gray">
         <div class="container">
             <div class="section-header">
                 <h2 class="section-title">Latest Jobs</h2>
@@ -408,7 +382,7 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> -->
     <!-- Latest Section End -->
     <!-- Testimonial Section Start -->
     <!-- <section id="testimonial" class="section">
@@ -510,7 +484,6 @@
       </div>
     </section> -->
     <!-- download Section Start -->
-
     <!-- Preloader -->
     <div id="preloader">
         <div class="loader" id="loader-1"></div>
@@ -524,33 +497,33 @@
         <script>
             $(document).ready(function () {
                 $.ajax({
-                        type: "GET",
-                        url: "/api/summary",
-                        success: function (response,status_code) {
-                           $('#applications').text(response['applications']);
-                           $('#jobs').text(response['jobs']);
-                           $('#resumes').text(response['resumes']);
-                           $('#companies').text(response['companies']);
-                        
-                        }
-                }).then(function(result) {
+                    type: "GET",
+                    url: "/api/summary",
+                    success: function (response, status_code) {
+                        $('#applications').text(response['applications']);
+                        $('#jobs').text(response['jobs']);
+                        $('#resumes').text(response['resumes']);
+                        $('#companies').text(response['companies']);
+
+                    }
+                }).then(function (result) {
                     $('#applications').addClass('counter');
                     $('#jobs').addClass('counter');
                     $('#resumes').addClass('counter');
                     $('#companies').addClass('counter');
 
-                      if($(".fact-count").length > 0) {
-                           $(".counter").counterUp({
+                    if ($(".fact-count").length > 0) {
+                        $(".counter").counterUp({
                             delay: 10,
                             time: 500
-                          });
-                        }
+                        });
+                    }
 
                 })
-             
+
 
             })
         </script>
     }
-    </body>
+</body>
 </html>

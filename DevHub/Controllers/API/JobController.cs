@@ -31,23 +31,23 @@ namespace DevHub.Controllers.API
             _context.Dispose();
         }
 
-        //[Authorize(Roles = "Admin,Candidate")]
+        [Authorize(Roles = "Admin,Candidate,Company")]
         [Route("api/Job/GetJobTypes")]
         public IEnumerable<JobTypeDto> GetJobTypes()
         {
             var jobtypelist = _context.job_type.ToList().Select(Mapper.Map<JobTypeModel, JobTypeDto>);
             return jobtypelist;
-        } 
-        
-        //[Authorize(Roles = "Admin,Candidate")]
+        }
+
+        [Authorize(Roles = "Admin,Candidate,Company")]
         [Route("api/Job/GetJobCategories")]
         public IEnumerable<JobCategoryDto> GetJobCategories()
         {
             var jobcategorieslist = _context.job_category.ToList().Select(Mapper.Map<JobCategoryModel, JobCategoryDto>);
             return jobcategorieslist;
-        }       
-        
-        //[Authorize(Roles = "Admin,Candidate")]
+        }
+
+        [Authorize(Roles = "Admin,Candidate,Company")]
         [Route("api/Job/GetJobModes")]
         public IEnumerable<JobModeDto> GetJobModes()
         {
@@ -69,7 +69,7 @@ namespace DevHub.Controllers.API
         }
 
         [HttpPost]
-        //[Authorize(Roles = "Admin,Candidate")]
+        [Authorize(Roles = "Company")]
         public IHttpActionResult PostJob()
         {
             var HttpCtx = HttpContext.Current.Request;
@@ -173,7 +173,7 @@ namespace DevHub.Controllers.API
         }
 
         [HttpPut]
-        //[Authorize(Roles = "Admin,Candidate")]
+        [Authorize(Roles = "Company")]
         public IHttpActionResult UpdateJob(int id)
         {
             var old_job = _context.jobs.SingleOrDefault(c => c.id == id);
@@ -265,7 +265,7 @@ namespace DevHub.Controllers.API
             return Ok("Job Updated Successfully");
         }
 
-        //[Authorize(Roles = "Admin,Candidate")]
+        [Authorize(Roles = "Company")]
         [Route("api/Job/JobStatus")]
         public async Task<IHttpActionResult> ApproveRejectJob(int candidate_id,int job_id,string stage)
         {
@@ -498,7 +498,7 @@ namespace DevHub.Controllers.API
         }
 
         [HttpDelete]
-        //[Authorize(Roles = "Admin,Company")]
+        [Authorize(Roles = "Company")]
         public IHttpActionResult DeleteJob(int id)
         {
             var job = _context.jobs.SingleOrDefault(c=>c.id==id);

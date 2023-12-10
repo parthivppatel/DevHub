@@ -1,0 +1,320 @@
+﻿
+@{
+    ViewBag.Title = "Companies";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="keywords" content="Bootstrap, Landing page, Template, Registration, Landing">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="author" content="UIdeck">
+    <title>JobX </title>
+</head>
+
+<body>
+    <!-- Page Header Start -->
+    <div class="page-header">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="inner-header">
+                        <h3>Manage Companies</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Page Header End -->
+    <!-- Start Content -->
+    <div id="content">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-4 col-xs-12">
+                    <div class="right-sideabr">
+                        <h4>Manage Account</h4>
+                        <ul class="list-item">
+                            <li>@Html.ActionLink("Manage Companies", "Companies", "Company", routeValues: null, htmlAttributes: new { @class = "active" })</li>
+                            <li>@Html.ActionLink("Manage Jobs", "ManageJobs", "Company")</li>
+                            <li>@Html.ActionLink("Manage Applications", "ManageApplications", "Company")</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-8 col-md-8 col-xs-12">
+                    <div class="job-alerts-item">
+                        <h3 class="alerts-title">Manage Companies</h3>
+                        <div class="col-lg-12 col-md-12 col-xs-12 mb-4">
+                            <div class="wrap-search-filter row">
+                                <div class="col-lg-5 col-md-5 col-xs-12 pr-0">
+                                    <input type="text" id="name" class="form-control" placeholder="Keyword: Name">
+                                </div>
+                                <div class="col-lg-5 col-md-5 col-xs-12 pr-0">
+                                    <select class="form-control" name="people" id="people" required>
+                                        <option data-display="General" selected value="">Select Option</option>
+                                        <option value="1">Just single employee</option>
+                                        <option value="2">2-10 employees</option>
+                                        <option value="3">10-99 employees</option>
+                                        <option value="4">100-1000 employees</option>
+                                        <option value="5">More Than 1000 employees</option>
+                                    </select>
+                                </div>
+                                <div class="col-lg-2 col-md-2 col-xs-12">
+                                    <button class="btn btn-common float-right filter" style="padding:8px 15px;">Filter</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 col-md-12 col-xs-12 jobs">
+                        </div>
+                        <br>
+
+                        <!-- Start Pagination -->
+                        <div class="d-none justify-content-start flex-wrap mt-md-0 mt-3" id="pagination">
+                            <!-- left arrow -->
+                            <div class="arrow-button">
+                                <a style="background:none; cursor:pointer;" class="m-0 p-0" id="prev">
+                                    <img src="@Url.Content("~/Content/img/left-arrow.png")" alt="YourAltText" height="25" class="mt-2" />
+                                </a>
+                            </div>
+                            <!-- Pagination tab's containing page numbers -->
+                            <div class="paginate-button">
+                                <ul class="pagination" id="pages">
+                                </ul>
+                            </div>
+                            <div class="arrow-button">
+                                <a style="background: none; cursor: pointer;" class="m-0 p-0" id="next">
+                                    <img src="@Url.Content("~/Content/img/right-arrow.png")" alt="YourAltText" height="25" class="mt-2" />
+                                </a>
+                            </div>
+                        </div>
+                        <!-- End Pagination -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Content -->
+    <!-- Preloader -->
+    <div id="preloader">
+        <div class="loader" id="loader-1"></div>
+    </div>
+    <!-- End Preloader -->
+    @section scripts{
+        <script>
+
+            $(document).ready(function () {
+                let TotalRecords = 0;
+                let PageSize = 5;
+                let pages = 0;
+                let pageTabs = 0;
+                let counter = 1;
+                let filter = { 'name': '' };
+                let base64_string = "";
+                let url = "";
+                let people = {
+                    '1': 'Just single employee',
+                    '2': '2-10 employees',
+                    '3': '10-99 employees',
+                    '4': '100-1000 employees',
+                    '5': 'More Than 1000 employees',
+                };
+
+                function getCompanyJobs() {
+                    $.ajax({
+                        type: "POST",
+                        url: "/api/Company/GetCompanies?start=" + 0 + "&end=" + PageSize,
+                        data: JSON.stringify(filter),
+                        processData: false,
+                        contentType: 'application/json',
+                        success: function (response) {
+                             response['data'].forEach(data => {
+                                    base64_string = "";
+                                    data.logo != "" ? base64_string = data.logo : '';
+                                    if (base64_string != "") {
+                                        extension = base64_string.split(';')[0].split('/')[1]
+                                        // Convert base64 to byte array
+                                        let byteNumbers = new Uint8Array([...atob(base64_string)].map(char => char.charCodeAt(0)));
+
+                                        // Create a Blob from the byte array
+                                        let blob = new Blob([byteNumbers], { type: 'image/' + extension });
+                                        let blobUrl = URL.createObjectURL(blob);
+                                        url = blobUrl;
+                                    }
+                                    else {
+                                        url = "../../Content/img/profile.png";
+                                    }
+                                    $('.jobs').append(`
+                                              <span class="job-listings-featured">
+                                                 <div class="row">
+                                                    <div class="col-lg-12 col-md-12 col-xs-12">
+                                                        <div class="job-company-logo mr-2">
+                                                           <img src="${url}" height="60" alt="">
+                                                        </div>
+                                                        <div class="job-details">
+                                                            <h3><a href="/company/CompanyProfile/${btoa(data.id)}">${data.name}</a></h3>
+                                                            <span class="company-neme">&nbsp;${people[data.people]}</span>
+                                                            <div class="tags">
+                                                                <span><i class="lni-map-marker"></i>${data.cityname}</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </span>
+                                         `);
+
+                                })
+                            $('.jobs').css('min-height', '0px');
+                            TotalRecords = response['totalRecords'];
+                            pages = Math.ceil(TotalRecords / PageSize);
+                            pageTabs = Math.ceil(pages / 5);
+                            $('#prev img').css('filter', '');
+                            $('#next img').css('filter', '');
+                            if (pages == 0) {
+                                $('.jobs').html('<div class="mt-4" style="width:100%; text-align:center;"><p class="font-weight-bold" style="font-size:20px;">No Data Available</h6><p>');
+                                $('#pagination').removeClass('d-flex');
+                                $('#pagination').addClass('d-none');
+                            }
+                            else if (pages <= 5) {
+                                $('#pagination').removeClass('d-none');
+                                $('#pagination').addClass('d-flex');
+                                $('#prev img').css('filter', 'saturate(0)');
+                                $('#next img').css('filter', 'saturate(0)');
+
+                                for (let i = 1; i <= 5; i++) {
+                                    $('#pages').append(`<li class="page-item"><a class="page-link color">${i}</a></li>`);
+                                    if (i == pages) {
+                                        break;
+                                    }
+                                }
+                                $('#prev img').css('filter', 'saturate(0)');
+                            }
+                            else {
+                                $('#pagination').removeClass('d-none');
+                                $('#pagination').addClass('d-flex');
+                                for (let i = 1; i <= 5; i++) {
+                                    $('#pages').append(`<li class="page-item"><a class="page-link color">${i}</a></li>`);
+
+                                }
+                                $('#prev img').css('filter', 'saturate(0)');
+                            }
+
+                            $('a.color').filter(':contains("1")').css('color', 'black');
+                        }
+                    });
+
+                }
+
+                getCompanyJobs();
+
+                $(document).on('click', '.color', function (e) {
+                    $(this).css('color', 'black');
+                    $('.color').not(this).css('color', 'white');
+                    let value = $(this).text();
+                    let end = value * PageSize;
+                    let start = end - PageSize;
+                    $('.jobs').css('min-height', '646px');
+                    $('.jobs').html('');
+                    $.ajax({
+                        type: "POST",
+                        url: "/api/Company/GetCompanies?start=" + start + "&end=" + end,
+                        data: JSON.stringify(filter),
+                        processData: false,
+                        contentType: 'application/json',
+                        success: function (response) {
+                             response['data'].forEach(data => {
+                                    base64_string = "";
+                                    data.logo != "" ? base64_string = data.logo : '';
+                                    if (base64_string != "") {
+                                        extension = base64_string.split(';')[0].split('/')[1]
+                                        // Convert base64 to byte array
+                                        let byteNumbers = new Uint8Array([...atob(base64_string)].map(char => char.charCodeAt(0)));
+
+                                        // Create a Blob from the byte array
+                                        let blob = new Blob([byteNumbers], { type: 'image/' + extension });
+                                        let blobUrl = URL.createObjectURL(blob);
+                                        url = blobUrl;
+                                    }
+                                    else {
+                                        url = "../../Content/img/jobicon.png";
+                                    }
+                                    $('.jobs').append(`
+                                        <span class="job-listings-featured">
+                                                 <div class="row">
+                                                    <div class="col-lg-12 col-md-12 col-xs-12">
+                                                        <div class="job-company-logo mr-2">
+                                                           <img src="${url}" height="60" alt="">
+                                                        </div>
+                                                        <div class="job-details">
+                                                            <h3><a href="/company/CompanyProfile/${btoa(data.id)}">${data.name}</a></h3>
+                                                            <span class="company-neme">&nbsp;${people[data.people]}</span>
+                                                            <div class="tags">
+                                                                <span><i class="lni-map-marker"></i>${data.cityname}</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </span>
+                                    `);
+                                })
+                            $('.jobs').css('min-height', '0px');
+                        }
+                    });
+                });
+
+                $('.filter').click(function (event) {
+                    event.preventDefault();
+                    $('.jobs').css('min-height', '646px');
+                    filter['name'] = $('#name').val();
+                    filter['people'] = $('#people').val();
+                    $('.jobs').html('');
+                    $('#pages').html('');
+                    getCompanyJobs();
+                });
+
+
+                $('#next').click(function () {
+                    if (counter != pageTabs) {
+                        counter++;
+                        let end = counter * 5;
+                        $('#pages').html('');
+                        for (let i = end - 4; i <= end; i++) {
+                            $('#pages').append(`<li class="page-item"><a class="page-link color" >${i}</a></li>`);
+                            if (i == pages) {
+                                $('#next img').css('filter', 'saturate(0)');
+                                break;
+                            }
+                        }
+                        $('#prev img').css('filter', '');
+                    }
+                });
+
+                $('#prev').click(function () {
+                    if (counter == 1 && pageTabs == counter) {
+                        $('#prev img').css('filter', 'saturate(0)');
+                        $('#next img').css('filter', 'saturate(0)');
+                    }
+                    else if (counter == 1) {
+                        $('#prev img').css('filter', 'saturate(0)');
+                        $('#next img').css('filter', '');
+                    }
+                    else {
+                        counter--;
+                        let end = counter * 5;
+                        $('#pages').html('');
+                        for (let i = end - 4; i <= end; i++) {
+                            $('#pages').append(`<li class="page-item"><a class="page-link color">${i}</a></li>`);
+                        }
+                        if (counter == 1) {
+                            $('#prev img').css('filter', 'saturate(0)');
+                            $('#next img').css('filter', '');
+                        }
+                    }
+                });
+
+            });
+        </script>
+    }
+</body>
+</html>

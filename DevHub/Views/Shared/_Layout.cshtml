@@ -7,7 +7,34 @@
     <title>@ViewBag.Title - My ASP.NET Application</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
-
+    <style>
+        @@media (min-width: 300px) and (max-width:767px) {
+            .profile-image {
+                margin:0px;
+            }
+        }
+        @@media (min-width: 300px) and (max-width:990px) {
+            .navbar-header, .dropdown{
+                display:none;
+            }
+            #mobile-logo{
+                height:25px;
+                margin-top:8px;
+            }
+        }
+        @@media (min-width: 990px) {
+            #mobile-logo{
+                height:30px;
+                margin-top:12px;
+            }
+        }
+        
+        @@media (min-width: 768px) and (max-width:990px) {
+            .profile-image {
+                margin:0px 12px;
+            }
+        }
+    </style>
 </head>
 <body>
     <!-- Navbar Start -->
@@ -23,7 +50,7 @@
                         <span class="lni-menu"></span>
                     </button>
                     <a href="@Url.Action("Index", "Home")">
-                        <img src="@Url.Content("~/Content/img/logo.png")" alt="YourAltText" class="mt-2" />
+                        <img src="@Url.Content("~/Content/img/logo.png")" alt="YourAltText" id="jobfinder" style="margin-top:10px;" height="30"/>
                     </a>
                 </div>
                 <div class="collapse navbar-collapse" id="main-navbar">
@@ -83,7 +110,8 @@
                                     }
                                     else
                                     {
-                                        @Html.ActionLink("Company", "CompanyProfile", "Company", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
+                                        @Html.ActionLink("Post a Job", "PostJob", "Company", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
+                                        @Html.ActionLink("Company Profile", "CompanyProfile", "Company", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
 
                                     }
                                     @Html.ActionLink("Manage Jobs", "ManageJobs", "Company", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
@@ -138,12 +166,6 @@
                                 @Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { @class = "nav-link" })
                             </li>
                         }
-                        @if (User.IsInRole("Company"))
-                        {
-                            <li class="button-group">
-                                @Html.ActionLink("Post a Job", "PostJob", "Company", routeValues: null, htmlAttributes: new { @class = "button btn btn-common" })
-                            </li>
-                        }
                     </ul>
                 </div>
             </div>
@@ -166,13 +188,13 @@
                     aria-expanded="false"
                     style="background-color:#f9fcff">
 
-                <img src="../../Content/img/profile.png"
+                <img src="@Url.Content("~/Content/img/profile.png")"
                      class="img-profile rounded-circle me-2"
                      id="profile"
                      height="40"
                      width="40" />
             </button>
-            <div class="nav-item dropdown">
+            <div class="nav-item dropdown" id="profile-menu">
                 <ul class="dropdown-menu" style="right:0;left:auto;" aria-labelledby="dropdownMenuButton">
                     @if (!User.IsInRole("Admin"))
                      {
@@ -181,8 +203,8 @@
                     @if (Request.IsAuthenticated)
                     {
                         <li>@Html.ActionLink("Change Password", "ChangePassword", "Manage", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })</li>
-                        <li><button class="dropdown-item" id="deactivate" style="cursor:pointer;">Delete Account</button></li>
-                        <li><a class="dropdown-item" href="javascript:document.getElementById('logoutForm').submit()">Log off</a><</li>
+                        <li><a class="dropdown-item" id="deactivate" style="cursor:pointer;">Delete Account</a></li>
+                        <li><a class="dropdown-item" href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
 
                     }
                     else
@@ -192,7 +214,7 @@
                 </ul>
             </div>
         </div>
-        <div class="mobile-menu" data-logo="@Url.Content("~/Content/img/logo-mobile.png")"></div>
+        <div class="mobile-menu" data-logo="@Url.Content("~/Content/img/logo.png")"></div>
     </nav>
     <!-- Navbar End -->
 
@@ -210,9 +232,9 @@
                     <div class="row">
                         <div class="col-lg-3 col-md-3 col-xs-12">
                             <div class="widget">
-                                <div class="footer-logo"><img src="@Url.Content("~/Content/img/logo-footer.png")" alt=""></div>
-                                <div class="textwidget">
-                                    <p>Sed consequat sapien faus quam bibendum convallis quis in nulla. Pellentesque volutpat odio eget diam cursus semper.</p>
+                                <div class="footer-logo"><img src="@Url.Content("~/Content/img/logo-footer.png")" height="30" alt=""></div>
+                                <div class="textwidget mt-3">
+                                    <p>Discover your next career move or top talent effortlessly on our advanced job portal. Streamline your hiring or job search with precision and ease.</p>
                                 </div>
                             </div>
                         </div>
@@ -236,7 +258,7 @@
                         <div class="col-lg-3 col-md-4 col-xs-12">
                             <div class="widget">
                                 <h3 class="block-title">Subscribe Now</h3>
-                                <p>Sed consequat sapien faus quam bibendum convallis.</p>
+                                <p>Subscribe Job Finder For new updates throgh email.</p>
                                 <form method="post" id="subscribe-form" name="subscribe-form" class="validate">
                                     <div class="form-group is-empty">
                                         <input type="email" value="" name="subscribe" class="form-control" placeholder="Enter Email..." required="">
@@ -277,7 +299,35 @@
 
 
     <script>
+        let blobUrl="";
+        function appendBasedOnScreenWidth() {
+             var screenWidth = $(window).width();
+            // Use a media query condition
+            $('.profile-image').parent().remove();
+            $('.profile-icons').remove();
+            if (screenWidth <= 990) { // Adjust the width condition as needed
+              $(`<li class="d-flex align-items-center">
+                  <img src="../../Content/img/profile.png"
+                   class="img-profile profile-image rounded-circle me-2"
+                   height="40"
+                   width="40" />
+                    @if (Request.IsAuthenticated)
+                    {
+                        string[] name = @User.Identity.GetUserName().Split('@');
+
+                        <div class="text-white ml-2">Hello @name[0] !</div>
+                    }
+                </li>`).prependTo(`.slicknav_nav ul:first-child`)
+               
+              if(blobUrl!=""){
+                  let img2=document.querySelector('.profile-image');
+                  img2.src=blobUrl;
+              }
+              $('#profile-menu ul li:not(:last-child)').clone().addClass('profile-icons').find('a').removeClass('dropdown-item').addClass('nav-link').end().appendTo('.slicknav_nav ul:first-child');
+            }
+        }
         $(document).ready(function () {
+            
             $('#deactivate').on('click', function (event) {
                 event.preventDefault();
                 Swal.fire({
@@ -319,11 +369,25 @@
                         extension = base64_string.split(';')[0].split('/')[1]
                         let byteNumbers = new Uint8Array([...atob(base64_string)].map(char => char.charCodeAt(0)));
                         let blob = new Blob([byteNumbers], { type: 'image/' + extension });
-                        let blobUrl = URL.createObjectURL(blob);
+                        blobUrl = URL.createObjectURL(blob);
                         img.src = blobUrl;
                     }
                 }
+            }).then(function(){
+                appendBasedOnScreenWidth();
             });
+
+    // $('#main-navbar ul').append(`<li class="nav-item dropdown">
+    // <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    //     Hello
+    // </a></li>`)
+
+    
+    $(window).resize(function() {
+      appendBasedOnScreenWidth();
+    });
+
+            
         });
     </script>
 

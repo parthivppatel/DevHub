@@ -52,15 +52,57 @@ JS INDEX
     /*====================================
     slick menu js
     ======================================*/
+    // appendBasedOnScreenWidth();
     var logo_path=$('.mobile-menu').data('logo');
+    // // $('#main-navbar ul').append(`<li class="nav-item dropdown">
+    // // <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    // //     Hello
+    // // </a></li>`)
+    // function appendBasedOnScreenWidth() {
+    //   var screenWidth = $(window).width();
+  
+    //   // Use a media query condition
+    //   if (screenWidth <= 990) { // Adjust the width condition as needed
+
+    //     $('#main-navbar ul').prepend(`
+    //       <li>
+    //           <button class="btn dropdown-toggle border-0 btn-sm"
+    //           type="button"
+    //           id="dropdownMenuButton"
+    //           data-toggle="dropdown"
+    //           aria-haspopup="true"
+    //           aria-expanded="false"
+    //           style="background-color:black; padding:0px;">
+    //               <img src="../../Content/img/profile.png"
+    //                class="img-profile profile-image rounded-circle me-2"
+    //                height="40"
+    //                width="40" /> 
+    //           </button>
+    //       </li>   
+    //     `);
+
+    //     // $('#profile-menu li').clone().appendTo('.navbar-nav');
+    //   } else {
+    //     // Remove previously appended elements if any
+    //     $('.profile-image').parent().parent().remove();
+    //   }
+    // }
+    
+    // $(window).resize(function() {
+    //   appendBasedOnScreenWidth();
+    // });
+
     $('#main-navbar').slicknav({
         appendTo:'.mobile-menu',
         removeClasses:false,
         label:'',
         closedSymbol:'<i class="lni-chevron-right"><i/>',
         openedSymbol:'<i class="lni-chevron-down"><i/>',
-        brand:'<a href="index.html"><img src="'+logo_path+'" class="img-responsive" alt="logo"></a>'
+        brand:'<a href="index.html"><img src="'+logo_path+'" class="img-responsive" id="mobile-logo" alt="logo"></a>'
     });
+
+
+    // $('#profile-menu ul li').appendTo('.navbar-nav');
       
     /*====================================
     sticky menu js

@@ -30,7 +30,7 @@ namespace DevHub
             var mailMessage = new MailMessage();
             mailMessage.To.Add(new MailAddress(message.Destination));
             System.Diagnostics.Debug.WriteLine(message.Destination, "destination");
-            mailMessage.From = new MailAddress("patelparthiv798@gmail.com", "JobX");
+            mailMessage.From = new MailAddress("patelparthiv798@gmail.com", "Job Finder");
             mailMessage.Subject = message.Subject;
             mailMessage.Body = message.Body;
             mailMessage.IsBodyHtml = true;

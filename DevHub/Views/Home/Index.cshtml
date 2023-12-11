@@ -493,7 +493,8 @@
     @section scripts {
 
         @Scripts.Render("~/bundles/jquery")
-        @Scripts.Render("~/bundles/bootstrap")
+        @*@Scripts.Render("~/bundles/bootstrap")*@ 
+
         <script>
             $(document).ready(function () {
                 $.ajax({
@@ -513,9 +514,26 @@
                     $('#companies').addClass('counter');
 
                     if ($(".fact-count").length > 0) {
-                        $(".counter").counterUp({
-                            delay: 10,
-                            time: 500
+                        // $(".counter").counterUp({
+                        //     delay: 10,
+                        //     time: 500
+                        // });
+                        $(".counter").each(function () {
+                          $(this)
+                            .prop("Counter", 0)
+                            .animate(
+                              {
+                                Counter: $(this).text(),
+                              },
+                              {
+                                duration: 2000,
+                                easing: "swing",
+                                step: function (now) {
+                                    now = Number(Math.ceil(now)).toLocaleString('en');
+                                    $(this).text(now);
+                                },
+                              }
+                            );
                         });
                     }
 

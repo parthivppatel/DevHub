@@ -203,7 +203,7 @@
                     @if (Request.IsAuthenticated)
                     {
                         <li>@Html.ActionLink("Change Password", "ChangePassword", "Manage", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })</li>
-                        <li><a class="dropdown-item" id="deactivate" style="cursor:pointer;">Delete Account</a></li>
+                        <li><a class="dropdown-item deactivate" style="cursor:pointer;">Delete Account</a></li>
                         <li><a class="dropdown-item" href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
 
                     }
@@ -328,7 +328,7 @@
         }
         $(document).ready(function () {
             
-            $('#deactivate').on('click', function (event) {
+            $(document).on('click','.deactivate' ,function (event) {
                 event.preventDefault();
                 Swal.fire({
                     title: "Are you sure want to Delete Account?",

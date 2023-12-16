@@ -13,16 +13,8 @@ Welcome to the Job Finder Application! This web-based platform facilitates seaml
 ### 3. Intuitive Job Management
    - Streamlined job posting process for employers.
    - User-friendly application process for candidates.
-
-### 4. Smart Matching
-   - Advanced search capabilities for tailored job searches.
-   - Matching algorithms ensuring the ideal job-employee fit.
-
-### 5. Instant Communication
-   - Real-time communication channels between employers and candidates.
-   - Feedback mechanisms for transparent and timely interactions.
-
-### 6. Secure User Authentication
+   - 
+### 4. Secure User Authentication
    - Prioritized data security with robust user authentication and authorization mechanisms.
 
 ## Screenshots

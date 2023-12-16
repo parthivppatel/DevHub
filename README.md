@@ -13,7 +13,7 @@ Welcome to the Job Finder Application! This web-based platform facilitates seaml
 ### 3. Intuitive Job Management
    - Streamlined job posting process for employers.
    - User-friendly application process for candidates.
-   - 
+
 ### 4. Secure User Authentication
    - Prioritized data security with robust user authentication and authorization mechanisms.
 
